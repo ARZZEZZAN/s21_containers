@@ -125,7 +125,18 @@ void AVLTree<T>::output(Node<T>* node, int level) {
     output(node->right, level + 1);
   }
 }
+template <typename T>
+Node<T>* AVLTree<T>::search(Node<T>* node, T key) {
+  if (!node || node->key == key) {
+    return node;
+  }
 
+  if (key < node->key) {
+    return search(node->left, key);
+  } else {
+    return search(node->right, key);
+  }
+}
 // Node<T>* AVLTree<T>::rotateRight(Node<T>* node) {}
 int main() {
   AVLTree<int> n;
@@ -133,14 +144,13 @@ int main() {
   n.insert(15);
   n.insert(25);
   n.insert(18);
-  // n.insert(30);
-  // n.insert(35);
-  // n.insert(24);
-  // n.insert(10);
-  // n.insert(5);
-  // n.insert(4);
-  // n.insert(12);
-  // n.insert(13);
-  n.remove(15);
-  n.output(n.root, 0);
+  n.insert(30);
+  n.insert(35);
+  n.insert(24);
+  n.insert(10);
+  n.insert(5);
+  n.insert(4);
+  n.insert(12);
+  n.insert(13);
+  cout << n.search(15)->right->key << endl;
 }
