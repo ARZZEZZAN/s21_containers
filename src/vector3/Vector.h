@@ -1,115 +1,87 @@
 #ifndef VECTOR_H
 #define VECTOR_H
-#include <iostream>
 
-template <typename T>
+namespace s21 {
+
+template <class T>
 class Vector {
+  // Vector Member type
+  using value_type = T;
+  using reference = value_type&;
+  using const_reference = const value_type&;
+  // using iterator = VectorIterator<T>;
+  // using const_iterator = const_iterator_Vector<T>;
+  using size_type = std::size_t;
+
  public:
-  Vector() {
-    arr_ = new T[1];
-    capacity_ = 1;
-  }
-  ~Vector() { delete[] arr_; }
-  // Конструкторы с move семантикой
-  Vector(Vector& other) {
-    if (this != &other) {
-      delete[] arr_;
-      arr_ = new T[other.capacity_];
-      for (size_t i = 0; i < other.size_; ++i) arr_[i] = other.arr_[i];
-      size_ = other.size_;
-      capacity_ = other.capacity_;
-    }
-  }
+  // Vector Member functions
+  Vector();
+  Vector(size_type n);
+  Vector(std::initializer_list<value_type> const& items);
+  Vector(const Vector& v);
+  Vector(Vector&& v);
+  ~Vector();
+  Vector& operator=(const Vector&& v);
 
-  Vector(Vector&& other) noexcept {
-    if (this != &other) {
-      delete[] arr_;
-      arr_ = other.arr_;
-      size_ = other.size_;
-      capacity_ = other.capacity_;
-      other.arr_ = nullptr;
-      other.size_ = other.capacity_ = 0;
-    }
-  }
+  // Vector& operator=(Vector& other) {
+  //   if (this != &other) {
+  //     delete[] container_;
+  //     container_ = other.container_;
+  //     size_ = other.size_;
+  //     capacity_ = other.capacity_;
+  //     other.container_ = nullptr;
+  //     other.size_ = other.capacity_ = 0;
+  //   }
+  //   return *this;
+  // }
 
-  // Метод, который проверяет пустой ли список
+  // Vector& operator=(Vector&& other) noexcept {
+  //   if (this != &other) {
+  //     delete[] container_;
+  //     container_ = other.container_;
+  //     size_ = other.size_;
+  //     capacity_ = other.capacity_;
+  //     other.container_ = nullptr;
+  //     other.size_ = other.capacity_ = 0;
+  //   }
+  //   return *this;
+  // }
+
+  // helper
+  void bring_to_zero();
+  void add_memory();
+  void copy_vector(const Vector& v);
+  void remove();
+
+ public:
   [[nodiscard]] bool isEmpty() const { return size_ == 0; }
-
-  // Метод получения размера вектора
   [[nodiscard]] size_t size() const { return size_; }
-
-  // Метод получения максимального размера вектора
   [[nodiscard]] size_t capacity() const { return capacity_; }
-
-  // Метод выделения новой памяти
-  void addMemory() {
-    capacity_ *= 2;
-    T* tmp = arr_;
-    arr_ = new T[capacity_];
-    for (size_t i = 0; i < size_; ++i) arr_[i] = tmp[i];
-    delete[] tmp;
+  void pushBack(const_reference value) {
+    if (size_ >= capacity_) add_memory();
+    container_[size_++] = value;
   }
-
-  // Метод добавления элемента
-  void pushBack(const T& value) {
-    if (size_ >= capacity_) addMemory();
-    arr_[size_++] = value;
-  }
-
-  // Метод удаления элемента
   void remove(size_t index) {
     for (size_t i = index + 1; i < size_; ++i) {
-      arr_[i - 1] = arr_[i];
+      container_[i - 1] = container_[i];
     }
     --size_;
   }
 
-  // Оператор, который возвращает обычную ссылку на элемент
-  T& operator[](size_t index) { return arr_[index]; }
+ public:
+  value_type* begin() { return &container_[0]; }
+  const value_type* begin() const { return &container_[0]; }
+  value_type* end() { return &container_[size_]; }
+  const value_type* end() const { return &container_[size_]; }
 
-  // Оператор, который возвращает константную ссылку на элемент
-  const T& operator[](size_t index) const { return arr_[index]; }
-
-  // Операторы присваивания
-  Vector& operator=(Vector& other) {
-    if (this != &other) {
-      delete[] arr_;
-      arr_ = new T[other.capacity_];
-      for (size_t i = 0; i < other.size_; ++i) arr_[i] = other.arr_[i];
-      size_ = other.size_;
-      capacity_ = other.capacity_;
-    }
-    return *this;
-  }
-
-  Vector& operator=(Vector&& other) noexcept {
-    if (this != &other) {
-      delete[] arr_;
-      arr_ = other.arr_;
-      size_ = other.size_;
-      capacity_ = other.capacity_;
-      other.arr_ = nullptr;
-      other.size_ = other.capacity_ = 0;
-    }
-    return *this;
-  }
-
-  // Итераторы
-  T* begin() { return &arr_[0]; }
-  const T* begin() const { return &arr_[0]; }
-  T* end() { return &arr_[size_]; }
-  const T* end() const { return &arr_[size_]; }
+ public:
+  reference operator[](size_t index) { return container_[index]; }
+  const_reference operator[](size_t index) const { return container_[index]; }
 
  private:
-  T* arr_;
-  size_t size_{};
-  size_t capacity_{};
+  size_t size_;
+  size_t capacity_;
+  value_type* container_;
 };
-// Оператор записи в поток
-// Он нужен для того, чтобы мы смогли выводить весь вектор в консоль ...
-template <typename T>
-inline std::ostream& operator<<(std::ostream& os, const Vector<T>& vec) {
-  for (size_t i = 0; i < vec.size(); ++i) os << vec[i] << " ";
-  return os;
-}
+}  // namespace s21
 #endif  // VECTOR_H
