@@ -4,7 +4,7 @@
 #include <iostream>
 
 using namespace std;
-
+namespace s21 {
 // AVL tree node
 template <typename T>
 class Node {
@@ -34,9 +34,8 @@ class AVLTree {
 
   void output(Node<T>* node, int level);
 
-  Node<T>* root;
-
  private:
+  Node<T>* root;
   void clear(Node<T>* node);
   int height(Node<T>* node);
   int balanceFactor(Node<T>* node);
@@ -50,5 +49,6 @@ class AVLTree {
   Node<T>* remove(Node<T>* node, T key);
   Node<T>* search(Node<T>* node, T key);
 };
+}  // namespace s21
 
 #endif  // SRC_AVL_H_

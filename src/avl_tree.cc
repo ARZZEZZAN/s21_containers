@@ -1,5 +1,5 @@
 #include "avl_tree.h"
-using namespace std;
+using namespace s21;
 template <typename T>
 AVLTree<T>::AVLTree() {
   root = nullptr;
@@ -136,21 +136,4 @@ Node<T>* AVLTree<T>::search(Node<T>* node, T key) {
   } else {
     return search(node->right, key);
   }
-}
-// Node<T>* AVLTree<T>::rotateRight(Node<T>* node) {}
-int main() {
-  AVLTree<int> n;
-  n.insert(20);
-  n.insert(15);
-  n.insert(25);
-  n.insert(18);
-  n.insert(30);
-  n.insert(35);
-  n.insert(24);
-  n.insert(10);
-  n.insert(5);
-  n.insert(4);
-  n.insert(12);
-  n.insert(13);
-  cout << n.search(15)->right->key << endl;
 }
