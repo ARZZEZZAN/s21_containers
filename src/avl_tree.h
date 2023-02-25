@@ -13,10 +13,11 @@ class Node {
   int height;
   Node<T>* left;
   Node<T>* right;
+  Node<T>* parent;
   Node(T k) {
     key = k;
     height = 1;
-    left = right = nullptr;
+    left = right = parent = nullptr;
   }
 };
 template <typename T>
