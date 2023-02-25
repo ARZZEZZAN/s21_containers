@@ -117,15 +117,6 @@ void AVLTree<T>::clear(Node<T>* node) {
   }
 }
 template <typename T>
-void AVLTree<T>::output(Node<T>* node, int level) {
-  if (node) {
-    output(node->left, level + 1);
-    for (int i = 0; i < level; i++) cout << "   ";
-    cout << node->key << endl;
-    output(node->right, level + 1);
-  }
-}
-template <typename T>
 Node<T>* AVLTree<T>::search(Node<T>* node, T key) {
   if (!node || node->key == key) {
     return node;
@@ -135,5 +126,14 @@ Node<T>* AVLTree<T>::search(Node<T>* node, T key) {
     return search(node->left, key);
   } else {
     return search(node->right, key);
+  }
+}
+template <typename T>
+void AVLTree<T>::output(Node<T>* node, int level) {
+  if (node) {
+    output(node->left, level + 1);
+    for (int i = 0; i < level; i++) cout << "   ";
+    cout << node->key << endl;
+    output(node->right, level + 1);
   }
 }
