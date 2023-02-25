@@ -70,6 +70,7 @@ class Set {
     Node<T>* node = tree_.getRoot();
     if (node == nullptr) return Iterator(nullptr);
     while (node->left != nullptr) node = node->left;
+
     return Iterator(node);
   }
 
