@@ -9,7 +9,7 @@ int main() {
   mySet.insert(3);
   mySet.insert(10);
   mySet.insert(-4);
-  for (auto i = mySet.begin(); i != mySet.end(); i++) {
-    cout << *i << endl;
+  if (mySet.contains(4)) {
+    std::cout << "hi" << std::endl;
   }
 }

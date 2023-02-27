@@ -62,7 +62,7 @@ class Set {
 
   void insert(T key) { tree_.insert(key); }
 
-  void remove(T key) { tree_.remove(key); }
+  void erase(T key) { tree_.remove(key); }
 
   bool contains(T key) const { return tree_.search(key) != nullptr; }
 
