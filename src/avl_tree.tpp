@@ -24,15 +24,12 @@ template <typename T>
 Node<T>* AVLTree<T>::rotateRight(Node<T>* node) {
   Node<T>* newRoot = node->left;
   node->left = newRoot->right;
-  newRoot->right = node;
-
-  if (node->left) {
-    node->left->parent = node;
+  if (newRoot->left) {
+    newRoot->right->parent = node;
   }
-
+  newRoot->right = node;
   newRoot->parent = node->parent;
   node->parent = newRoot;
-
   updateHeight(newRoot);
   updateHeight(node);
   return newRoot;
@@ -41,15 +38,12 @@ template <typename T>
 Node<T>* AVLTree<T>::rotateLeft(Node<T>* node) {
   Node<T>* newRoot = node->right;
   node->right = newRoot->left;
-  newRoot->left = node;
-
-  if (node->right) {
-    node->right->parent = node;
+  if (newRoot->right) {
+    newRoot->left->parent = node;
   }
-
+  newRoot->left = node;
   newRoot->parent = node->parent;
   node->parent = newRoot;
-
   updateHeight(newRoot);
   updateHeight(node);
   return newRoot;
@@ -72,13 +66,17 @@ Node<T>* AVLTree<T>::balance(Node<T>* node) {
   return node;
 }
 template <typename T>
-Node<T>* AVLTree<T>::insert(Node<T>* node, T key) {
-  if (!node) return new Node<T>(key);
+Node<T>* AVLTree<T>::insert(Node<T>* node, T key, Node<T>* parent) {
+  if (!node) {
+    node = new Node<T>(key);
+    node->parent = parent;
+    return node;
+  }
 
   if (key < node->key) {
-    node->left = insert(node->left, key);
+    node->left = insert(node->left, key, node);
   } else if (key > node->key) {
-    node->right = insert(node->right, key);
+    node->right = insert(node->right, key, node);
   }
   return balance(node);
 }
@@ -137,7 +135,6 @@ Node<T>* AVLTree<T>::search(Node<T>* node, T key) {
   if (!node || node->key == key) {
     return node;
   }
-
   if (key < node->key) {
     return search(node->left, key);
   } else {

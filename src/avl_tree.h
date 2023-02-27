@@ -25,7 +25,7 @@ class AVLTree {
  public:
   AVLTree();
   ~AVLTree();
-  void insert(T key) { root = insert(root, key); }
+  void insert(T key) { root = insert(root, key, nullptr); }
 
   void remove(T key) { root = remove(root, key); }
 
@@ -44,7 +44,7 @@ class AVLTree {
   Node<T>* rotateLeft(Node<T>* node);
   Node<T>* rotateRight(Node<T>* node);
   Node<T>* balance(Node<T>* node);
-  Node<T>* insert(Node<T>* node, T key);
+  Node<T>* insert(Node<T>* node, T key, Node<T>* parent);
   Node<T>* findMin(Node<T>* node);
   Node<T>* removeMin(Node<T>* node);
   Node<T>* remove(Node<T>* node, T key);
