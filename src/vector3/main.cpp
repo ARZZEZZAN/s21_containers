@@ -1,18 +1,18 @@
 
 #include <iostream>
 
-// #include "Vector.h"
 #include "s21_vector.tpp"
 using namespace s21;
+using namespace std;
 
 int main() {
-  Vector<int> vector;
-  vector.pushBack(1);
-  vector.pushBack(2);
-  vector.pushBack(3);
-  std::cout << vector[0] << std::endl;
-  std::cout << vector[1] << std::endl;
-  std::cout << vector[2] << std::endl;
+  Vector<char> vec;
+  vec.push_back(97);
+  vec.push_back(98);
+  vec.push_back(99);
+  std::cout << vec[0] << std::endl;
+  std::cout << vec[1] << std::endl;
+  std::cout << vec[2] << std::endl;
 
   return 0;
 }

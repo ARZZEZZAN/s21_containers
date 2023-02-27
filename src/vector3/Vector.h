@@ -1,5 +1,6 @@
 #ifndef VECTOR_H
 #define VECTOR_H
+#include <iostream>
 
 namespace s21 {
 
@@ -23,64 +24,46 @@ class Vector {
   ~Vector();
   Vector& operator=(const Vector&& v);
 
-  // Vector& operator=(Vector& other) {
-  //   if (this != &other) {
-  //     delete[] container_;
-  //     container_ = other.container_;
-  //     size_ = other.size_;
-  //     capacity_ = other.capacity_;
-  //     other.container_ = nullptr;
-  //     other.size_ = other.capacity_ = 0;
-  //   }
-  //   return *this;
-  // }
+  // Vector Element access
+  // reference at(size_type pos);
+  reference operator[](size_type pos) { return container_[pos]; }
+  const_reference operator[](size_type pos) const { return container_[pos]; }
+  // const_reference front();
+  // const_reference back();
+  // T* data();
 
-  // Vector& operator=(Vector&& other) noexcept {
-  //   if (this != &other) {
-  //     delete[] container_;
-  //     container_ = other.container_;
-  //     size_ = other.size_;
-  //     capacity_ = other.capacity_;
-  //     other.container_ = nullptr;
-  //     other.size_ = other.capacity_ = 0;
-  //   }
-  //   return *this;
-  // }
+  // Vector Iterators
+  //   value_type* begin() { return &container_[0]; }
+  //   const value_type* begin() const { return &container_[0]; }
+  //   value_type* end() { return &container_[size_]; }
+  //   const value_type* end() const { return &container_[size_]; }
+
+  // Vector Capacity
+  [[nodiscard]] bool empty() const { return size_ == 0; }
+  [[nodiscard]] size_type size() const { return size_; }
+  [[nodiscard]] size_type max_size() const { return capacity_ * sizeof(T); }
+  [[nodiscard]] size_type capacity() const { return capacity_; }
+  void reserve(size_type size);
+  void shrink_to_fit();
+
+  // Vector Modifiers
+  // void clear();
+  // iterator insert(iterator pos, const_reference value);
+  // void erase(iterator pos);
+  void push_back(const_reference value);
+  // void pop_back();
+  // void swap(vector& other);
 
   // helper
   void bring_to_zero();
-  void add_memory();
+  void add_memory(size_type size, bool flag);
+  size_type add_memory_size(size_type size, bool flag);
   void copy_vector(const Vector& v);
   void remove();
 
- public:
-  [[nodiscard]] bool isEmpty() const { return size_ == 0; }
-  [[nodiscard]] size_t size() const { return size_; }
-  [[nodiscard]] size_t capacity() const { return capacity_; }
-  void pushBack(const_reference value) {
-    if (size_ >= capacity_) add_memory();
-    container_[size_++] = value;
-  }
-  void remove(size_t index) {
-    for (size_t i = index + 1; i < size_; ++i) {
-      container_[i - 1] = container_[i];
-    }
-    --size_;
-  }
-
- public:
-  value_type* begin() { return &container_[0]; }
-  const value_type* begin() const { return &container_[0]; }
-  value_type* end() { return &container_[size_]; }
-  const value_type* end() const { return &container_[size_]; }
-
- public:
-  reference operator[](size_t index) { return container_[index]; }
-  const_reference operator[](size_t index) const { return container_[index]; }
-
  private:
-  size_t size_;
-  size_t capacity_;
+  size_type size_;
+  size_type capacity_;
   value_type* container_;
 };
 }  // namespace s21
