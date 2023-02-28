@@ -2,8 +2,8 @@
 #define SRC_AVL_H_
 
 #include <iostream>
-
 using namespace std;
+
 namespace s21 {
 // AVL tree node
 template <typename T>
@@ -11,6 +11,7 @@ class Node {
  public:
   T key;
   int height;
+  size_t size_;
   Node<T>* left;
   Node<T>* right;
   Node<T>* parent;
@@ -26,18 +27,15 @@ class AVLTree {
   AVLTree();
   ~AVLTree();
   void insert(T key) { root = insert(root, key, nullptr); }
-
   void remove(T key) { root = remove(root, key); }
-
   Node<T>* search(T key) { return search(root, key); }
-
   Node<T>* getRoot() { return root; }
-
-  void output(Node<T>* node, int level);
+  void swap(AVLTree<T>& other) { swap(other.root); }
 
  private:
   Node<T>* root;
   void clear(Node<T>* node);
+  void swap(Node<T>* other);
   int height(Node<T>* node);
   int balanceFactor(Node<T>* node);
   void updateHeight(Node<T>* node);

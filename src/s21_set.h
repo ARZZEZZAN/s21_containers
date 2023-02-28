@@ -18,12 +18,9 @@ class Set {
     using difference_type = std::ptrdiff_t;
     using pointer = T*;
     using reference = T&;
-
     explicit Iterator(Node<T>* node = nullptr) : node_(node) {}
-
     reference operator*() const { return node_->key; }
     pointer operator->() const { return &(node_->key); }
-
     Iterator& operator++() {
       if (node_->right != nullptr) {
         node_ = node_->right;
@@ -38,17 +35,14 @@ class Set {
       }
       return *this;
     }
-
     Iterator operator++(int) {
       Iterator tmp = *this;
       ++(*this);
       return tmp;
     }
-
     friend bool operator==(const Iterator& a, const Iterator& b) {
       return a.node_ == b.node_;
     }
-
     friend bool operator!=(const Iterator& a, const Iterator& b) {
       return a.node_ != b.node_;
     }
@@ -60,12 +54,6 @@ class Set {
   Set() : tree_() {}
   ~Set() {}
 
-  void insert(T key) { tree_.insert(key); }
-
-  void erase(T key) { tree_.remove(key); }
-
-  bool contains(T key) const { return tree_.search(key) != nullptr; }
-
   Iterator begin() {
     Node<T>* node = tree_.getRoot();
     while (node != nullptr && node->left != nullptr) {
@@ -73,8 +61,19 @@ class Set {
     }
     return Iterator(node);
   }
-
   Iterator end() { return Iterator(nullptr); }
+  void insert(T key) { tree_.insert(key); }
+  void erase(T key) { tree_.remove(key); }
+  bool contains(T key) { return tree_.search(key) != nullptr; }
+  void merge(Set<T>& other) {
+    if (this != &other) {
+      for (auto& elem : other) {
+        insert(elem);
+      }
+      other.clear();
+    }
+  }
+  void swap(Set& other) { tree_.swap(other.tree_); }
 
  private:
   AVLTree<T> tree_;

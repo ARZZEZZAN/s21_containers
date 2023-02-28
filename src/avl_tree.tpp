@@ -38,7 +38,7 @@ template <typename T>
 Node<T>* AVLTree<T>::rotateLeft(Node<T>* node) {
   Node<T>* newRoot = node->right;
   node->right = newRoot->left;
-  if (newRoot->right) {
+  if (newRoot->left) {
     newRoot->left->parent = node;
   }
   newRoot->left = node;
@@ -70,9 +70,9 @@ Node<T>* AVLTree<T>::insert(Node<T>* node, T key, Node<T>* parent) {
   if (!node) {
     node = new Node<T>(key);
     node->parent = parent;
+    node->size_++;
     return node;
   }
-
   if (key < node->key) {
     node->left = insert(node->left, key, node);
   } else if (key > node->key) {
@@ -109,6 +109,7 @@ Node<T>* AVLTree<T>::remove(Node<T>* node, T key) {
     min->right = removeMin(right);
     min->left = left;
     updateHeight(min);
+    node->size_--;
     return balance(min);
   }
   updateHeight(node);
@@ -121,13 +122,10 @@ AVLTree<T>::~AVLTree() {
 template <typename T>
 void AVLTree<T>::clear(Node<T>* node) {
   if (node != nullptr) {
-    if (node->left != nullptr) {
-      clear(node->left);
-    }
-    if (node->right != nullptr) {
-      clear(node->right);
-    }
-    delete node;
+    clear(node->left);
+    clear(node->right);
+    node->size_ = 0;
+    node = nullptr;
   }
 }
 template <typename T>
@@ -142,11 +140,7 @@ Node<T>* AVLTree<T>::search(Node<T>* node, T key) {
   }
 }
 template <typename T>
-void AVLTree<T>::output(Node<T>* node, int level) {
-  if (node) {
-    output(node->left, level + 1);
-    for (int i = 0; i < level; i++) cout << "   ";
-    cout << node->key << endl;
-    output(node->right, level + 1);
-  }
+void AVLTree<T>::swap(Node<T>* other) {
+  std::swap(root, other);
+  std::swap(root->size_, other->size_);
 }
