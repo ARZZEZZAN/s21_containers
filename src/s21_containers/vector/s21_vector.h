@@ -5,67 +5,68 @@
 namespace s21 {
 
 template <class T>
-class iterator_Vector;
+class iterator_vector;
 
 template <class T>
-class const_iterator_Vector;
+class const_iterator_vector;
 
 template <class T>
-class Vector {
-  // Vector Member type -- DONE
+class vector {
+  // vector Member type
   using value_type = T;
   using reference = value_type &;
   using const_reference = const value_type &;
-  using iterator = iterator_Vector<T>;
-  using const_iterator = const_iterator_Vector<T>;
+  using iterator = iterator_vector<T>;
+  using const_iterator = const_iterator_vector<T>;
   using size_type = std::size_t;
+  using pointer = T *;
 
  public:
-  // Vector Member functions
-  Vector();
-  Vector(size_type n);
-  Vector(std::initializer_list<value_type> const &items);
-  Vector(const Vector &v);
-  Vector(Vector &&v);
-  ~Vector();
-  Vector &operator=(const Vector &&v);
+  // vector Member functions
+  vector();
+  vector(size_type n);
+  vector(std::initializer_list<value_type> const &items);
+  vector(const vector &v);
+  vector(vector &&v);
+  ~vector();
+  vector &operator=(vector &&v);  // WTF ??????
 
-  // Vector Element access -- DONE
+  // vector Element access
   reference at(size_type pos);
-  reference operator[](size_type pos) { return container_[pos]; }
+  reference operator[](size_type pos);
   const_reference front();
   const_reference back();
-  T *data() { return container_; }
+  pointer data() { return container_; }
 
-  // Vector Iterators -- DONE
+  // vector Iterators -- DONE
   iterator begin() { return iterator(container_); }
   iterator end() { return iterator(container_ + size_); }
   const_iterator begin() const { return const_iterator(container_); }
   const_iterator end() const { return const_iterator(container_ + size_); }
 
-  // Vector Capacity -- DONE
+  // vector Capacity
   bool empty() const { return size_ == 0; }
   size_type size() const { return size_; }
-  size_type max_size() const { return capacity_ * sizeof(T); }
+  size_type max_size() const { return capacity_ * sizeof(value_type); }
   size_type capacity() const { return capacity_; }
   void reserve(size_type size);
   void shrink_to_fit();
 
-  // Vector Modifiers -- DONE
+  // vector Modifiers -- DONE
   void clear() { this->size_ = 0; }
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back() { this->size_ > 0 ? this->size_-- : 0; };
-  void swap(Vector &other);
+  void swap(vector &other);
 
   // helper -- DONE
   void bring_to_zero();
   void add_memory(size_type size, bool flag);
   size_type add_memory_size(size_type size, bool flag);
-  void copy_vector(const Vector &v);
+  void copy_vector(const vector &v);
   void remove();
-  void printVector();
+  void printvector();
 
  private:
   size_type size_;
@@ -74,63 +75,63 @@ class Vector {
 };
 
 template <class T>
-class iterator_Vector {
-  friend class Vector<T>;
-  friend class const_iterator_Vector<T>;
+class iterator_vector {
+  friend class vector<T>;
+  friend class const_iterator_vector<T>;
 
   using value_type = T;
   using pointer = T *;
   using reference = T &;
 
  public:
-  iterator_Vector() { ptr_ = nullptr; }
-  iterator_Vector(pointer ptr) { ptr_ = ptr; }
+  iterator_vector() { ptr_ = nullptr; }
+  iterator_vector(pointer ptr) { ptr_ = ptr; }
 
   value_type &operator*() const { return (*ptr_); }
   pointer operator->() { return ptr_; }
 
-  iterator_Vector &operator++() {
+  iterator_vector &operator++() {
     ptr_++;
     return *this;
   }
 
-  iterator_Vector &operator--() {
+  iterator_vector &operator--() {
     ptr_--;
     return *this;
   }
 
-  iterator_Vector operator++(int) {
-    iterator_Vector tmp = *this;
+  iterator_vector operator++(int) {
+    iterator_vector tmp = *this;
     ++(*this);
     return tmp;
   }
 
-  iterator_Vector operator--(int) {
-    iterator_Vector tmp = *this;
+  iterator_vector operator--(int) {
+    iterator_vector tmp = *this;
     --(*this);
     return tmp;
   }
 
-  iterator_Vector operator+(const size_t value) {
-    iterator_Vector tmp(this->ptr_ + value);
+  iterator_vector operator+(const size_t value) {
+    iterator_vector tmp(this->ptr_ + value);
     return tmp;
   }
 
-  iterator_Vector operator-(const size_t value) {
-    iterator_Vector tmp(this->ptr_ - value);
+  iterator_vector operator-(const size_t value) {
+    iterator_vector tmp(this->ptr_ - value);
     return tmp;
   }
 
-  friend bool operator==(const iterator_Vector &a, const iterator_Vector &b) {
+  friend bool operator==(const iterator_vector &a, const iterator_vector &b) {
     return a.ptr_ == b.ptr_;
   }
 
-  friend bool operator!=(const iterator_Vector &a, const iterator_Vector &b) {
+  friend bool operator!=(const iterator_vector &a, const iterator_vector &b) {
     return a.ptr_ != b.ptr_;
   }
 
-  operator const_iterator_Vector<T>() const {
-    return const_iterator_Vector<T>(ptr_);
+  operator const_iterator_vector<T>() const {
+    return const_iterator_vector<T>(ptr_);
   }
 
  private:
@@ -138,53 +139,53 @@ class iterator_Vector {
 };
 
 template <class T>
-class const_iterator_Vector {
-  friend class Vector<T>;
-  friend class iterator_Vector<T>;
+class const_iterator_vector {
+  friend class vector<T>;
+  friend class iterator_vector<T>;
 
   using value_type = T;
   using pointer = T *;
   using reference = T &;
 
  public:
-  const_iterator_Vector() { ptr_ = nullptr; };
-  const_iterator_Vector(pointer ptr) { ptr_ = ptr; };
+  const_iterator_vector() { ptr_ = nullptr; };
+  const_iterator_vector(pointer ptr) { ptr_ = ptr; };
   value_type operator*() const { return (*ptr_); }
   pointer operator->() { return ptr_; }
 
-  const_iterator_Vector &operator++() {
+  const_iterator_vector &operator++() {
     ptr_++;
     return *this;
   }
 
-  const_iterator_Vector &operator--() {
+  const_iterator_vector &operator--() {
     ptr_--;
     return *this;
   }
 
-  const_iterator_Vector operator++(int) {
-    const_iterator_Vector tmp = *this;
+  const_iterator_vector operator++(int) {
+    const_iterator_vector tmp = *this;
     ++(*this);
     return tmp;
   }
 
-  const_iterator_Vector operator--(int) {
-    const_iterator_Vector tmp = *this;
+  const_iterator_vector operator--(int) {
+    const_iterator_vector tmp = *this;
     --(*this);
     return tmp;
   }
 
-  friend bool operator==(const const_iterator_Vector &a,
-                         const const_iterator_Vector &b) {
+  friend bool operator==(const const_iterator_vector &a,
+                         const const_iterator_vector &b) {
     return a.ptr_ == b.ptr_;
   }
 
-  friend bool operator!=(const const_iterator_Vector &a,
-                         const const_iterator_Vector &b) {
+  friend bool operator!=(const const_iterator_vector &a,
+                         const const_iterator_vector &b) {
     return a.ptr_ != b.ptr_;
   }
 
-  operator iterator_Vector<T>() const { return iterator_Vector<T>(ptr_); }
+  operator iterator_vector<T>() const { return iterator_vector<T>(ptr_); }
 
  private:
   pointer ptr_;
