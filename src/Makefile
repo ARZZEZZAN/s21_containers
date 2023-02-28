@@ -1,48 +1,32 @@
-.PHONY: all clean test s21_list.a check rebuild main
-
+.PHONY: all clear rebuild main
 CC = gcc
-CPP = g++
-CFLAGS = -Wall -Werror -Wextra -std=c++17 --language=c++ -I h -I /usr/local/include/gtest/ -c
-LFLAGS = -std=c++17 -I h -pthread -lstdc++
-UNAME:=$(shell uname -s)
+GCOV = -fprofile-arcs -ftest-coverage
+CFLAGS = -lstdc++ -lgtest -std=c++17 -Wall -Werror -Wextra 
+EXE = unit_tests
+TFN = unit_tests.cc
 
-all: s21_list.a main
-	
-main: s21_list.a
-	@$(CC) $(LFLAGS) main.cc list/s21_list.a -o main
-	@./main
-	@make clean
+all: test leaks gcov_report clean
+
+test: $(TFN) clean
+	@${CC} $<  ${CFLAGS} -o $(EXE)
+	@./$(BUILD)$(EXE)
+
+leaks:
+	leaks --atExit -- ./$(EXE)
+
+gcov_report:
+	gcc  --coverage $(TFN) -o gcov_report -lgtest -lstdc++
+	./gcov_report
+	lcov -t "stest" -o s21_test.info -c -d .
+	genhtml -o report s21_test.info
+	open ./report/index.html
 
 clean:
-	@rm -rf *.o
-	@rm -rf *.h.gch
-	@rm -rf *.a
-	@rm -rf *.out
-	@rm -rf test
-	@rm -rf *.gcda
-	@rm -rf *.dSYM
-	@rm -rf .clang-format
+	@/bin/rm -rf *.o *.a build *.gcno *gcda report *.info main *.dSYM *.out gcov_report $(EXE)
 
-test: build_test
-	@./test
+rebuild: clean all
 
-build_test: clean s21_list.a
-ifeq ($(UNAME), Linux)
-	@$(CPP) $(LFLAGS) gtests.cc s21_list.a -lgtest -lpthread -o test
-else
-	@$(CC) $(LFLAGS) gtests.cc s21_list.a -lgtest -lpthread -o test
-endif
-#the -lstdc++ flag doesn't help when compiling with gcc on Linux, so I just use g++ for build tests
-
-s21_list.a:
-	@$(CC) ${CFLAGS} list/s21_list.h -c list/s21_list.tpp
-# @ar rcs s21_list.a s21_*.o
-	@ar rcs list/s21_list.a s21_list.o
-	@ranlib list/s21_list.a
-	@rm -rf **/*.o
-
-check:
-	@cp ../materials/linters/.clang-format .
-	clang-format -n *.cc *.tpp *.h
-
-rebuild: clean clean s21_list.a
+# build main
+main: clean
+	$(CC) $(CFLAGS) main.cc -o main.out
+	./main.out

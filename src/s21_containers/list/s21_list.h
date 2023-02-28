@@ -4,36 +4,34 @@
 
 namespace s21 {
 
-template <class T>
+template <typename T>
 class list {
   using value_type = T;
   using size_type = std::size_t;
+  using reference = T&;
 
  public:
-  // list();
-  // ~list();
   list();
   list(size_type n);
   list(std::initializer_list<value_type> const& items);
   list(const list& l);
   list(list&& l);
   ~list();
-  operator=(list&& l);
+  list& operator=(list&& l);
 
  private:
   struct Node {
-    T value;
-    Node* prev;
-    Node* next;
+    value_type value_;
+    Node* prev_;
+    Node* next_;
 
-    Node(const T& value) : value(value), prev(nullptr), next(nullptr) {}
+    Node(const value_type& value)
+        : value_(value), prev(nullptr), next(nullptr) {}
   };
 
-  Node* head;
-  Node* tail;
+  Node* head_;
+  Node* tail_;
   size_type size_;
-  size_type capacity_;
-  value_type* container_;
 };
 }  // namespace s21
 #endif  // S21_LIST_H
