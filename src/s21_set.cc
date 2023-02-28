@@ -16,9 +16,7 @@ int main() {
   mySet1.insert(3);
   mySet1.insert(4);
 
-  mySet.clear();
-  mySet.swap(mySet1);
-  if (mySet.contains(1)) {
-    std::cout << "hi" << std::endl;
+  if (mySet.contains(5)) {
+    std::cout << mySet.find(5) << std::endl;
   }
 }

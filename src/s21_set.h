@@ -78,12 +78,12 @@ class Set {
       this->tree_.setRoot(nullptr);
     }
   }
-  void swap(Set& other) { tree_.swap(other.tree_); }
+  void swap(Set<T>& other) { tree_.swap(other.tree_); }
 
   void insert(T key) { tree_.insert(key); }
-  void erase(T key) { tree_.remove(key); }
+  void erase(Iterator pos) { tree_.remove(pos); }
 
-  Iterator find(const T& key);
+  Iterator find(const T& key) { return tree_.search(key); }
 
  private:
   AVLTree<T> tree_;
