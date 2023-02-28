@@ -144,6 +144,9 @@ Node<T>* AVLTree<T>::search(Node<T>* node, T key) {
   }
 }
 template <typename T>
-void AVLTree<T>::swap(Node<T>* other) {
-  std::swap(root, other);
+void AVLTree<T>::setRoot(Node<T>* root) {
+  this->root = root;
+  if (this->root != nullptr) {
+    this->root->parent = nullptr;
+  }
 }

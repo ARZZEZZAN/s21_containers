@@ -62,9 +62,7 @@ class Set {
     return Iterator(node);
   }
   Iterator end() { return Iterator(nullptr); }
-  void insert(T key) { tree_.insert(key); }
-  void erase(T key) { tree_.remove(key); }
-  bool contains(T key) { return tree_.search(key) != nullptr; }
+  bool contains(const T& key) { return tree_.search(key) != nullptr; }
   void merge(Set<T>& other) {
     if (this != &other) {
       for (auto& elem : other) {
@@ -81,6 +79,11 @@ class Set {
     }
   }
   void swap(Set& other) { tree_.swap(other.tree_); }
+
+  void insert(T key) { tree_.insert(key); }
+  void erase(T key) { tree_.remove(key); }
+
+  Iterator find(const T& key);
 
  private:
   AVLTree<T> tree_;

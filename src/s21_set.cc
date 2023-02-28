@@ -16,9 +16,9 @@ int main() {
   mySet1.insert(3);
   mySet1.insert(4);
 
-  // mySet.clear();
+  mySet.clear();
   mySet.swap(mySet1);
-  if (mySet1.contains(2)) {
+  if (mySet.contains(1)) {
     std::cout << "hi" << std::endl;
   }
 }
