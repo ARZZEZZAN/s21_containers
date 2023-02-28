@@ -70,7 +70,14 @@ class Set {
       for (auto& elem : other) {
         insert(elem);
       }
-      other.clear();
+    }
+    other.clear();
+  }
+  void clear() {
+    if (this->tree_.getRoot()) {
+      Node<T>* root = this->tree_.getRoot();
+      this->tree_.clear(root);
+      this->tree_.setRoot(nullptr);
     }
   }
   void swap(Set& other) { tree_.swap(other.tree_); }

@@ -29,12 +29,18 @@ class AVLTree {
   void insert(T key) { root = insert(root, key, nullptr); }
   void remove(T key) { root = remove(root, key); }
   Node<T>* search(T key) { return search(root, key); }
-  Node<T>* getRoot() { return root; }
+  Node<T>* getRoot() { return this->root; }
+  void setRoot(Node<T>* root) {
+    this->root = root;
+    if (this->root != nullptr) {
+      this->root->parent = nullptr;
+    }
+  }
   void swap(AVLTree<T>& other) { swap(other.root); }
+  void clear(Node<T>* node);
 
  private:
   Node<T>* root;
-  void clear(Node<T>* node);
   void swap(Node<T>* other);
   int height(Node<T>* node);
   int balanceFactor(Node<T>* node);

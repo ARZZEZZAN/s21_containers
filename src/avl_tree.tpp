@@ -4,6 +4,7 @@ template <typename T>
 AVLTree<T>::AVLTree() {
   root = nullptr;
 }
+
 template <typename T>
 int AVLTree<T>::height(Node<T>* node) {
   if (!node) return 0;
@@ -117,16 +118,19 @@ Node<T>* AVLTree<T>::remove(Node<T>* node, T key) {
 }
 template <typename T>
 AVLTree<T>::~AVLTree() {
-  clear(root);
+  if (root) {
+    clear(root);
+  }
 }
 template <typename T>
 void AVLTree<T>::clear(Node<T>* node) {
-  if (node != nullptr) {
+  if (node) {
     clear(node->left);
     clear(node->right);
-    node->size_ = 0;
-    node = nullptr;
+    node->size_--;
+    delete node;
   }
+  node = nullptr;
 }
 template <typename T>
 Node<T>* AVLTree<T>::search(Node<T>* node, T key) {
@@ -141,6 +145,7 @@ Node<T>* AVLTree<T>::search(Node<T>* node, T key) {
 }
 template <typename T>
 void AVLTree<T>::swap(Node<T>* other) {
-  std::swap(root, other);
-  std::swap(root->size_, other->size_);
+  Node<T>* tmp = root;
+  root = other;
+  other = tmp;
 }
