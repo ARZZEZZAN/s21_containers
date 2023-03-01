@@ -11,13 +11,14 @@ template <typename T>
 class Set {
  public:
   // iterator class
+  using size_type = size_t;
+  using iterator_category = std::forward_iterator_tag;
+  using value_type = T;
+  using difference_type = std::ptrdiff_t;
+  using pointer = T*;
+  using reference = T&;
   class Iterator {
    public:
-    using iterator_category = std::forward_iterator_tag;
-    using value_type = T;
-    using difference_type = std::ptrdiff_t;
-    using pointer = T*;
-    using reference = T&;
     explicit Iterator(Node<T>* node = nullptr) : node_(node) {}
     reference operator*() const { return node_->key; }
     pointer operator->() const { return &(node_->key); }
@@ -79,11 +80,11 @@ class Set {
     }
   }
   void swap(Set<T>& other) { tree_.swap(other.tree_); }
+  Iterator find(const T& key) { return Iterator(tree_.search(key)); }
+  size_type size() { return tree_.getRoot()->size_; }
 
   void insert(T key) { tree_.insert(key); }
   void erase(Iterator pos) { tree_.remove(pos); }
-
-  Iterator find(const T& key) { return tree_.search(key); }
 
  private:
   AVLTree<T> tree_;
