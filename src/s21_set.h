@@ -18,6 +18,7 @@ class Set {
   using difference_type = std::ptrdiff_t;
   using pointer = T*;
   using reference = T&;
+  using Allocator = std::allocator<T>;
   class Iterator {
    public:
     explicit Iterator(Node<T>* node = nullptr) : node_(node) {}
@@ -83,13 +84,14 @@ class Set {
   void swap(Set<T>& other) { tree_.swap(other.tree_); }
   Iterator find(const T& key) { return Iterator(tree_.search(key)); }
   size_type size() { return tree_.getRoot()->size_; }
-  size_type max_size() { return std::numeric_limits<size_type>::max(); }
+  size_type max_size() { return allocator.max_size() / 10; }
 
   void insert(T key) { tree_.insert(key); }
   void erase(Iterator pos) { tree_.remove(pos); }
 
  private:
   AVLTree<T> tree_;
+  Allocator allocator;
 };
 
 }  // namespace s21

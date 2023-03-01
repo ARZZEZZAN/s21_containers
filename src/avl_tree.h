@@ -2,7 +2,6 @@
 #define SRC_AVL_H_
 
 #include <iostream>
-using namespace std;
 
 namespace s21 {
 // AVL tree node
