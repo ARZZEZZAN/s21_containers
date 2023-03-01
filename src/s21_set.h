@@ -12,12 +12,14 @@ template <typename T>
 class Set {
  public:
   // iterator class
+  using key_type = T;
+  using value_type = T;
+  using reference = T&;
+  using const_reference = const reference;
   using size_type = size_t;
   using iterator_category = std::forward_iterator_tag;
-  using value_type = T;
   using difference_type = std::ptrdiff_t;
   using pointer = T*;
-  using reference = T&;
   using Allocator = std::allocator<T>;
   class Iterator {
    public:
