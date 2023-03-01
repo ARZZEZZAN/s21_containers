@@ -46,7 +46,7 @@ vector<value_type>::~vector() {
 }
 
 template <class value_type>
-vector<value_type>& vector<value_type>::operator=(vector&& v) {
+typename s21::vector<value_type>& vector<value_type>::operator=(vector&& v) {
   if (this != &v) {
     this->remove();
     this->size_ = v.size_;
@@ -189,13 +189,6 @@ template <class value_type>
 typename vector<value_type>::size_type vector<value_type>::add_memory_size(
     size_type size, bool flag) {
   size_type n = 2;
-  if (this->size_ > 1e+5) {
-    n = 1.0;
-  } else if (this->size_ > 1e+4) {
-    n = 1.3;
-  } else if (this->size_ > 1e+3) {
-    n = 1.5;
-  }
   return flag ? size : n * (this->capacity_ > 0 ? this->capacity_ : n);
 }
 

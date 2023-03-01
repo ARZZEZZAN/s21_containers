@@ -31,7 +31,7 @@ class vector {
   vector(const vector &v);
   vector(vector &&v);
   ~vector();
-  vector &operator=(vector &&v);  // WTF ??????
+  vector &operator=(vector &&v);
 
   // vector Element access
   reference at(size_type pos);

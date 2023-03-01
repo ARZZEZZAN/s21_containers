@@ -133,6 +133,26 @@ TEST(vector, Destructor) {
   EXPECT_EQ(0, s21_v.data());
 }
 
+TEST(vector, Operator_move_1) {
+  s21::vector<int> s21_v1{1, 2, 3};
+  s21::vector<int> s21_v2;
+  s21_v2 = std::move(s21_v1);
+  EXPECT_EQ(s21_v2.size(), 3);
+  EXPECT_EQ(s21_v2.at(0), 1);
+  EXPECT_EQ(s21_v2.at(1), 2);
+  EXPECT_EQ(s21_v2.at(2), 3);
+}
+
+TEST(vector, Operator_move_2) {
+  s21::vector<int> s21_v1{1, 2, 3};
+  s21::vector<int> s21_v2{4, 5, 6};
+  s21_v2 = std::move(s21_v1);
+  EXPECT_EQ(s21_v2.size(), 3);
+  EXPECT_EQ(s21_v2.at(0), 1);
+  EXPECT_EQ(s21_v2.at(1), 2);
+  EXPECT_EQ(s21_v2.at(2), 3);
+}
+
 TEST(vector, Element_at) {
   s21::vector<int> s21_v{1, 2, 3, 4, 5};
   std::vector<int> std_v{1, 2, 3, 4, 5};
