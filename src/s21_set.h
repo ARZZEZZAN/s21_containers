@@ -83,6 +83,7 @@ class Set {
   Iterator find(const T& key) { return Iterator(tree_.search(key)); }
   size_type size() { return tree_.getRoot()->size_; }
 
+  size_type max_size() {}
   void insert(T key) { tree_.insert(key); }
   void erase(Iterator pos) { tree_.remove(pos); }
 

@@ -37,6 +37,7 @@ class AVLTree {
  private:
   Node<T>* root;
   int height(Node<T>* node);
+  void updateSize(Node<T>* node);
   int balanceFactor(Node<T>* node);
   void updateHeight(Node<T>* node);
   Node<T>* rotateLeft(Node<T>* node);
