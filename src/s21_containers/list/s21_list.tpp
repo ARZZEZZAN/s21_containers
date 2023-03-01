@@ -1,113 +1,103 @@
 #include "s21_list.h"
+
 using namespace s21;
 
 // Constructor
 template <typename value_type>
 list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {}
 
-// Destructor
 template <typename value_type>
-list<value_type>::~list() {
-  // clear();
+list<value_type>::list(size_type n) {
+  for (size_type i = 0; i < n; ++i) {
+    // TODO раскоментить после реализации push_back();
+    // push_back(item);
+  }
 }
-
-// Copy constructor
 template <typename value_type>
-list<value_type>::list(const value_type& other) : list() {
-  // for (const auto& item : other) {
-  //   push_back(item);
+list<value_type>::list(std::initializer_list<value_type> const& items)
+    : head_(nullptr), tail_(nullptr), size_(0) {
+  // for (const auto& item : items) {
+  //   // push_back(item); TODO
   // }
 }
 
-// Copy assignment operator
 template <typename value_type>
-list<value_type>::list<value_type>& operator=(const list& other) {
-  if (this != &other) {
+list<value_type>::list(const list& l)
+    : head_(nullptr), tail_(nullptr), size_(0) {
+  for (const auto& item : l) {
+    // TODO раскоментить после реализации push_back();
+    // push_back(item);
+  }
+}
+
+template <typename value_type>
+list<value_type>::list(list&& l) : head_(nullptr), tail_(nullptr), size_(0) {
+  std::swap(this->head_, l.head_);
+  std::swap(this->tail_, l.tail_);
+  std::swap(this->size_, l.size_);
+}
+
+template <typename value_type>
+list<value_type>::~list() {
+  clear();
+}
+
+template <typename value_type>
+typename list<value_type>::list& list<value_type>::operator=(list&& l) {
+  if (this != &l) {
     clear();
-    for (const auto& item : other) {
-      push_back(item);
+    std::swap(head_, l.head_);
+    std::swap(tail_, l.tail_);
+    std::swap(size_, l.size_);
+  }
+  return *this;
+}
+
+template <typename value_type>
+bool list<value_type>::empty() const {
+  return size_ == 0;
+}
+
+template <typename value_type>
+void list<value_type>::clear() {
+  while (!empty()) {
+    pop_back();
+  }
+}
+
+// iterator insert(iterator pos, const_reference value);
+// void erase(iterator pos);
+// void push_back(const_reference value);
+
+template <typename value_type>
+void list<value_type>::pop_back() {
+  if (!empty()) {
+    auto last_node = tail_;
+    tail_ = last_node->prev_;
+    if (tail_) {
+      tail_->next_ = nullptr;
+    } else {
+      head_ = nullptr;
     }
+    delete last_node;
+    --size_;
   }
-  return *this;
 }
 
-// Move constructor
-list(list&& other) noexcept : list() { swap(*this, other); }
+// void push_front(const_reference value);
+// void pop_front();
+// void swap(list& other);
+// void merge(list& other);
+// void splice(const_iterator pos, list& other);
+// void reverse();
+// void unique();
+// void sort();
 
-// Move assignment operator
-list& operator=(list&& other) noexcept {
-  swap(*this, other);
-  return *this;
-}
-
-// Push an element to the back of the list
-void push_back(const T& value) {
-  Node* new_node = new Node(value);
-  if (tail == nullptr) {
-    head = tail = new_node;
-  } else {
-    tail->next = new_node;
-    new_node->prev = tail;
-    tail = new_node;
-  }
-  size++;
-}
-
-// Remove all elements from the list
-void clear() {
-  while (head != nullptr) {
-    Node* next_node = head->next;
-    delete head;
-    head = next_node;
-  }
-  tail = nullptr;
-  size = 0;
-}
-
-// Swap the contents of two lists
-friend void swap(list& a, list& b) noexcept {
-  using std::swap;
-  swap(a.head, b.head);
-  swap(a.tail, b.tail);
-  swap(a.size, b.size);
-}
-
-// Iterator
-class Iterator {
- public:
-  Iterator(Node* node) : node(node) {}
-
-  Iterator& operator++() {
-    node = node->next;
-    return *this;
-  }
-
-  bool operator!=(const Iterator& other) const { return node != other.node; }
-
-  T& operator*() const { return node->value; }
-
- private:
-  Node* node;
-};
-
-// Begin iterator
-Iterator begin() const { return Iterator(head); }
-
-// End iterator
-Iterator end() const { return Iterator(nullptr); }
-
-private:
-// Node struct for the linked list
-struct Node {
-  T value;
-  Node* prev;
-  Node* next;
-
-  Node(const T& value) : value(value), prev(nullptr), next(nullptr) {}
-};
-
-Node* head;
-Node* tail;
-size_t size;
-}
-;
+// TODO сделать Iterator
+// template <typename value_type>
+// void print_list(list<value_type>& l) {
+//   for (auto i = l.begin(); i != l.end(); ++i) {
+//     std::cout << *i << " ";
+//   }
+//   std::cout << std::endl;
+// }

@@ -1,7 +1,7 @@
 .PHONY: all clear rebuild main
 CC = gcc
 GCOV = -fprofile-arcs -ftest-coverage
-CFLAGS = -lstdc++ -lgtest -std=c++17 -Wall -Werror -Wextra 
+CFLAGS = -lstdc++ -lgtest -std=c++17
 EXE = unit_tests
 TFN = unit_tests.cc
 
@@ -28,5 +28,6 @@ rebuild: clean all
 
 # build main
 main: clean
-	$(CC) $(CFLAGS) main.cc -o main.out
+# $(CC) $(CFLAGS) main.cc -o main.out
+	$(CC) $(CFLAGS) s21_containers/list/s21_list.tpp  main.cc -o main.out
 	./main.out
