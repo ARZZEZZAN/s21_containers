@@ -1,6 +1,5 @@
 #include "s21_vector.h"
-using namespace s21;
-
+namespace s21 {
 // vector Member functions
 template <class value_type>
 vector<value_type>::vector() {
@@ -117,6 +116,10 @@ template <class value_type>
 typename vector<value_type>::iterator vector<value_type>::insert(
     iterator pos, const_reference value) {
   size_type position = &(*pos) - this->container_;
+  size_type zero = 0;
+  if (zero > position || position > this->size_) {
+    throw std::out_of_range("Index out ot range");
+  }
   if (this->size_ + 1 >= this->capacity_) {
     this->add_memory(this->capacity_ * 2, true);
   }
@@ -134,9 +137,9 @@ typename vector<value_type>::iterator vector<value_type>::insert(
 template <class value_type>
 void vector<value_type>::erase(iterator pos) {
   size_type position = &(*pos) - this->container_;
-  size_type less_zero = 0;
-  if (less_zero > position) {
-    position = 0;
+  size_type zero = 0;
+  if (zero > position || position > this->size_) {
+    throw std::out_of_range("Index out ot range");
   }
   for (size_type i = position + 1; i < this->size_; i++) {
     this->container_[i - 1] = this->container_[i];
@@ -158,6 +161,7 @@ void vector<value_type>::swap(vector& other) {
   std::swap(other.capacity_, this->capacity_);
   std::swap(other.container_, this->container_);
 }
+
 // Helpers
 template <class value_type>
 void vector<value_type>::copy_vector(const vector& v) {
@@ -210,14 +214,4 @@ void vector<value_type>::remove() {
   this->container_ = nullptr;
   this->size_ = this->capacity_ = 0;
 }
-
-template <class value_type>
-void vector<value_type>::printvector() {
-  std::cout << "size = " << this->size_ << std::endl;
-  std::cout << "capacity_ = " << this->capacity_ << std::endl;
-  std::cout << "container_: " << std::endl;
-  for (size_type i = 0; i < this->size_; i++) {
-    std::cout << "      i:" << i << " = " << this->container_[i] << std::endl;
-  }
-  std::cout << std::endl;
-}
+}  // namespace s21

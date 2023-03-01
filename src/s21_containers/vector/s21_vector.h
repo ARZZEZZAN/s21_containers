@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
+#include <initializer_list>
 #include <iostream>
+using namespace std;
 
 namespace s21 {
 
@@ -38,7 +40,7 @@ class vector {
   const_reference back();
   pointer data() { return container_; }
 
-  // vector Iterators -- DONE
+  // vector Iterators
   iterator begin() { return iterator(container_); }
   iterator end() { return iterator(container_ + size_); }
   const_iterator begin() const { return const_iterator(container_); }
@@ -52,7 +54,7 @@ class vector {
   void reserve(size_type size);
   void shrink_to_fit();
 
-  // vector Modifiers -- DONE
+  // vector Modifiers
   void clear() { this->size_ = 0; }
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
@@ -60,18 +62,17 @@ class vector {
   void pop_back() { this->size_ > 0 ? this->size_-- : 0; };
   void swap(vector &other);
 
-  // helper -- DONE
+ private:
+  size_type size_;
+  size_type capacity_;
+  value_type *container_;
+
+  // helper
   void bring_to_zero();
   void add_memory(size_type size, bool flag);
   size_type add_memory_size(size_type size, bool flag);
   void copy_vector(const vector &v);
   void remove();
-  void printvector();
-
- private:
-  size_type size_;
-  size_type capacity_;
-  value_type *container_;
 };
 
 template <class T>
