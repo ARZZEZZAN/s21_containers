@@ -97,7 +97,7 @@ template <class value_type>
 void vector<value_type>::reserve(size_type size) {
   size_type less_zero = 0;
   if (less_zero > size) {
-    throw std::out_of_range("bad_array_new_length");
+    throw std::out_of_range("Index out of range");
   }
   if (size > this->size_) {
     this->add_memory(size, true);

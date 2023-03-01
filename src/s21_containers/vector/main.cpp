@@ -4,14 +4,11 @@ using namespace s21;
 using namespace std;
 
 int main() {
-  s21::vector<int> s21_v{1, 2, 3, 4};
-  s21::vector<int> s21_v_copy{1, 2, 3, 4, 5, 6};
+  s21::vector<int> s21_v{110};
 
-  std::vector<int> std_v{1, 2, 3, 4};
-  std::vector<int> std_v_copy{1, 2, 3, 4, 5, 6};
-
-  s21_v_copy.swap(s21_v);
-  std_v_copy.swap(std_v);
+  // s21_v.push_back(5);
+  std::cout << s21_v.size() << std::endl;
+  // EXPECT_EQ(s21_v.size(), 1001);
   return 0;
 }
 

@@ -1,19 +1,19 @@
 .PHONY: all clear rebuild
 CC = gcc
 GCOV = -fprofile-arcs -ftest-coverage
-CFLAGS = -lstdc++ -lgtest -std=c++17 -Wall -Werror -Wextra 
+CFLAGS = -lstdc++ -lgtest -std=c++17 -Wall -Werror -Wextra -fsanitize=address -g
 EXE = unit_tests
 TFN = unit_tests.cc
 
 all: test leaks gcov_report clean
 
-test: $(TFN) clean
+test: $(TFN)
 	@${CC} $<  ${CFLAGS} -o $(EXE)
 	@./$(BUILD)$(EXE)
 
-leaks:
+leaks: test
 	leaks --atExit -- ./$(EXE)
-
+ 
 gcov_report:
 	gcc  --coverage $(TFN) -o gcov_report -lgtest -lstdc++
 	./gcov_report
