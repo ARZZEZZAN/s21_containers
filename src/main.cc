@@ -1,5 +1,5 @@
-#include <iostream>
-// #include <list>
+// #include <iostream>
+#include <list>
 
 #include "s21_containers/list/s21_list.tpp"
 // namespace s21 {
@@ -18,7 +18,7 @@
 //  private:
 //   value_type value;
 // };
-// namespace s21;
+// using namespace s21;
 int main() {
   // s21::list<int>* gt = new s21::list<int>(1468588943);
   // std::cout << gt->getValue();
@@ -26,8 +26,11 @@ int main() {
   // s21::list<int> l;
   // l.hui = 2;
   // std::cout << l.hui;
-  s21::list<int> l = {2, 2, 8};
-
+  s21::list<int> l = {2, 3, 4, 2, 5, 3, 4, 2, 5, 3, 4, 2, 5};
+  std::list<int> l2;
+  l.push_back(3);
+  l.push_front(3);
+  l2.push_back(3);
   // s21::print_list(l);
   // s21::print_list(l);
   // for (auto item : l) {
@@ -35,7 +38,8 @@ int main() {
   // }
   // std::cout << l.size() << endl;
 
-  // std::cout << l.size() << endl;
+  std::cout << "my " << sizeof(l, l2) << std::endl;
+  std::cout << "std " << sizeof(l2) << std::endl;
   return 0;
 }
 // 1468588943

@@ -1,19 +1,20 @@
-.PHONY: all clear rebuild main
+.PHONY: all clear rebuild
 CC = gcc
 GCOV = -fprofile-arcs -ftest-coverage
-CFLAGS = -lstdc++ -lgtest -std=c++17
-EXE = unit_tests
-TFN = unit_tests.cc
+# CFLAGS = -lstdc++ -lgtest -std=c++17
+CFLAGS = -lstdc++ -lgtest -std=c++17 -Wall -Werror -Wextra
+EXE = main
+TFN = main.cc
 
-all: test leaks gcov_report clean
+all: clean test
 
-test: $(TFN) clean
+test: $(TFN)
 	@${CC} $<  ${CFLAGS} -o $(EXE)
-	@./$(BUILD)$(EXE)
+	@./$(EXE)
 
-leaks:
+leaks: test
 	leaks --atExit -- ./$(EXE)
-
+ 
 gcov_report:
 	gcc  --coverage $(TFN) -o gcov_report -lgtest -lstdc++
 	./gcov_report
@@ -25,9 +26,3 @@ clean:
 	@/bin/rm -rf *.o *.a build *.gcno *gcda report *.info main *.dSYM *.out gcov_report $(EXE)
 
 rebuild: clean all
-
-# build main
-main: clean
-# $(CC) $(CFLAGS) main.cc -o main.out
-	$(CC) $(CFLAGS) s21_containers/list/s21_list.tpp  main.cc -o main.out
-	./main.out

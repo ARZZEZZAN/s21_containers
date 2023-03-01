@@ -12,7 +12,6 @@ class list {
   using size_type = std::size_t;
 
  public:
-  value_type hui;
   list();
   list(size_type n);
   list(std::initializer_list<value_type> const& items);
@@ -22,13 +21,13 @@ class list {
 
   list& operator=(list&& l);
 
-  bool empty() const;
-  void clear();
+  bool empty() const;  //
+  void clear();        //
 
   // iterator insert(iterator pos, const_reference value);
   // void erase(iterator pos);
-  void push_back(const_reference value);
-  void pop_back();
+  void push_back(const_reference value);  //
+  void pop_back();                        //
   void push_front(const_reference value);
   void pop_front();
   void swap(list& other);
@@ -57,46 +56,7 @@ class list {
 }  // namespace s21
 #endif  // S21_LIST_H
 
-// template <typename T>
-// void list<T>::push_back(const value_type& value) {
-//   auto new_node = new Node(value);
-//   if (empty()) {
-//     head_ = new_node;
-//   } else {
-//     new_node->prev_ = tail_;
-//     tail_->next_ = new_node;
-//   }
-//   tail_ = new_node;
-//   ++size_;
-// }
 
-// template <typename T>
-// void list<T>::pop_back() {
-//   if (!empty()) {
-//     auto last_node = tail_;
-//     tail_ = last_node->prev_;
-//     if (tail_) {
-//       tail_->next_ = nullptr;
-//     } else {
-//       head_ = nullptr;
-//     }
-//     delete last_node;
-//     --size_;
-//   }
-// }
-
-// template <typename T>
-// void list<T>::push_front(const value_type& value) {
-//   auto new_node = new Node(value);
-//   if (empty()) {
-//     tail_ = new_node;
-//   } else {
-//     new_node->next_ = head_;
-//     head_->prev_ = new_node;
-//   }
-//   head_ = new_node;
-//   ++size_;
-// }
 
 // template <typename T>
 // void list<T>::pop_front() {

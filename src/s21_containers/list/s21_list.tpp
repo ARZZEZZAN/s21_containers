@@ -9,24 +9,23 @@ list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {}
 template <typename value_type>
 list<value_type>::list(size_type n) {
   for (size_type i = 0; i < n; ++i) {
-    // TODO раскоментить после реализации push_back();
-    // push_back(item);
+    push_back(value_type());
   }
 }
+
 template <typename value_type>
 list<value_type>::list(std::initializer_list<value_type> const& items)
     : head_(nullptr), tail_(nullptr), size_(0) {
-  // for (const auto& item : items) {
-  //   // push_back(item); TODO
-  // }
+  for (const auto& item : items) {
+    push_back(item);
+  }
 }
 
 template <typename value_type>
 list<value_type>::list(const list& l)
     : head_(nullptr), tail_(nullptr), size_(0) {
   for (const auto& item : l) {
-    // TODO раскоментить после реализации push_back();
-    // push_back(item);
+    push_back(item);
   }
 }
 
@@ -67,7 +66,19 @@ void list<value_type>::clear() {
 
 // iterator insert(iterator pos, const_reference value);
 // void erase(iterator pos);
-// void push_back(const_reference value);
+
+template <typename value_type>
+void list<value_type>::push_back(const value_type& value) {
+  auto new_node = new Node(value);
+  if (empty()) {
+    head_ = new_node;
+  } else {
+    new_node->prev_ = tail_;
+    tail_->next_ = new_node;
+  }
+  tail_ = new_node;
+  ++size_;
+}
 
 template <typename value_type>
 void list<value_type>::pop_back() {
@@ -84,7 +95,19 @@ void list<value_type>::pop_back() {
   }
 }
 
-// void push_front(const_reference value);
+template <typename value_type>
+void list<value_type>::push_front(const value_type& value) {
+  auto new_node = new Node(value);
+  if (empty()) {
+    tail_ = new_node;
+  } else {
+    new_node->next_ = head_;
+    head_->prev_ = new_node;
+  }
+  head_ = new_node;
+  ++size_;
+}
+
 // void pop_front();
 // void swap(list& other);
 // void merge(list& other);
