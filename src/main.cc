@@ -27,10 +27,14 @@ int main() {
   // l.hui = 2;
   // std::cout << l.hui;
   s21::list<int> l = {2, 3, 4, 2, 5, 3, 4, 2, 5, 3, 4, 2, 5};
-  std::list<int> l2;
+  s21::list<int> l2 = {2, 3, 4, 2, 5, 3, 4, 2, 5, 3, 4, 2, 5};
+  std::list<int> l3;
   l.push_back(3);
   l.push_front(3);
-  l2.push_back(3);
+  l.pop_front();
+  l.swap(l2);
+
+  l3.push_back(3);
   // s21::print_list(l);
   // s21::print_list(l);
   // for (auto item : l) {

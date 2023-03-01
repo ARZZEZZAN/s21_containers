@@ -58,6 +58,16 @@ bool list<value_type>::empty() const {
 }
 
 template <typename value_type>
+typename list<value_type>::size_type list<value_type>::size() {
+  return size_;
+}
+
+template <typename value_type>
+typename list<value_type>::size_type list<value_type>::max_size() {
+  return std::numeric_limits<size_type>::max();
+}
+
+template <typename value_type>
 void list<value_type>::clear() {
   while (!empty()) {
     pop_back();
@@ -68,50 +78,79 @@ void list<value_type>::clear() {
 // void erase(iterator pos);
 
 template <typename value_type>
-void list<value_type>::push_back(const value_type& value) {
-  auto new_node = new Node(value);
+void list<value_type>::push_back(const_reference value) {
+  Node* new_node = new Node(value);
   if (empty()) {
     head_ = new_node;
+    tail_ = new_node;
   } else {
     new_node->prev_ = tail_;
     tail_->next_ = new_node;
+    tail_ = new_node;
   }
-  tail_ = new_node;
-  ++size_;
+  size_++;
 }
 
 template <typename value_type>
 void list<value_type>::pop_back() {
-  if (!empty()) {
-    auto last_node = tail_;
-    tail_ = last_node->prev_;
-    if (tail_) {
-      tail_->next_ = nullptr;
-    } else {
-      head_ = nullptr;
-    }
-    delete last_node;
-    --size_;
+  if (empty()) {
+    throw std::out_of_range("list is empty");
   }
+  Node* last_node = tail_;
+  if (size_ == 1) {
+    head_ = nullptr;
+    tail_ = nullptr;
+  } else {
+    tail_ = last_node->prev_;
+    tail_->next_ = nullptr;
+  }
+  delete last_node;
+  size_--;
 }
 
 template <typename value_type>
-void list<value_type>::push_front(const value_type& value) {
-  auto new_node = new Node(value);
+void list<value_type>::push_front(const_reference value) {
+  Node* new_node = new Node(value);
   if (empty()) {
+    head_ = new_node;
     tail_ = new_node;
   } else {
     new_node->next_ = head_;
     head_->prev_ = new_node;
+    head_ = new_node;
   }
-  head_ = new_node;
-  ++size_;
+  size_++;
 }
 
-// void pop_front();
-// void swap(list& other);
-// void merge(list& other);
-// void splice(const_iterator pos, list& other);
+template <typename value_type>
+void list<value_type>::pop_front() {
+  if (empty()) {
+    throw std::out_of_range("list is empty");
+  }
+  Node* first_node = head_;
+  if (size_ == 1) {
+    head_ = nullptr;
+    tail_ = nullptr;
+  } else {
+    head_ = first_node->next_;
+    head_->prev_ = nullptr;
+  }
+  delete first_node;
+  size_--;
+}
+
+template <typename value_type>
+void list<value_type>::swap(list& other) {
+  using std::swap;
+  swap(this->head_, other.head_);
+  swap(this->tail_, other.tail_);
+  swap(this->size_, other.size_);
+}
+
+template <typename value_type>
+void list<value_type>::merge(list& other) {}
+
+// void splice(const_iterator pos, list& other); TODO жду итераторы
 // void reverse();
 // void unique();
 // void sort();
