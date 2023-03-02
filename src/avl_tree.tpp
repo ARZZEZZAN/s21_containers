@@ -25,7 +25,7 @@ template <typename T>
 Node<T>* AVLTree<T>::rotateRight(Node<T>* node) {
   Node<T>* newRoot = node->left;
   node->left = newRoot->right;
-  if (newRoot->left) {
+  if (newRoot->right) {
     newRoot->right->parent = node;
   }
   newRoot->right = node;
@@ -157,4 +157,8 @@ void AVLTree<T>::updateSize(Node<T>* node) {
   if (node->parent) {
     updateSize(node->parent);
   }
+}
+template <typename T>
+void AVLTree<T>::insert(T key) {
+  root = insert(root, key, nullptr);
 }

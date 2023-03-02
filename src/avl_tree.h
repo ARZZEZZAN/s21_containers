@@ -28,7 +28,7 @@ class AVLTree {
  public:
   AVLTree();
   ~AVLTree();
-  void insert(T key) { root = insert(root, key, nullptr); }
+  void insert(T key);
   void remove(T key) { root = remove(root, key); }
   Node<T>* search(T key) { return search(root, key); }
   Node<T>* getRoot() { return this->root; }

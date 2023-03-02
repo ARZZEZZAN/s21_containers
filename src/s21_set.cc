@@ -10,13 +10,14 @@ int main() {
   mySet.insert(3);
   mySet.insert(10);
   mySet.insert(-4);
+  mySet.insert(-5);
 
   mySet1.insert(1);
   mySet1.insert(2);
   mySet1.insert(3);
   mySet1.insert(4);
 
-  std::cout << *(mySet.begin()++) << std::endl;
+  // std::cout << *mySet.insert(-5).first << std::endl;
 
   // for (auto i : mySet) {
   //   std::cout << i << std::endl;
