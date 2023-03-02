@@ -28,16 +28,18 @@ class AVLTree {
  public:
   AVLTree();
   ~AVLTree();
-  void insert(T key);
+  Node<T>* insert(T key);
   void remove(T key) { root = remove(root, key); }
   Node<T>* search(T key) { return search(root, key); }
   Node<T>* getRoot() { return this->root; }
   void setRoot(Node<T>* root);
   void swap(AVLTree<T>& other) { std::swap(root, other.root); }
   void clear(Node<T>* node);
+  bool getInserted() { return inserted; }
 
  private:
   Node<T>* root;
+  bool inserted;
   int height(Node<T>* node);
   void updateSize(Node<T>* node);
   int balanceFactor(Node<T>* node);

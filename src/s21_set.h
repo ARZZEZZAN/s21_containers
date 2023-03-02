@@ -105,16 +105,16 @@ class Set {
     return false;
   }
   void erase(Iterator pos) { tree_.remove(*pos); }
-  void insert(T key) { tree_.insert(key); }
-  // std::pair<Iterator, bool> insert(const value_type& value) {
-  //   std::pair<Iterator, bool> result;
-  //   if (this->tree_.insert(value) != nullptr) {
-  //     result = std::pair<Iterator, bool>(find(value), true);
-  //   } else {
-  //     result = std::pair<Iterator, bool>(find(value), false);
-  //   }
-  //   return result;
-  // }
+  // void insert(T key) { tree_.insert(key); }
+  std::pair<Iterator, bool> insert(const value_type& value) {
+    std::pair<Iterator, bool> result;
+    if (this->tree_.getInserted()) {
+      result = std::pair<Iterator, bool>(find(value), true);
+    } else {
+      result = std::pair<Iterator, bool>(find(value), false);
+    }
+    return result;
+  }
 
  private:
   AVLTree<T> tree_;

@@ -3,6 +3,7 @@ using namespace s21;
 template <typename T>
 AVLTree<T>::AVLTree() {
   root = nullptr;
+  inserted = false;
 }
 
 template <typename T>
@@ -72,14 +73,18 @@ Node<T>* AVLTree<T>::insert(Node<T>* node, T key, Node<T>* parent) {
     node = new Node<T>(key);
     node->parent = parent;
     node->size_++;
+    inserted = true;
     return node;
   }
   if (key < node->key) {
     node->left = insert(node->left, key, node);
   } else if (key > node->key) {
     node->right = insert(node->right, key, node);
+  } else {
+    inserted = false;
   }
   node->size_++;
+  inserted = true;
   return balance(node);
 }
 
@@ -159,6 +164,7 @@ void AVLTree<T>::updateSize(Node<T>* node) {
   }
 }
 template <typename T>
-void AVLTree<T>::insert(T key) {
+Node<T>* AVLTree<T>::insert(T key) {
   root = insert(root, key, nullptr);
+  return root;
 }
