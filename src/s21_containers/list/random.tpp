@@ -1,8 +1,8 @@
 #include "s21_list.h"
 
-namespace s21 {
+using namespace s21;
 
-//  List Functions
+// Constructor
 template <typename value_type>
 list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {}
 
@@ -52,7 +52,21 @@ typename list<value_type>::list& list<value_type>::operator=(list&& l) {
   return *this;
 }
 
-// List Modifiers
+template <typename value_type>
+bool list<value_type>::empty() const {
+  return size_ == 0;
+}
+
+template <typename value_type>
+typename list<value_type>::size_type list<value_type>::size() {
+  return size_;
+}
+
+template <typename value_type>
+typename list<value_type>::size_type list<value_type>::max_size() {
+  return std::numeric_limits<size_type>::max();
+}
+
 template <typename value_type>
 void list<value_type>::clear() {
   while (!empty()) {
@@ -60,36 +74,8 @@ void list<value_type>::clear() {
   }
 }
 
-/* current */
-// template <typename value_type>
-// typename list<value_type>::iterator list<value_type>::insert(
-//     iterator pos, const_reference value) {
-//   size_type position = &(*pos) - this->container_;
-//   size_type zero = 0;
-//   if (zero > position || position > this->size_) {
-//     throw std::out_of_range("Index out ot range");
-//   }
-//   if (position = this->size_) {
-//     this->push_back(value);
-//   } else {
-//     Node<int> current;
-//     for (size_type i = 0; i <= position; ++i) {
-//       push_back(value_type());
-//     }
-
-//     value_type replace = this->container_[position];
-//     this->size_++;
-//     this->container_[position] = value;
-//     for (size_type i = position + 1; i < this->size_; ++i) {
-//       value_type next = this->container_[i];
-//       this->container_[i] = replace;
-//       replace = next;
-//     }
-//   }
-//   return this->container_ + position;
-// }
-
-/* current */
+// iterator insert(iterator pos, const_reference value);
+// void erase(iterator pos);
 
 template <typename value_type>
 void list<value_type>::push_back(const_reference value) {
@@ -164,4 +150,16 @@ void list<value_type>::swap(list& other) {
 template <typename value_type>
 void list<value_type>::merge(list& other) {}
 
-}  // namespace s21
+// void splice(const_iterator pos, list& other); TODO жду итераторы
+// void reverse();
+// void unique();
+// void sort();
+
+// TODO сделать Iterator
+// template <typename value_type>
+// void print_list(list<value_type>& l) {
+//   for (auto i = l.begin(); i != l.end(); ++i) {
+//     std::cout << *i << " ";
+//   }
+//   std::cout << std::endl;
+// }
