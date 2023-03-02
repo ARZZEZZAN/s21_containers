@@ -85,12 +85,25 @@ class Set {
   }
   void swap(Set<T>& other) { tree_.swap(other.tree_); }
   Iterator find(const T& key) { return Iterator(tree_.search(key)); }
-  size_type size() { return tree_.getRoot()->size_; }
+  size_type size() {
+    if (this->tree_.getRoot() == nullptr) {
+      return 0;
+    }
+    return tree_.getRoot()->size_;
+  }
   size_type max_size() { return allocator.max_size() / 10; }
-  // bool empty() {}
+  bool empty() {
+    if (this->tree_.getRoot() == nullptr) {
+      return true;
+    }
+    if (this->tree_.getRoot()->size_ == 0) {
+      return true;
+    }
+    return false;
+  }
+  void erase(Iterator pos) { tree_.remove(*pos); }
 
   void insert(T key) { tree_.insert(key); }
-  void erase(Iterator pos) { tree_.remove(pos); }
 
  private:
   AVLTree<T> tree_;

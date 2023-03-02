@@ -15,7 +15,8 @@ int main() {
   mySet1.insert(2);
   mySet1.insert(3);
   mySet1.insert(4);
-  if (mySet.contains(5)) {
-    std::cout << mySet.max_size() << std::endl;
+
+  if (mySet.empty()) {
+    std::cout << mySet.size() << std::endl;
   }
 }
