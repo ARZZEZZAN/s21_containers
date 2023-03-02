@@ -26,3 +26,4 @@ clean:
 	@/bin/rm -rf *.o *.a build *.gcno *gcda report *.info main *.dSYM *.out gcov_report $(EXE)
 
 rebuild: clean all
+

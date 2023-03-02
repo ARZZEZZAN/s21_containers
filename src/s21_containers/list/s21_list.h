@@ -1,6 +1,9 @@
 #ifndef S21_LIST_H
 #define S21_LIST_H
+
+#include <initializer_list>
 #include <iostream>
+#include <limits>
 
 namespace s21 {
 
@@ -9,6 +12,8 @@ class list {
   using value_type = T;
   using reference = T&;
   using const_reference = const T&;
+  // using iterator = ListIterator<T>;             // TODO
+  // using const_iterator = ListConstIterator<T>;  // TODO
   using size_type = std::size_t;
 
  public:
@@ -18,30 +23,31 @@ class list {
   list(const list& l);
   list(list&& l);
   ~list();
-
   list& operator=(list&& l);
 
-  bool empty() const;  //
-  size_type size();
-  size_type max_size();
+  const_reference front();
+  const_reference back();
+
+  // iterator begin(); TODO
+  // iterator end(); TODO
+
+  bool empty();
+  size_type size();      // TODO review
+  size_type max_size();  // TODO review
+
   void clear();  //
-
-  // iterator insert(iterator pos, const_reference value);
-  // void erase(iterator pos);
-  void push_back(const_reference value);  //
-  void pop_back();                        //
+  // iterator insert(iterator pos, const_reference value); TODO
+  // void erase(iterator pos); TODO
+  void push_back(const_reference value);
+  void pop_back();
   void push_front(const_reference value);
-  void pop_front();  //
+  void pop_front();
   void swap(list& other);
-  void merge(list& other);
-  // void splice(const_iterator pos, list& other);
-  void reverse();
-  void unique();
-  void split(list& left_half, list& right_half);
-  void sort();
-  void list<T>::merge_sorted_lists(list& left_half, list& right_half);
-
-  void print_list();
+  void merge(list& other);  // TODO review
+  // void splice(const_iterator pos, list& other); TODO
+  void reverse();  // TODO review
+  void unique();   // TODO review
+  void sort();     // TODO review
 
  private:
   struct Node {
@@ -56,14 +62,17 @@ class list {
   Node* head_;
   Node* tail_;
   size_type size_;
+  // TODO все вспомогательные функции закинуть в private
+  // ---------------support functions-----------------
+  void print_list();  // TODO review
 };
 }  // namespace s21
 #endif  // S21_LIST_H
 
 // --------------
 
-// template <typename T>
-// void list<T>::merge(list& other) {
+// template <typename value_type>
+// void list<value_type>::merge(list& other) {
 //   if (&other == this) {
 //     return;
 //   }
@@ -106,8 +115,8 @@ class list {
 //   }
 // }
 
-// template <typename T>
-// void list<T>::reverse() {
+// template <typename value_type>
+// void list<value_type>::reverse() {
 //   if (empty()) {
 //     return;
 //   }
@@ -123,8 +132,8 @@ class list {
 //   std::swap(head_, tail_);
 // }
 
-// template <typename T>
-// void list<T>::unique() {
+// template <typename value_type>
+// void list<value_type>::unique() {
 //   if (empty()) {
 //     return;
 //   }
@@ -147,8 +156,8 @@ class list {
 //   }
 // }
 
-// template <typename T>
-// void list<T>::sort() {
+// template <typename value_type>
+// void list<value_type>::sort() {
 //   if (size_ < 2) {
 //     return;
 //   }
@@ -163,20 +172,8 @@ class list {
 //   merge_sorted_lists(left_half, right_half);
 // }
 
-// template <typename T>
-// void list<T>::print_list() {
-//   std::cout << "[";
-//   for (Node* node = head_; node; node = node->next_) {
-//     std::cout << node->value_;
-//     if (node->next_) {
-//       std::cout << ", ";
-//     }
-//   }
-//   std::cout << "]\n";
-// }
-
-// template <typename T>
-// void list<T>::split(list& left_half, list& right_half) {
+// template <typename value_type>
+// void list<value_type>::split(list& left_half, list& right_half) {
 //   Node* middle_node = head_;
 //   Node* current_node = head_;
 //   while (current_node) {
@@ -203,8 +200,9 @@ class list {
 //   size_ = 0;
 // }
 
-// template <typename T>
-// void list<T>::merge_sorted_lists(list& left_half, list& right_half) {
+// template <typename value_type>
+// void list<value_type>::merge_sorted_lists(list& left_half, list& right_half)
+// {
 //   if (left_half.empty()) {
 //     *this = right_half;
 //     right_half.head_ = nullptr;

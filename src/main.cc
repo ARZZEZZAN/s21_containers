@@ -28,13 +28,11 @@ int main() {
   // std::cout << l.hui;
   s21::list<int> l = {2, 3, 4, 2, 5, 3, 4, 2, 5, 3, 4, 2, 5};
   s21::list<int> l2 = {2, 3, 4, 2, 5, 3, 4, 2, 5, 3, 4, 2, 5};
-  std::list<int> l3;
   l.push_back(3);
   l.push_front(3);
   l.pop_front();
   l.swap(l2);
 
-  l3.push_back(3);
   // s21::print_list(l);
   // s21::print_list(l);
   // for (auto item : l) {
@@ -44,6 +42,14 @@ int main() {
 
   std::cout << "my " << sizeof(l, l2) << std::endl;
   std::cout << "std " << sizeof(l2) << std::endl;
+  // std::list<int> l3;
+  // l3.push_back(1);
+  // l3.push_back(2);
+  // l3.push_back(3);
+  // for (auto i = l3.begin(); i != l3.end(); ++i) {
+  //   std::cout << *i << " ";
+  // }
+  // std::cout << std::endl;
   return 0;
 }
 // 1468588943
