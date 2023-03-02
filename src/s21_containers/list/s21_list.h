@@ -48,7 +48,7 @@ class list {
 
   // List Iterators -- DONE
   iterator begin() { return iterator(head_); }
-  iterator end() { return iterator(tail_->next_); }
+  iterator end() { return iterator(end_); }
 
   // List Capacity -- DONE
   bool empty() { return size_ == 0; }
@@ -77,7 +77,9 @@ class list {
  private:
   Node* head_;
   Node* tail_;
+  Node* end_;
   size_type size_;
+  void add_end();
 };
 
 template <typename T>
@@ -95,12 +97,7 @@ class ListIterator {
   ListIterator() { ptr_ = nullptr; }
   ListIterator(Node* ptr) : ptr_(ptr){};
 
-  reference operator*() {
-    if (this->ptr_ == nullptr) {
-      throw std::invalid_argument("Bad <*> parameter!");
-    }
-    return this->ptr_->value_;
-  }
+  reference operator*() { return this->ptr_->value_; }
 
   ListIterator operator++(int) {
     ptr_ = ptr_->next_;
@@ -118,6 +115,9 @@ class ListIterator {
   }
 
   ListIterator& operator--() {
+    // if (!ptr_) {
+    //   throw std::invalid_argument("hui");
+    // }
     ptr_ = ptr_->prev_;
     return *this;
   }
@@ -127,6 +127,7 @@ class ListIterator {
     for (size_type i = 0; i < value; i++) {
       tmp = tmp->next_;
     }
+
     ListIterator res(tmp);
     return res;
   }

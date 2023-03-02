@@ -4,15 +4,19 @@ namespace s21 {
 
 //  List Functions
 template <typename value_type>
-list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {}
+list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {
+  end_ = new Node(size_);
+  add_end();
+}
 
 template <typename value_type>
 list<value_type>::list(size_type n) {
   for (size_type i = 0; i < n; ++i) {
     push_back(value_type());
   }
+  end_ = new Node(size_);
+  add_end();
 }
-
 // template <typename value_type>
 // list<value_type>::list(std::initializer_list<value_type> const& items)
 //     : head_(nullptr), tail_(nullptr), size_(0) {
@@ -83,6 +87,8 @@ typename list<value_type>::iterator list<value_type>::insert(
     current->prev_->next_ = add;
     current->prev_ = add;
   }
+  size_++;
+  add_end();
   return iterator(add);
 }
 
@@ -100,6 +106,7 @@ void list<value_type>::push_back(const_reference value) {
     tail_ = new_node;
   }
   size_++;
+  add_end();
 }
 
 template <typename value_type>
@@ -108,15 +115,18 @@ void list<value_type>::pop_back() {
     throw std::out_of_range("list is empty");
   }
   Node* last_node = tail_;
+
   if (size_ == 1) {
     head_ = nullptr;
     tail_ = nullptr;
+
   } else {
     tail_ = last_node->prev_;
-    tail_->next_ = nullptr;
+    tail_->next_ = end_;
   }
   delete last_node;
   size_--;
+  add_end();
 }
 
 template <typename value_type>
@@ -131,6 +141,7 @@ void list<value_type>::push_front(const_reference value) {
     head_ = new_node;
   }
   size_++;
+  add_end();
 }
 
 template <typename value_type>
@@ -148,6 +159,7 @@ void list<value_type>::pop_front() {
   }
   delete first_node;
   size_--;
+  add_end();
 }
 
 template <typename value_type>
@@ -156,6 +168,7 @@ void list<value_type>::swap(list& other) {
   swap(this->head_, other.head_);
   swap(this->tail_, other.tail_);
   swap(this->size_, other.size_);
+  swap(this->end_, other.end_);
 }
 
 template <typename value_type>
@@ -168,5 +181,18 @@ void print_list(list<value_type>& l) {
     std::cout << *i << " ";
   }
   std::cout << std::endl;
+}
+
+template <typename value_type>
+void list<value_type>::add_end() {
+  end_->next_ = head_;
+  end_->prev_ = tail_;
+  end_->value_ = size();
+  if (head_) {
+    head_->prev_ = end_;
+  }
+  if (tail_) {
+    tail_->next_ = end_;
+  }
 }
 }  // namespace s21
