@@ -9,15 +9,20 @@ int main() {
   mySet.insert(5);
   mySet.insert(3);
   mySet.insert(10);
-  // mySet.insert(-4);
   mySet.insert(-5);
+  mySet.insert(-5);
+  mySet.insert(11);
+  mySet.insert(12);
+  mySet.insert(13);
+  mySet.insert(14);
+  mySet.insert(15);
 
   mySet1.insert(1);
   mySet1.insert(2);
   mySet1.insert(3);
   mySet1.insert(4);
 
-  std::cout << mySet.insert(-4).second << std::endl;
+  std::cout << mySet.size() << std::endl;
 
   // for (auto i : mySet) {
   //   std::cout << i << std::endl;

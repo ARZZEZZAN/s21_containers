@@ -69,11 +69,12 @@ Node<T>* AVLTree<T>::balance(Node<T>* node) {
 }
 template <typename T>
 Node<T>* AVLTree<T>::insert(Node<T>* node, T key, Node<T>* parent) {
+  inserted = false;
   if (!node) {
     node = new Node<T>(key);
     node->parent = parent;
-    node->size_++;
-    inserted = true;
+    // root->size_++;
+    this->inserted = true;
     return node;
   }
   if (key < node->key) {
@@ -83,8 +84,6 @@ Node<T>* AVLTree<T>::insert(Node<T>* node, T key, Node<T>* parent) {
   } else {
     inserted = false;
   }
-  node->size_++;
-  inserted = true;
   return balance(node);
 }
 

@@ -105,9 +105,10 @@ class Set {
     return false;
   }
   void erase(Iterator pos) { tree_.remove(*pos); }
-  // void insert(T key) { tree_.insert(key); }
+
   std::pair<Iterator, bool> insert(const value_type& value) {
     std::pair<Iterator, bool> result;
+    this->tree_.insert(value);
     if (this->tree_.getInserted()) {
       result = std::pair<Iterator, bool>(find(value), true);
     } else {
@@ -120,7 +121,6 @@ class Set {
   AVLTree<T> tree_;
   Allocator allocator;
 };
-
 }  // namespace s21
 
 #endif  // AVL_SET_H_
