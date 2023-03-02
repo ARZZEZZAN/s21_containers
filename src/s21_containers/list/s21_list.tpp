@@ -13,13 +13,13 @@ list<value_type>::list(size_type n) {
   }
 }
 
-template <typename value_type>
-list<value_type>::list(std::initializer_list<value_type> const& items)
-    : head_(nullptr), tail_(nullptr), size_(0) {
-  for (const auto& item : items) {
-    push_back(item);
-  }
-}
+// template <typename value_type>
+// list<value_type>::list(std::initializer_list<value_type> const& items)
+//     : head_(nullptr), tail_(nullptr), size_(0) {
+//   for (const auto& item : items) {
+//     push_back(item);
+//   }
+// }
 
 template <typename value_type>
 list<value_type>::list(const list& l)
@@ -61,33 +61,30 @@ void list<value_type>::clear() {
 }
 
 /* current */
-// template <typename value_type>
-// typename list<value_type>::iterator list<value_type>::insert(
-//     iterator pos, const_reference value) {
-//   size_type position = &(*pos) - this->container_;
-//   size_type zero = 0;
-//   if (zero > position || position > this->size_) {
-//     throw std::out_of_range("Index out ot range");
-//   }
-//   if (position = this->size_) {
-//     this->push_back(value);
-//   } else {
-//     Node<int> current;
-//     for (size_type i = 0; i <= position; ++i) {
-//       push_back(value_type());
-//     }
-
-//     value_type replace = this->container_[position];
-//     this->size_++;
-//     this->container_[position] = value;
-//     for (size_type i = position + 1; i < this->size_; ++i) {
-//       value_type next = this->container_[i];
-//       this->container_[i] = replace;
-//       replace = next;
-//     }
-//   }
-//   return this->container_ + position;
-// }
+template <typename value_type>
+typename list<value_type>::iterator list<value_type>::insert(
+    iterator pos, const_reference value) {
+  Node* current = pos.ptr_;
+  Node* add = new Node(value);
+  if (!current) {
+    // add to tail
+    tail_->next_ = add;
+    add->prev_ = tail_;
+    tail_ = add;
+  } else if (!current->prev_) {
+    // add to head
+    head_->prev_ = add;
+    add->next_ = head_;
+    head_ = add;
+  } else {
+    // add between
+    add->next_ = current;
+    add->prev_ = current->prev_;
+    current->prev_->next_ = add;
+    current->prev_ = add;
+  }
+  return iterator(add);
+}
 
 /* current */
 
@@ -164,4 +161,12 @@ void list<value_type>::swap(list& other) {
 template <typename value_type>
 void list<value_type>::merge(list& other) {}
 
+// helpers
+template <typename value_type>
+void print_list(list<value_type>& l) {
+  for (auto i = l.begin(); i != l.end(); ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+}
 }  // namespace s21

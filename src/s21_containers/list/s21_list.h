@@ -36,7 +36,7 @@ class list {
   // List Functions -- DONE
   list();
   list(size_type n);
-  list(std::initializer_list<value_type> const& items);
+  // list(std::initializer_list<value_type> const& items);
   list(const list& l);
   list(list&& l);
   ~list();
@@ -48,7 +48,7 @@ class list {
 
   // List Iterators -- DONE
   iterator begin() { return iterator(head_); }
-  iterator end() { return iterator(tail_); }
+  iterator end() { return iterator(tail_->next_); }
 
   // List Capacity -- DONE
   bool empty() { return size_ == 0; }
@@ -57,7 +57,7 @@ class list {
 
   // List Modifiers
   void clear();
-  // iterator insert(iterator pos, const_reference value);
+  iterator insert(iterator pos, const_reference value);
   // void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back();
@@ -72,7 +72,7 @@ class list {
 
   // Helpers
   // void list<T>::merge_sorted_lists(list& left_half, list& right_half);
-  // void print_list();
+  void print_list();
 
  private:
   Node* head_;
@@ -89,10 +89,11 @@ class ListIterator {
   using pointer = T*;
   using reference = T&;
   using Node = node<T>;
+  using size_type = std::size_t;
 
  public:
   ListIterator() { ptr_ = nullptr; }
-  ListIterator(Node* ptr) { ptr_(ptr); }
+  ListIterator(Node* ptr) : ptr_(ptr){};
 
   reference operator*() {
     if (this->ptr_ == nullptr) {
@@ -102,51 +103,51 @@ class ListIterator {
   }
 
   ListIterator operator++(int) {
-    ptr_ = ptr_->next;
+    ptr_ = ptr_->next_;
     return *this;
   }
 
   ListIterator operator--(int) {
-    ptr_ = ptr_->prev;
+    ptr_ = ptr_->prev_;
     return *this;
   }
 
   ListIterator& operator++() {
-    ptr_ = ptr_->next;
+    ptr_ = ptr_->next_;
     return *this;
   }
 
   ListIterator& operator--() {
-    ptr_ = ptr_->prev;
+    ptr_ = ptr_->prev_;
     return *this;
   }
 
-  ListIterator operator+(const size_t value) {
+  ListIterator operator+(const size_type value) {
     Node* tmp = ptr_;
-    for (int i = 0; i < value; i++) {
-      tmp = tmp->next;
+    for (size_type i = 0; i < value; i++) {
+      tmp = tmp->next_;
     }
     ListIterator res(tmp);
     return res;
   }
 
-  ListIterator operator-(const size_t value) {
+  ListIterator operator-(const size_type value) {
     Node* tmp = ptr_;
-    for (int i = 0; i < value; i++) {
+    for (size_type i = 0; i < value; i++) {
       tmp = tmp->prev_;
     }
     ListIterator res(tmp);
     return res;
   }
 
-  ListIterator& operator=(const ListIterator other) {
-    this->ptr_ = other->ptr_;
-    return *this;
-  }
+  // ListIterator& operator=(const ListIterator other) {
+  //   this->ptr_ = other->ptr_;
+  //   return *this;
+  // }
 
   bool operator==(ListIterator other) { return this->ptr_ == other.ptr_; }
 
-  bool operator!=(ListIterator other) { return this->ptr != other.ptr_; }
+  bool operator!=(ListIterator other) { return this->ptr_ != other.ptr_; }
 
  private:
   Node* ptr_ = nullptr;
