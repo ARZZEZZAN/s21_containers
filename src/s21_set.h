@@ -27,6 +27,9 @@ class Set {
     reference operator*() const { return node_->key; }
     pointer operator->() const { return &(node_->key); }
     Iterator& operator++() {
+      if (this->node_ == nullptr) {
+        throw std::length_error("Node is nullptr");
+      }
       if (node_->right != nullptr) {
         node_ = node_->right;
         while (node_->left != nullptr) node_ = node_->left;
@@ -104,6 +107,15 @@ class Set {
   void erase(Iterator pos) { tree_.remove(*pos); }
 
   void insert(T key) { tree_.insert(key); }
+  // std::pair<Iterator, bool> insert(const value_type& value) {
+  //   std::pair<Iterator, bool> result;
+  //   if (this->tree_.insert(value) != nullptr) {
+  //     result = std::pair<Iterator, bool>(find(value), true);
+  //   } else {
+  //     result = std::pair<Iterator, bool>(find(value), false);
+  //   }
+  //   return result;
+  // }
 
  private:
   AVLTree<T> tree_;

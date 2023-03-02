@@ -16,7 +16,9 @@ int main() {
   mySet1.insert(3);
   mySet1.insert(4);
 
-  if (mySet.empty()) {
-    std::cout << mySet.size() << std::endl;
-  }
+  std::cout << *(mySet.begin()++) << std::endl;
+
+  // for (auto i : mySet) {
+  //   std::cout << i << std::endl;
+  // }
 }

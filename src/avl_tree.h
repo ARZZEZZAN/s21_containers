@@ -3,7 +3,10 @@
 
 #include <iostream>
 
+#include "s21_set.h"
+
 namespace s21 {
+enum Duplicate { WITH_DUPLICATE, WITHOUT_DUPLICATE };
 // AVL tree node
 template <typename T>
 class Node {
