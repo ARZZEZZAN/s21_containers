@@ -2,22 +2,29 @@
 
 using namespace s21;
 
-// Constructor
+// Constructors
 template <typename value_type>
-list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {}
+list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {
+  end_ = new Node(size_);
+  add_end();
+}
 
 template <typename value_type>
 list<value_type>::list(size_type n) {
   for (size_type i = 0; i < n; ++i) {
     push_back(value_type());
   }
+  end_ = new Node(size_);
+  add_end();
 }
 
 template <typename value_type>
 list<value_type>::list(std::initializer_list<value_type> const& items)
     : head_(nullptr), tail_(nullptr), size_(0) {
+  end_ = new Node(size_);
   for (const auto& item : items) {
     push_back(item);
+    add_end();
   }
 }
 
@@ -40,15 +47,17 @@ list<value_type>::list(list&& l) : head_(nullptr), tail_(nullptr), size_(0) {
 template <typename value_type>
 list<value_type>::~list() {
   clear();
+  delete end_;
 }
 
 template <typename value_type>
 typename list<value_type>::list& list<value_type>::operator=(list&& l) {
   if (this != &l) {
     clear();
-    std::swap(head_, l.head_);
-    std::swap(tail_, l.tail_);
-    std::swap(size_, l.size_);
+    // std::swap(head_, l.head_);
+    // std::swap(tail_, l.tail_);
+    // std::swap(size_, l.size_);
+    swap(l);  // TODO review
   }
   return *this;
 }
@@ -67,6 +76,24 @@ typename list<value_type>::const_reference list<value_type>::back() {
     throw std::out_of_range("list is empty");
   }
   return tail_->value_;
+}
+
+template <typename value_type>
+void list<value_type>::print_list() {  // TODO review
+  std::cout << "[";
+  for (iterator it = begin(); it != end(); ++it) {
+    std::cout << *it;
+    if ((it + 1) != end()) {
+      std::cout << ", ";
+    }
+  }
+  std::cout << "]\n";
+  // old {
+  // for (auto i = this->begin(); i != this->end(); ++i) {
+  //   std::cout << *i << " ";
+  // }
+  // std::cout << std::endl;
+  // }
 }
 
 template <typename value_type>
@@ -91,7 +118,33 @@ void list<value_type>::clear() {
   }
 }
 
-// iterator insert(iterator pos, const_reference value);
+template <typename value_type>
+typename list<value_type>::iterator list<value_type>::insert(
+    iterator pos, const_reference value) {  // TODO review
+  Node* current = pos.ptr_;
+  Node* add = new Node(value);
+  if (!current) {
+    // add to tail
+    tail_->next_ = add;
+    add->prev_ = tail_;
+    tail_ = add;
+  } else if (!current->prev_) {
+    // add to head
+    head_->prev_ = add;
+    add->next_ = head_;
+    head_ = add;
+  } else {
+    // add between
+    add->next_ = current;
+    add->prev_ = current->prev_;
+    current->prev_->next_ = add;
+    current->prev_ = add;
+  }
+  size_++;
+  add_end();
+  return iterator(add);
+}
+
 // void erase(iterator pos);
 
 template <typename value_type>
@@ -106,6 +159,7 @@ void list<value_type>::push_back(const_reference value) {
     tail_ = new_node;
   }
   size_++;
+  add_end();
 }
 
 template <typename value_type>
@@ -123,6 +177,7 @@ void list<value_type>::pop_back() {
   }
   delete last_node;
   size_--;
+  add_end();
 }
 
 template <typename value_type>
@@ -137,6 +192,7 @@ void list<value_type>::push_front(const_reference value) {
     head_ = new_node;
   }
   size_++;
+  add_end();
 }
 
 template <typename value_type>
@@ -154,6 +210,7 @@ void list<value_type>::pop_front() {
   }
   delete first_node;
   size_--;
+  add_end();
 }
 
 template <typename value_type>
@@ -162,6 +219,7 @@ void list<value_type>::swap(list& other) {
   swap(this->head_, other.head_);
   swap(this->tail_, other.tail_);
   swap(this->size_, other.size_);
+  swap(this->end_, other.end_);
 }
 
 // template <typename value_type>
@@ -212,86 +270,64 @@ void list<value_type>::swap(list& other) {
 // void reverse();
 // void unique();
 
+// template <typename value_type>
+// void list<value_type>::sort_helper(iterator left, iterator right) {
+//   if (left == right || left == end_ || right == end_ || left == tail_) {
+//     return;
+//   }
+//   iterator pivot = partition(left, right);
+//   sort_helper(left, pivot);
+//   sort_helper(++pivot, right);
+// }
+
+// template <typename value_type>
+// typename list<value_type>::iterator list<value_type>::partition(
+//     iterator left, iterator right) {
+//   iterator pivot = left;
+//   iterator i = left;
+//   iterator j = ++left;
+//   while (j != right) {
+//     if (*j < *pivot) {
+//       ++i;
+//       std::swap(*i, *j);
+//     }
+//     ++j;
+//   }
+//   if (*i > *pivot) {
+//     std::swap(*i, *pivot);
+//     return i;
+//   } else {
+//     return pivot;
+//   }
+// }
+
+// template <typename value_type>
+// void list<value_type>::sort() {
+//   if (size_ <= 1) {
+//     return;
+//   }
+//   sort_helper(begin(), --end());
+// }
+
 template <typename value_type>
 void list<value_type>::sort() {
-  if (size_ > 1) {
-    Node* pivot = head_;
-    Node* current = head_->next_;
-    Node* last = tail_;
-    while (current != nullptr) {
-      if (current->value_ < pivot->value_) {
-        Node* tmp = current;
-        current = current->next_;
-        tmp->prev_->next_ = tmp->next_;
-        if (tmp->next_ != nullptr) {
-          tmp->next_->prev_ = tmp->prev_;
-        } else {
-          last = tmp->prev_;
-        }
-        tmp->prev_ = nullptr;
-        tmp->next_ = head_;
-        head_->prev_ = tmp;
-        head_ = tmp;
-      } else {
-        current = current->next_;
-      }
-    }
-    list<value_type> left_half;
-    list<value_type> right_half;
-    pivot->prev_->next_ = nullptr;
-    pivot->prev_ = nullptr;
-    left_half.head_ = head_;
-    left_half.tail_ = pivot;
-    right_half.head_ = pivot->next_;
-    right_half.tail_ = last;
-    left_half.size_ = 1;
-    right_half.size_ = size_ - 1;
-    head_ = nullptr;
-    tail_ = nullptr;
-    size_ = 0;
-    left_half.sort();
-    right_half.sort();
-    if (left_half.size_ > 0) {
-      head_ = left_half.head_;
-      left_half.tail_->next_ = pivot;
-      pivot->prev_ = left_half.tail_;
-      size_ += left_half.size_;
-    } else {
-      head_ = pivot;
-    }
-    if (right_half.size_ > 0) {
-      if (left_half.size_ == 0) {
-        pivot->prev_ = nullptr;
-      }
-      pivot->next_ = right_half.head_;
-      right_half.head_->prev_ = pivot;
-      tail_ = right_half.tail_;
-      size_ += right_half.size_;
-    } else {
-      tail_ = pivot;
-    }
-  }
+  
 }
-
-// TODO сделать Iterator
-// template <typename value_type>
-// void print_list(list<value_type>& l) {
-//   for (auto i = l.begin(); i != l.end(); ++i) {
-//     std::cout << *i << " ";
-//   }
-//   std::cout << std::endl;
-// }
 
 // ---------------support functions-----------------
 template <typename value_type>
-void list<value_type>::print_list() {  // TODO review
-  std::cout << "[";
-  for (Node* node = head_; node; node = node->next_) {
-    std::cout << node->value_;
-    if (node->next_) {
-      std::cout << ", ";
+void list<value_type>::add_end() {
+  if (end_) {
+    end_->next_ = head_;
+    end_->prev_ = tail_;
+    end_->value_ = size();
+    if (head_) {
+      head_->prev_ = end_;
+    }
+    if (tail_) {
+      tail_->next_ = end_;
     }
   }
-  std::cout << "]\n";
 }
+
 // -------------------------------------------------
