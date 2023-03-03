@@ -2,7 +2,6 @@
 
 using namespace s21;
 
-// Constructors
 template <typename value_type>
 list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {
   end_ = new Node(size_);
@@ -38,9 +37,6 @@ list<value_type>::list(const list& l)
 
 template <typename value_type>
 list<value_type>::list(list&& l) : head_(nullptr), tail_(nullptr), size_(0) {
-  // std::swap(this->head_, l.head_);
-  // std::swap(this->tail_, l.tail_);
-  // std::swap(this->size_, l.size_);
   swap(l);  // TODO проверить точно ли правильно работает
 }
 
@@ -54,9 +50,6 @@ template <typename value_type>
 typename list<value_type>::list& list<value_type>::operator=(list&& l) {
   if (this != &l) {
     clear();
-    // std::swap(head_, l.head_);
-    // std::swap(tail_, l.tail_);
-    // std::swap(size_, l.size_);
     swap(l);  // TODO review
   }
   return *this;
@@ -120,7 +113,7 @@ void list<value_type>::clear() {
 
 template <typename value_type>
 typename list<value_type>::iterator list<value_type>::insert(
-    iterator pos, const_reference value) {  // TODO review
+    iterator pos, const_reference value) {
   Node* current = pos.ptr_;
   Node* add = new Node(value);
   if (!current) {
@@ -145,7 +138,31 @@ typename list<value_type>::iterator list<value_type>::insert(
   return iterator(add);
 }
 
-// void erase(iterator pos);
+template <typename value_type>
+void list<value_type>::erase(iterator pos) {
+  Node* current = pos.ptr_;
+  if (!empty() && current != end_) {
+    if (current == head_) {
+      if (current->next_ && current->next_ != end_) {
+        head_ = current->next_;
+      }
+    }
+    current->prev_->next_ = current->next_;
+    current->next_->prev_ = current->prev_;
+    delete current;
+    this->size_--;
+  } else {
+    throw std::invalid_argument("Invalid argument");
+  }
+}
+
+template <typename value_type>
+void list<value_type>::splice(iterator pos, list& other) {
+  for (iterator iter = other.begin(); iter != other.end(); ++iter) {
+    this->insert(pos, *iter);
+    other.erase(iter);
+  }
+}
 
 template <typename value_type>
 void list<value_type>::push_back(const_reference value) {
@@ -222,96 +239,52 @@ void list<value_type>::swap(list& other) {
   swap(this->end_, other.end_);
 }
 
-// template <typename value_type>
-// void list<value_type>::merge(list& other) {
-//   if (&other == this) {
-//     return;
-//   }
+template <typename value_type>
+void list<value_type>::merge(list& other) {
+  iterator iter_this = this->begin();
+  iterator iter_other = other.begin();
 
-//   if (empty()) {
-//     head_ = other.head_;
-//     tail_ = other.tail_;
-//     size_ = other.size_;
-//     other.head_ = nullptr;
-//     other.tail_ = nullptr;
-//     other.size_ = 0;
-//     return;
-//   }
+  while (iter_this != this->end()) {
+    if (iter_other != other.end()) {
+      if (iter_this.ptr_->value_ >= iter_other.ptr_->value_) {
+        this->insert(iter_this, iter_other.ptr_->value_);
+        iter_other++;
+      }
+    } else {
+      iter_this++;
+    }
+  }
+  while (iter_other != other.end()) {
+    this->insert(iter_this, iter_other.ptr_->value_);
+  }
+}
 
-//   if (other.empty()) {
-//     return;
-//   }
+template <typename value_type>
+void list<value_type>::reverse() {
+  size_type step = 0;
+  for (iterator iter = this->begin(); step <= this->size(); ++iter) {
+    step++;
+    std::swap(iter.ptr_->prev_, iter.ptr_->next_);
+  }
+  std::swap(head_, tail_);
+}
 
-//   Node* this_node = head_;
-//   Node* other_node = other.head_;
-
-//   while (this_node && other_node) {
-//     if (other_node->value_ < this_node->value_) {
-//       Node* next_node = other_node->next_;
-//       insert_node_before(this_node, other_node);
-//       other_node = next_node;
-//     } else {
-//       this_node = this_node->next_;
-//     }
-//   }
-
-//   if (other_node) {
-//     tail_->next_ = other_node;
-//     other_node->prev_ = tail_;
-//     tail_ = other.tail_;
-//     size_ += other.size_;
-//     other.head_ = nullptr;
-//     other.tail_ = nullptr;
-//     other.size_ = 0;
-//   }
-// }
-
-// void splice(const_iterator pos, list& other); TODO жду итераторы
-// void reverse();
-// void unique();
-
-// template <typename value_type>
-// void list<value_type>::sort_helper(iterator left, iterator right) {
-//   if (left == right || left == end_ || right == end_ || left == tail_) {
-//     return;
-//   }
-//   iterator pivot = partition(left, right);
-//   sort_helper(left, pivot);
-//   sort_helper(++pivot, right);
-// }
-
-// template <typename value_type>
-// typename list<value_type>::iterator list<value_type>::partition(
-//     iterator left, iterator right) {
-//   iterator pivot = left;
-//   iterator i = left;
-//   iterator j = ++left;
-//   while (j != right) {
-//     if (*j < *pivot) {
-//       ++i;
-//       std::swap(*i, *j);
-//     }
-//     ++j;
-//   }
-//   if (*i > *pivot) {
-//     std::swap(*i, *pivot);
-//     return i;
-//   } else {
-//     return pivot;
-//   }
-// }
-
-// template <typename value_type>
-// void list<value_type>::sort() {
-//   if (size_ <= 1) {
-//     return;
-//   }
-//   sort_helper(begin(), --end());
-// }
+template <typename value_type>
+void list<value_type>::unique() {
+  for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+    if (iter.ptr_->next_ && iter.ptr_->next_ != end_) {
+      if (iter.ptr_->value_ == iter.ptr_->next_->value_) {
+        this->erase(iter);
+      }
+    }
+  }
+}
 
 template <typename value_type>
 void list<value_type>::sort() {
-  
+  if (size_ > 1) {
+    quick_sort(begin(), --end());
+  }
 }
 
 // ---------------support functions-----------------
@@ -330,4 +303,31 @@ void list<value_type>::add_end() {
   }
 }
 
+template <typename value_type>
+void list<value_type>::quick_sort(iterator first, iterator last) {
+  if (first == last || first == end_ || last == end_ || first == tail_) {
+    return;
+  }
+  iterator pivot = partition(first, last);
+  quick_sort(first, --pivot);
+  quick_sort(++pivot, last);
+}
+
+template <typename value_type>
+typename list<value_type>::iterator list<value_type>::partition(iterator first,
+                                                                iterator last) {
+  value_type pivot_value = last.ptr_->value_;
+  iterator i = first;
+
+  for (iterator j = first; j != last; ++j) {
+    if (j.ptr_->value_ <= pivot_value) {
+      std::swap(i.ptr_->value_, j.ptr_->value_);
+      i++;
+    }
+  }
+
+  std::swap(i.ptr_->value_, last.ptr_->value_);
+
+  return i;
+}
 // -------------------------------------------------
