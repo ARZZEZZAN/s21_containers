@@ -11,6 +11,7 @@ namespace s21 {
 template <typename T>
 class Set {
  public:
+  using value_type = T;
   using iterator = Iterator<T>;
   using constIterator = ConstIterator<T>;
   using size_type = size_t;

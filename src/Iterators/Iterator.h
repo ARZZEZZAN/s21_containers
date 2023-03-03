@@ -8,7 +8,6 @@ template <typename T>
 class Iterator {
  public:
   using key_type = T;
-  using value_type = T;
   using reference = T&;
   using const_reference = const reference;
   using pointer = T*;
@@ -78,7 +77,6 @@ template <typename T>
 class ConstIterator {
  public:
   using key_type = T;
-  using value_type = T;
   using reference = const T&;  // use const reference
   using const_reference = reference;
   using pointer = const T*;  // use const pointer
