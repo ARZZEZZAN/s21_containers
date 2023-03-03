@@ -1,5 +1,5 @@
 #include "s21_set.h"
-using namespace s21;
+namespace s21 {
 template <typename T>
 typename Set<T>::Iterator Set<T>::begin() {
   Node<T>* node = tree_.getRoot();
@@ -78,3 +78,4 @@ template <typename T>
 typename Set<T>::Iterator Set<T>::find(const T& key) {
   return Iterator(tree_.search(key));
 }
+}  // namespace s21

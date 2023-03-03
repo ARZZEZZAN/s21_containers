@@ -1,5 +1,5 @@
 #include "avl_tree.h"
-using namespace s21;
+namespace s21 {
 template <typename T>
 AVLTree<T>::AVLTree() {
   root = nullptr;
@@ -174,3 +174,4 @@ Node<T>* AVLTree<T>::insert(T key) {
   root = insert(root, key, nullptr);
   return root;
 }
+}  // namespace s21

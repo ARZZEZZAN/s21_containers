@@ -4,15 +4,17 @@
 #include <iterator>
 #include <limits>
 
-#include "Iterator.h"
-#include "avl_tree.tpp"
+#include "./Iterators/Iterator.h"
 
 namespace s21 {
 
 template <typename T>
 class Set {
+ public:
   using size_type = size_t;
   using Allocator = std::allocator<T>;
+  // using Iterator = Iterator;
+  // using ConstIterator = ConstIterator;
 
   Set() : tree_() {}
   ~Set() {}
