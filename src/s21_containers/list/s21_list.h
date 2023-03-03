@@ -71,7 +71,6 @@ class list {
   void sort();
 
   // Helpers
-  // void list<T>::merge_sorted_lists(list& left_half, list& right_half);
   void print_list();
 
  private:

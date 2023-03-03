@@ -202,12 +202,12 @@ void list<value_type>::splice(iterator pos, list& other) {
 // NOT WORK
 template <typename value_type>
 void list<value_type>::reverse() {
-  Node* start = head_;
-  std::swap(head_->next_, head_->prev_);
-  while (start != head_) {
-    std::swap(start->prev_, start->next_);
-    start = start->prev_;
+  size_type step = 0;
+  for (iterator iter = this->begin(); step <= this->size(); ++iter) {
+    step++;
+    std::swap(iter.ptr_->prev_, iter.ptr_->next_);
   }
+  std::swap(head_, tail_);
 }
 
 /* current */
