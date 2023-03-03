@@ -19,9 +19,9 @@ class Set {
 
   Set();
   Set(std::initializer_list<value_type> const& items);
-  Set(const set& s);
-  Set(set&& s);
-  operator=(set&& s);
+  Set(const Set& s);
+  Set(Set&& s);
+  Set<T> operator=(Set&& s);
   ~Set() {}
 
   iterator begin();

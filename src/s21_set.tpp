@@ -4,6 +4,15 @@ namespace s21 {
 template <typename T>
 Set<T>::Set() : tree_() {}
 template <typename T>
+Set<T>::Set(std::initializer_list<value_type> const& items) {}
+template <typename T>
+Set<T>::Set(const Set& s) {}
+template <typename T>
+Set<T>::Set(Set&& s) {}
+template <typename T>
+Set<T> Set<T>::operator=(Set&& s) {}
+
+template <typename T>
 typename Set<T>::iterator Set<T>::begin() {
   Node<T>* node = tree_.getRoot();
   while (node != nullptr && node->left != nullptr) {
