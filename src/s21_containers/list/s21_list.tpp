@@ -68,33 +68,12 @@ void list<value_type>::clear() {
 template <typename value_type>
 typename list<value_type>::iterator list<value_type>::insert(
     iterator pos, const_reference value) {
-  // Node* current = pos.ptr_;
-  // Node* add = new Node(value);
-  // if (!current) {
-  //   // add to tail
-  //   tail_->next_ = add;
-  //   add->prev_ = tail_;
-  //   tail_ = add;
-  // } else if (!current->prev_) {
-  //   // add to head
-  //   head_->prev_ = add;
-  //   add->next_ = head_;
-  //   head_ = add;
-  // } else {
-  //   // add between
-  //   add->next_ = current;
-  //   add->prev_ = current->prev_;
-  //   current->prev_->next_ = add;
-  //   current->prev_ = add;
-  // }
-  // size_++;
-  // add_end();
-  // return iterator(add);
-
   Node* current = pos.ptr_;  // позиция в которую нехобходимо добавить
   Node* add = new Node(value);  // то что мы добавим
 
-  if (!current) {  // если лист не существует
+  if (!head_ && !tail_) {  // если лист не существует
+    add->next_ = end_;
+    add->prev_ = end_;
     head_ = add;
     tail_ = add;
   } else {

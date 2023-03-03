@@ -12,7 +12,7 @@ int main() {
   // s21_l.push_back(10);
   // s21_l.push_back(20);
   // s21_l.push_back(30);
-  s21_l.insert(s21_l.end() - 1, 100);
+  s21_l.insert(s21_l.end(), 100);
   std::cout << "s21: ";
   k = 0;
   for (auto i = s21_l.begin(); k < n; ++i) {
@@ -23,10 +23,10 @@ int main() {
   std::cout << std::endl;
 
   std::list<int> std_l;
-  std_l.push_back(10);
-  std_l.push_back(20);
-  std_l.push_back(30);
-  std_l.insert(std_l.end().operator--(), 100);
+  // std_l.push_back(10);
+  // std_l.push_back(20);
+  // std_l.push_back(30);
+  std_l.insert(std_l.end(), 100);
   // .operator++().operator++().operator++().operator++()
   std::cout << "std: ";
   k = 0;
