@@ -2,11 +2,10 @@
 #define AVL_ITERATOR_H_
 
 #include "../avl_tree.tpp"
-#include "VirtualIterator.h"
 
 namespace s21 {
 template <typename T>
-class Iterator : public IteratorBase<T> {
+class Iterator {
  public:
   using key_type = T;
   using value_type = T;
@@ -16,7 +15,7 @@ class Iterator : public IteratorBase<T> {
 
   Iterator(Node<T>* node = nullptr) : node_(node) {}
 
-  Iterator& operator++() override {
+  Iterator& operator++() {
     if (this->node_ == nullptr) {
       throw std::length_error("Node is nullptr");
     }
@@ -34,13 +33,13 @@ class Iterator : public IteratorBase<T> {
     return *this;
   }
 
-  Iterator operator++(int) override {
+  Iterator operator++(int) {
     Iterator tmp = *this;
     ++(*this);
     return tmp;
   }
 
-  Iterator& operator--() override {
+  Iterator& operator--() {
     if (this->node_ == nullptr) {
       throw std::length_error("Node is nullptr");
     }
@@ -61,7 +60,7 @@ class Iterator : public IteratorBase<T> {
     return *this;
   }
 
-  Iterator operator--(int) override {
+  Iterator operator--(int) {
     Iterator tmp = *this;
     --(*this);
     return tmp;
@@ -76,11 +75,16 @@ class Iterator : public IteratorBase<T> {
   Node<T>* node_;
 };
 template <typename T>
-class ConstIterator : public IteratorBase<T> {
+class ConstIterator {
  public:
+  using key_type = T;
+  using value_type = T;
+  using reference = const T&;  // use const reference
+  using const_reference = reference;
+  using pointer = const T*;  // use const pointer
   ConstIterator(const Node<T>* node = nullptr) : node_(node) {}
 
-  ConstIterator& operator++() override {
+  ConstIterator& operator++() {
     if (this->node_ == nullptr) {
       throw std::length_error("Node is nullptr");
     }
@@ -98,13 +102,13 @@ class ConstIterator : public IteratorBase<T> {
     return *this;
   }
 
-  ConstIterator operator++(int) override {
+  ConstIterator operator++(int) {
     ConstIterator tmp = *this;
     ++(*this);
     return tmp;
   }
 
-  ConstIterator& operator--() override {
+  ConstIterator& operator--() {
     if (this->node_ == nullptr) {
       throw std::length_error("Node is nullptr");
     }
@@ -125,20 +129,20 @@ class ConstIterator : public IteratorBase<T> {
     return *this;
   }
 
-  ConstIterator operator--(int) override {
+  ConstIterator operator--(int) {
     ConstIterator tmp = *this;
     --(*this);
     return tmp;
   }
-  bool operator==(const ConstIterator& other) const override {
+  bool operator==(const ConstIterator& other) const {
     return node_ == other.node_;
   }
-  bool operator!=(const ConstIterator& other) const override {
+  bool operator!=(const ConstIterator& other) const {
     return node_ != other.node_;
   }
 
-  reference operator*() const override { return node_->key; }
-  pointer operator->() const override { return &(node_->key); }
+  reference operator*() const { return node_->key; }
+  pointer operator->() const { return &(node_->key); }
 
  private:
   const Node<T>* node_;
