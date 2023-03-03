@@ -10,7 +10,6 @@ int main() {
   mySet.insert(3);
   mySet.insert(10);
   mySet.insert(-5);
-  mySet.insert(-5);
   mySet.insert(11);
   mySet.insert(12);
   mySet.insert(13);

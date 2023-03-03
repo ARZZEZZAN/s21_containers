@@ -40,18 +40,19 @@ class AVLTree {
  private:
   Node<T>* root;
   bool inserted;
+  int size(Node<T>* node);
   int height(Node<T>* node);
   void updateSize(Node<T>* node);
   int balanceFactor(Node<T>* node);
   void updateHeight(Node<T>* node);
+  Node<T>* balance(Node<T>* node);
+  Node<T>* findMin(Node<T>* node);
   Node<T>* rotateLeft(Node<T>* node);
   Node<T>* rotateRight(Node<T>* node);
-  Node<T>* balance(Node<T>* node);
-  Node<T>* insert(Node<T>* node, T key, Node<T>* parent);
-  Node<T>* findMin(Node<T>* node);
   Node<T>* removeMin(Node<T>* node);
   Node<T>* remove(Node<T>* node, T key);
   Node<T>* search(Node<T>* node, T key);
+  Node<T>* insert(Node<T>* node, T key, Node<T>* parent);
 };
 }  // namespace s21
 

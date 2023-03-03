@@ -73,7 +73,7 @@ Node<T>* AVLTree<T>::insert(Node<T>* node, T key, Node<T>* parent) {
   if (!node) {
     node = new Node<T>(key);
     node->parent = parent;
-    // root->size_++;
+    updateSize(node);
     this->inserted = true;
     return node;
   }
@@ -161,6 +161,13 @@ void AVLTree<T>::updateSize(Node<T>* node) {
   if (node->parent) {
     updateSize(node->parent);
   }
+}
+template <typename T>
+int AVLTree<T>::size(Node<T>* node) {
+  if (node) {
+    return node->size_;
+  }
+  return 0;
 }
 template <typename T>
 Node<T>* AVLTree<T>::insert(T key) {
