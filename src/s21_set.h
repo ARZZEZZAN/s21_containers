@@ -23,7 +23,7 @@ class Set {
   using Allocator = std::allocator<T>;
   class Iterator {
    public:
-    explicit Iterator(Node<T>* node = nullptr) : node_(node) {}
+    Iterator(Node<T>* node = nullptr) : node_(node) {}
     reference operator*() const { return node_->key; }
     pointer operator->() const { return &(node_->key); }
     Iterator& operator++() {
@@ -48,11 +48,11 @@ class Set {
       ++(*this);
       return tmp;
     }
-    friend bool operator==(const Iterator& a, const Iterator& b) {
-      return a.node_ == b.node_;
+    bool operator==(const Iterator& other) const {
+      return node_ == other.node_;
     }
-    friend bool operator!=(const Iterator& a, const Iterator& b) {
-      return a.node_ != b.node_;
+    bool operator!=(const Iterator& other) const {
+      return node_ != other.node_;
     }
 
    private:
@@ -62,60 +62,21 @@ class Set {
   Set() : tree_() {}
   ~Set() {}
 
-  Iterator begin() {
-    Node<T>* node = tree_.getRoot();
-    while (node != nullptr && node->left != nullptr) {
-      node = node->left;
-    }
-    return Iterator(node);
-  }
-  Iterator end() { return Iterator(nullptr); }
-  bool contains(const T& key) { return tree_.search(key) != nullptr; }
-  void merge(Set<T>& other) {
-    if (this != &other) {
-      for (auto& elem : other) {
-        insert(elem);
-      }
-    }
-    other.clear();
-  }
-  void clear() {
-    if (this->tree_.getRoot()) {
-      Node<T>* root = this->tree_.getRoot();
-      this->tree_.clear(root);
-      this->tree_.setRoot(nullptr);
-    }
-  }
-  void swap(Set<T>& other) { tree_.swap(other.tree_); }
-  Iterator find(const T& key) { return Iterator(tree_.search(key)); }
-  size_type size() {
-    if (this->tree_.getRoot() == nullptr) {
-      return 0;
-    }
-    return tree_.getRoot()->size_;
-  }
-  size_type max_size() { return allocator.max_size() / 10; }
-  bool empty() {
-    if (this->tree_.getRoot() == nullptr) {
-      return true;
-    }
-    if (this->tree_.getRoot()->size_ == 0) {
-      return true;
-    }
-    return false;
-  }
-  void erase(Iterator pos) { tree_.remove(*pos); }
+  Iterator begin();
+  Iterator end();
 
-  std::pair<Iterator, bool> insert(const value_type& value) {
-    std::pair<Iterator, bool> result;
-    this->tree_.insert(value);
-    if (this->tree_.getInserted()) {
-      result = std::pair<Iterator, bool>(find(value), true);
-    } else {
-      result = std::pair<Iterator, bool>(find(value), false);
-    }
-    return result;
-  }
+  bool empty();
+  size_type size();
+  size_type max_size();
+
+  void clear();
+  std::pair<Iterator, bool> insert(const value_type& value);
+  void erase(Iterator pos);
+  void swap(Set<T>& other);
+  void merge(Set<T>& other);
+
+  bool contains(const T& key);
+  Iterator find(const T& key);
 
  private:
   AVLTree<T> tree_;

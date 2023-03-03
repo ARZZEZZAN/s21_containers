@@ -1,4 +1,4 @@
-#include "s21_set.h"
+#include "s21_set.tpp"
 
 #include <set>
 using namespace std;
