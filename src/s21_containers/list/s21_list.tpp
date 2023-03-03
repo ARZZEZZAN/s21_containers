@@ -188,7 +188,24 @@ void list<value_type>::swap(list& other) {
 }
 
 template <typename value_type>
-void list<value_type>::merge(list& other) {}
+void list<value_type>::merge(list& other) {
+  iterator iter_this = this->begin();
+  iterator iter_other = other.begin();
+
+  while (iter_this != this->end()) {
+    if (iter_other != other.end()) {
+      if (iter_this.ptr_->value_ >= iter_other.ptr_->value_) {
+        this->insert(iter_this, iter_other.ptr_->value_);
+        iter_other++;
+      }
+    } else {
+      iter_this++;
+    }
+  }
+  while (iter_other != other.end()) {
+    this->insert(iter_this, iter_other.ptr_->value_);
+  }
+}
 
 template <typename value_type>
 void list<value_type>::splice(iterator pos, list& other) {
@@ -208,7 +225,6 @@ void list<value_type>::reverse() {
   std::swap(head_, tail_);
 }
 
-/* current */
 template <typename value_type>
 void list<value_type>::unique() {
   for (iterator iter = this->begin(); iter != this->end(); ++iter) {
@@ -219,7 +235,6 @@ void list<value_type>::unique() {
     }
   }
 }
-/* current */
 
 // helpers
 template <typename value_type>
