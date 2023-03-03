@@ -5,29 +5,33 @@ using namespace s21;
 using namespace std;
 
 int main() {
+  int n = 5;
+  int k = 0;
+
   s21::list<int> s21_l;
+  // s21_l.push_back(10);
+  // s21_l.push_back(20);
+  // s21_l.push_back(30);
+  s21_l.insert(s21_l.end() - 1, 100);
+  std::cout << "s21: ";
+  k = 0;
+  for (auto i = s21_l.begin(); k < n; ++i) {
+    k++;
+    std::cout << *i << " ";
+  }
+
+  std::cout << std::endl;
+
   std::list<int> std_l;
-  s21_l.push_back(1);
-  s21_l.push_back(2);
-  s21_l.push_back(3);
-
-  std_l.push_back(1);
-  std_l.push_back(2);
-  std_l.push_back(3);
-
-  // s21_l.insert(s21_l.begin(), 100);
-  // s21_l.insert(s21_l.begin() + 1, 100);
-  // s21_l.insert(s21_l.begin() + 2, 100);
-  s21_l.insert(s21_l.begin() + 4, 100);
-  // s21_l.insert(s21_l.end(), 100);
-  // std_l.begin()++;
-  // std_l.begin()++;
-  // std_l.begin()++;
-  // std_l.insert(std_l.end()., 5);
-  // for (auto i = std_l.begin(); i != std_l.end(); ++i) {
-  //   std::cout << *i << " ";
-  // }
-  // std_l.end().operator--()
-  // std::cout << std::endl;
-  print_list(s21_l);
+  std_l.push_back(10);
+  std_l.push_back(20);
+  std_l.push_back(30);
+  std_l.insert(std_l.end().operator--(), 100);
+  // .operator++().operator++().operator++().operator++()
+  std::cout << "std: ";
+  k = 0;
+  for (auto i = std_l.begin(); k < n; ++i) {
+    k++;
+    std::cout << *i << " ";
+  }
 }
