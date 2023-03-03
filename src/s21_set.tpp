@@ -2,6 +2,8 @@
 
 namespace s21 {
 template <typename T>
+Set<T>::Set() : tree_() {}
+template <typename T>
 typename Set<T>::iterator Set<T>::begin() {
   Node<T>* node = tree_.getRoot();
   while (node != nullptr && node->left != nullptr) {

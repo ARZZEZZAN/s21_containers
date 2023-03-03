@@ -11,12 +11,16 @@ namespace s21 {
 template <typename T>
 class Set {
  public:
-  using size_type = size_t;
-  using Allocator = std::allocator<T>;
   using iterator = Iterator<T>;
   using constIterator = ConstIterator<T>;
+  using size_type = size_t;
+  using Allocator = std::allocator<T>;
 
-  Set() : tree_() {}
+  Set();
+  Set(std::initializer_list<value_type> const& items);
+  Set(const set& s);
+  Set(set&& s);
+  operator=(set&& s);
   ~Set() {}
 
   iterator begin();
