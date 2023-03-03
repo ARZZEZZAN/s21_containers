@@ -67,7 +67,7 @@ class list {
   void merge(list& other);
   void splice(iterator pos, list& other);
   void reverse();
-  // void unique();
+  void unique();
   void sort();
 
   // Helpers

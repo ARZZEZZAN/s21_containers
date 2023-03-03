@@ -198,8 +198,6 @@ void list<value_type>::splice(iterator pos, list& other) {
   }
 }
 
-/* current */
-// NOT WORK
 template <typename value_type>
 void list<value_type>::reverse() {
   size_type step = 0;
@@ -210,6 +208,17 @@ void list<value_type>::reverse() {
   std::swap(head_, tail_);
 }
 
+/* current */
+template <typename value_type>
+void list<value_type>::unique() {
+  for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+    if (iter.ptr_->next_ && iter.ptr_->next_ != end_) {
+      if (iter.ptr_->value_ == iter.ptr_->next_->value_) {
+        this->erase(iter);
+      }
+    }
+  }
+}
 /* current */
 
 // helpers
