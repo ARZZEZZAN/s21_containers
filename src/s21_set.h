@@ -48,6 +48,32 @@ class Set {
       ++(*this);
       return tmp;
     }
+    Iterator& operator--() {
+      if (this->node_ == nullptr) {
+        throw std::length_error("Node is nullptr");
+      }
+      if (this->node_ == nullptr) {
+        throw std::length_error("Node is nullptr");
+      }
+      if (node_->left != nullptr) {
+        node_ = node_->left;
+        while (node_->right != nullptr) node_ = node_->right;
+      } else {
+        Node<T>* parent = node_->parent;
+        while (parent != nullptr && node_ == parent->left) {
+          node_ = parent;
+          parent = parent->parent;
+        }
+        node_ = parent;
+      }
+      return *this;
+    }
+
+    Iterator operator--(int) {
+      Iterator tmp = *this;
+      --(*this);
+      return tmp;
+    }
     bool operator==(const Iterator& other) const {
       return node_ == other.node_;
     }
