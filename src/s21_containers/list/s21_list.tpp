@@ -17,6 +17,7 @@ list<value_type>::list(size_type n) {
   end_ = new Node(size_);
   add_end();
 }
+
 // template <typename value_type>
 // list<value_type>::list(std::initializer_list<value_type> const& items)
 //     : head_(nullptr), tail_(nullptr), size_(0) {
@@ -64,22 +65,20 @@ void list<value_type>::clear() {
   }
 }
 
-/* current */
 template <typename value_type>
 typename list<value_type>::iterator list<value_type>::insert(
     iterator pos, const_reference value) {
-  Node* current = pos.ptr_;  // позиция в которую нехобходимо добавить
-  Node* add = new Node(value);  // то что мы добавим
-
-  if (!head_ && !tail_) {  // если лист не существует
+  Node* current = pos.ptr_;
+  Node* add = new Node(value);
+  if (empty()) {
     add->next_ = end_;
     add->prev_ = end_;
     head_ = add;
     tail_ = add;
   } else {
-    if (current == head_) {  // это head
+    if (current == head_) {
       head_ = add;
-    } else if (current == end_) {  // это tail_
+    } else if (current == end_) {
       tail_ = add;
     }
     add->next_ = current;
@@ -91,6 +90,26 @@ typename list<value_type>::iterator list<value_type>::insert(
   size_++;
   add_end();
   return iterator(add);
+}
+
+/* current */
+
+template <typename value_type>
+void list<value_type>::erase(iterator pos) {
+  Node* current = pos.ptr_;
+  if (!empty() && current != end_) {
+    if (current == head_) {
+      if (current->next_ && current->next_ != end_) {
+        head_ = current->next_;
+      }
+    }
+    current->prev_->next_ = current->next_;
+    current->next_->prev_ = current->prev_;
+    delete current;
+    this->size_--;
+  } else {
+    throw std::invalid_argument("Invalid argument");
+  }
 }
 
 /* current */
