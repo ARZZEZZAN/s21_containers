@@ -1,5 +1,5 @@
-#ifndef AVL_ITERATOR_H_
-#define AVL_ITERATOR_H_
+#ifndef AVL_VIRTITERATOR_H_
+#define AVL_VIRTITERATOR_H_
 
 namespace s21 {
 template <typename T>
@@ -13,18 +13,16 @@ class IteratorBase {
 
   virtual ~IteratorBase() {}
 
-  bool operator==(const IteratorBase& other) const {
-    return node_ == other.node_;
-  }
-  bool operator!=(const IteratorBase& other) const {
-    return node_ != other.node_;
-  }
-  reference operator*() const override { return node_->key; }
-  pointer operator->() const override { return &(node_->key); }
-  virtual IteratorBase& operator++() = 0;
-  virtual IteratorBase operator++(int) = 0;
-  virtual IteratorBase& operator--() = 0;
-  virtual IteratorBase operator--(int) = 0;
+  virtual bool operator==(const IteratorBase& other) const = 0;
+  virtual bool operator!=(const IteratorBase& other) const = 0;
+
+  virtual reference operator*() const = 0;
+  virtual pointer operator->() const = 0;
+
+  virtual IteratorBase<T>& operator++() = 0;
+  virtual IteratorBase<T>& operator++(int) = 0;
+  virtual IteratorBase<T>& operator--() = 0;
+  virtual IteratorBase<T>& operator--(int) = 0;
 };
 }  // namespace s21
-#endif  // AVL_ITERATOR_H_
+#endif  // AVL_VIRTITERATOR_H_

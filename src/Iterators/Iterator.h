@@ -6,7 +6,8 @@
 
 namespace s21 {
 template <typename T>
-class Iterator : public IteratorBase {
+class Iterator : public IteratorBase<T> {
+ public:
   using key_type = T;
   using value_type = T;
   using reference = T&;
@@ -65,12 +66,17 @@ class Iterator : public IteratorBase {
     --(*this);
     return tmp;
   }
+  bool operator==(const Iterator& other) const { return node_ == other.node_; }
+  bool operator!=(const Iterator& other) const { return node_ != other.node_; }
+
+  reference operator*() const { return node_->key; }
+  pointer operator->() const { return &(node_->key); }
 
  private:
   Node<T>* node_;
 };
 template <typename T>
-class ConstIterator : public IteratorBase {
+class ConstIterator : public IteratorBase<T> {
  public:
   ConstIterator(const Node<T>* node = nullptr) : node_(node) {}
 
@@ -93,7 +99,7 @@ class ConstIterator : public IteratorBase {
   }
 
   ConstIterator operator++(int) override {
-    Iterator tmp = *this;
+    ConstIterator tmp = *this;
     ++(*this);
     return tmp;
   }
@@ -120,10 +126,19 @@ class ConstIterator : public IteratorBase {
   }
 
   ConstIterator operator--(int) override {
-    Iterator tmp = *this;
+    ConstIterator tmp = *this;
     --(*this);
     return tmp;
   }
+  bool operator==(const ConstIterator& other) const override {
+    return node_ == other.node_;
+  }
+  bool operator!=(const ConstIterator& other) const override {
+    return node_ != other.node_;
+  }
+
+  reference operator*() const override { return node_->key; }
+  pointer operator->() const override { return &(node_->key); }
 
  private:
   const Node<T>* node_;

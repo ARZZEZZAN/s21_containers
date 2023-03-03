@@ -1,16 +1,17 @@
 #include "s21_set.h"
+
 namespace s21 {
 template <typename T>
-typename Set<T>::Iterator Set<T>::begin() {
+typename Set<T>::iterator Set<T>::begin() {
   Node<T>* node = tree_.getRoot();
   while (node != nullptr && node->left != nullptr) {
     node = node->left;
   }
-  return Iterator(node);
+  return iterator(node);
 }
 template <typename T>
-typename Set<T>::Iterator Set<T>::end() {
-  return Iterator(nullptr);
+typename Set<T>::iterator Set<T>::end() {
+  return iterator(nullptr);
 }
 template <typename T>
 bool Set<T>::empty() {
@@ -42,19 +43,19 @@ void Set<T>::clear() {
   }
 }
 template <typename T>
-std::pair<typename Set<T>::Iterator, bool> Set<T>::insert(const T& value) {
-  std::pair<typename Set<T>::Iterator, bool> result;
+std::pair<typename Set<T>::iterator, bool> Set<T>::insert(const T& value) {
+  std::pair<typename Set<T>::iterator, bool> result;
   this->tree_.insert(value);
   if (this->tree_.getInserted()) {
-    result = std::pair<typename Set<T>::Iterator, bool>(find(value), true);
+    result = std::pair<typename Set<T>::iterator, bool>(find(value), true);
   } else {
-    result = std::pair<typename Set<T>::Iterator, bool>(find(value), false);
+    result = std::pair<typename Set<T>::iterator, bool>(find(value), false);
   }
   return result;
 }
 
 template <typename T>
-void Set<T>::erase(Set<T>::Iterator pos) {
+void Set<T>::erase(Set<T>::iterator pos) {
   tree_.remove(*pos);
 }
 template <typename T>
@@ -75,7 +76,7 @@ bool Set<T>::contains(const T& key) {
   return tree_.search(key) != nullptr;
 }
 template <typename T>
-typename Set<T>::Iterator Set<T>::find(const T& key) {
-  return Iterator(tree_.search(key));
+typename Set<T>::iterator Set<T>::find(const T& key) {
+  return iterator(tree_.search(key));
 }
 }  // namespace s21

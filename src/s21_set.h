@@ -13,27 +13,27 @@ class Set {
  public:
   using size_type = size_t;
   using Allocator = std::allocator<T>;
-  // using Iterator = Iterator;
-  // using ConstIterator = ConstIterator;
+  using iterator = Iterator<T>;
+  using constIterator = ConstIterator<T>;
 
   Set() : tree_() {}
   ~Set() {}
 
-  Iterator begin();
-  Iterator end();
+  iterator begin();
+  iterator end();
 
   bool empty();
   size_type size();
   size_type max_size();
 
   void clear();
-  std::pair<Iterator, bool> insert(const T& value);
-  void erase(Iterator pos);
+  std::pair<iterator, bool> insert(const T& value);
+  void erase(iterator pos);
   void swap(Set<T>& other);
   void merge(Set<T>& other);
 
   bool contains(const T& key);
-  Iterator find(const T& key);
+  iterator find(const T& key);
 
  private:
   AVLTree<T> tree_;
