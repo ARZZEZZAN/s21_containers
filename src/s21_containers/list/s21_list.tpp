@@ -92,8 +92,6 @@ typename list<value_type>::iterator list<value_type>::insert(
   return iterator(add);
 }
 
-/* current */
-
 template <typename value_type>
 void list<value_type>::erase(iterator pos) {
   Node* current = pos.ptr_;
@@ -111,8 +109,6 @@ void list<value_type>::erase(iterator pos) {
     throw std::invalid_argument("Invalid argument");
   }
 }
-
-/* current */
 
 template <typename value_type>
 void list<value_type>::push_back(const_reference value) {
@@ -193,6 +189,28 @@ void list<value_type>::swap(list& other) {
 
 template <typename value_type>
 void list<value_type>::merge(list& other) {}
+
+template <typename value_type>
+void list<value_type>::splice(iterator pos, list& other) {
+  for (iterator iter = other.begin(); iter != other.end(); ++iter) {
+    this->insert(pos, *iter);
+    other.erase(iter);
+  }
+}
+
+/* current */
+// NOT WORK
+template <typename value_type>
+void list<value_type>::reverse() {
+  Node* start = head_;
+  std::swap(head_->next_, head_->prev_);
+  while (start != head_) {
+    std::swap(start->prev_, start->next_);
+    start = start->prev_;
+  }
+}
+
+/* current */
 
 // helpers
 template <typename value_type>

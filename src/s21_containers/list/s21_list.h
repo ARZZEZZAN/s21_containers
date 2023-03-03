@@ -65,10 +65,10 @@ class list {
   void pop_front();
   void swap(list& other);
   void merge(list& other);
-  // void splice(const_iterator pos, list& other);
-  // void reverse();
+  void splice(iterator pos, list& other);
+  void reverse();
   // void unique();
-  // void sort();
+  void sort();
 
   // Helpers
   // void list<T>::merge_sorted_lists(list& left_half, list& right_half);

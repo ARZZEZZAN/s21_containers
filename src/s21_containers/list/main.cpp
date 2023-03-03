@@ -5,14 +5,14 @@ using namespace s21;
 using namespace std;
 
 int main() {
-  int n = 5;
+  int n = 7;
   int k = 0;
 
   s21::list<int> s21_l;
   s21_l.push_back(10);
   s21_l.push_back(20);
   s21_l.push_back(30);
-  s21_l.erase(s21_l.begin());
+  s21_l.reverse();
   std::cout << "s21: ";
   k = 0;
   for (auto i = s21_l.begin(); k < n; ++i) {
@@ -26,8 +26,7 @@ int main() {
   std_l.push_back(10);
   std_l.push_back(20);
   std_l.push_back(30);
-  std_l.erase(std_l.end());
-  // .operator++().operator++().operator++().operator++()
+  std_l.reverse();
   std::cout << "std: ";
   k = 0;
   for (auto i = std_l.begin(); k < n; ++i) {
