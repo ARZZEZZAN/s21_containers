@@ -28,6 +28,11 @@ int main() {
   s21::list<int> l3 = {10000000, 9, 10000, 2, 10000000, 20000000};
   std::list<int> l4 = {10000000, 9, 10000, 2, 10000000, 20000000};
 
+  l3.insert(l3.begin() + 2, 99999999);
+  auto it = l4.begin();
+  it++;
+  it++;
+  l4.insert(l4.begin(), 99999999);
   l3.print_list();
   print_std_list(l4);
 
@@ -38,5 +43,8 @@ int main() {
   print_std_list(l4);
 
   std::cout << "-------------------------------------------" << std::endl;
+
+  s21::list<int> lcopy(l3);
+  lcopy.print_list();
   return 0;
 }

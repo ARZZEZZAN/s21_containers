@@ -3,6 +3,8 @@ CC = gcc
 GCOV = -fprofile-arcs -ftest-coverage
 # CFLAGS = -lstdc++ -lgtest -std=c++17
 CFLAGS = -lstdc++ -lgtest -std=c++17 -Wall -Werror -Wextra
+# EXE = unit_tests
+# TFN = unit_tests.cc
 EXE = main
 TFN = main.cc
 

@@ -128,11 +128,11 @@ class list {
     Node* ptr_ = nullptr;
   };
 
-  using iterator = ListIterator<T>;             // TODO
-  using const_iterator = ListConstIterator<T>;  // TODO
+  using iterator = ListIterator<T>;
+  using const_iterator = ListConstIterator<T>;
 
-  iterator begin() { return iterator(head_); }  // TODO
-  iterator end() { return iterator(end_); }     // TODO
+  iterator begin() { return iterator(head_); }  // TODO review
+  iterator end() { return iterator(end_); }     // TODO review
 
   iterator insert(iterator pos, const_reference value);  // TODO
   void erase(iterator pos);                              // TODO
@@ -141,7 +141,9 @@ class list {
 
  private:
   // ---------------support functions-----------------
-  void add_end();  // TODO review и поменять название на change_end()
+  void add_end();  // TODO review и поменять название на change_end() и убрать
+                   // излишний вызов например в push и поп он вызывается, после
+                   // push мы вызываем add_end который уже был вызван в push
   void quick_sort(iterator left, iterator right);
   iterator partition(iterator first, iterator last);
 };

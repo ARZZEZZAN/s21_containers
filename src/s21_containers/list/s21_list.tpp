@@ -3,7 +3,8 @@
 using namespace s21;
 
 template <typename value_type>
-list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {
+list<value_type>::list()
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   end_ = new Node(size_);
   add_end();
 }
@@ -19,7 +20,7 @@ list<value_type>::list(size_type n) {
 
 template <typename value_type>
 list<value_type>::list(std::initializer_list<value_type> const& items)
-    : head_(nullptr), tail_(nullptr), size_(0) {
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   end_ = new Node(size_);
   for (const auto& item : items) {
     push_back(item);
@@ -28,15 +29,19 @@ list<value_type>::list(std::initializer_list<value_type> const& items)
 }
 
 template <typename value_type>
-list<value_type>::list(const list& l)
-    : head_(nullptr), tail_(nullptr), size_(0) {
-  for (const auto& item : l) {
-    push_back(item);
+list<value_type>::list(const list& l)  // TODO need review
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
+  end_ = new Node(size_);
+  Node* current = l.head_;
+  for (size_type i = 0; i != l.size_; i++) {
+    push_back(current->value_);
+    current = current->next_;
   }
 }
 
 template <typename value_type>
-list<value_type>::list(list&& l) : head_(nullptr), tail_(nullptr), size_(0) {
+list<value_type>::list(list&& l)
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   swap(l);  // TODO проверить точно ли правильно работает
 }
 
@@ -81,12 +86,6 @@ void list<value_type>::print_list() {  // TODO review
     }
   }
   std::cout << "]\n";
-  // old {
-  // for (auto i = this->begin(); i != this->end(); ++i) {
-  //   std::cout << *i << " ";
-  // }
-  // std::cout << std::endl;
-  // }
 }
 
 template <typename value_type>
@@ -116,23 +115,23 @@ typename list<value_type>::iterator list<value_type>::insert(
     iterator pos, const_reference value) {
   Node* current = pos.ptr_;
   Node* add = new Node(value);
-  if (!current) {
-    // add to tail
-    tail_->next_ = add;
-    add->prev_ = tail_;
-    tail_ = add;
-  } else if (!current->prev_) {
-    // add to head
-    head_->prev_ = add;
-    add->next_ = head_;
+  if (empty()) {
+    add->next_ = end_;
+    add->prev_ = end_;
     head_ = add;
+    tail_ = add;
   } else {
-    // add between
+    if (current == head_) {
+      head_ = add;
+    } else if (current == end_) {
+      tail_ = add;
+    }
     add->next_ = current;
     add->prev_ = current->prev_;
     current->prev_->next_ = add;
     current->prev_ = add;
   }
+
   size_++;
   add_end();
   return iterator(add);
@@ -322,7 +321,7 @@ typename list<value_type>::iterator list<value_type>::partition(iterator first,
   for (iterator j = first; j != last; ++j) {
     if (j.ptr_->value_ <= pivot_value) {
       std::swap(i.ptr_->value_, j.ptr_->value_);
-      i++;
+      ++i;
     }
   }
 
