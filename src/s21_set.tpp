@@ -4,13 +4,29 @@ namespace s21 {
 template <typename T>
 Set<T>::Set() : tree_() {}
 template <typename T>
-Set<T>::Set(std::initializer_list<value_type> const& items) {}
+Set<T>::Set(std::initializer_list<value_type> const& items) : tree_() {
+  for (auto i = items.begin(); i != items.end(); ++i) {
+    this->insert(*i);
+  }
+}
 template <typename T>
-Set<T>::Set(const Set& s) {}
+Set<T>::Set(const Set& s) : tree_() {
+  *this = s;
+}
 template <typename T>
-Set<T>::Set(Set&& s) {}
+Set<T>::Set(Set&& s) : tree_() {
+  if (this != &s) {
+    *this = s;
+  }
+}
 template <typename T>
-Set<T> Set<T>::operator=(Set&& s) {}
+Set<T> Set<T>::operator=(Set&& s) {
+  if (this != &s) {
+    clear();
+    swap(s);
+  }
+  return *this;
+}
 
 template <typename T>
 typename Set<T>::iterator Set<T>::begin() {
