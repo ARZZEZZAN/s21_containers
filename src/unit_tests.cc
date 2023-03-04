@@ -188,6 +188,23 @@ TEST(ListTest, Reverse) {
   std_list.reverse();
   EXPECT_TRUE(compare_lists(my_list, std_list));
 }
+
+TEST(ListTest, Unique) {
+  s21::list<int> my_list{90, 10, 3, 40, 30, 20, 10, 10, 90, 90, 3};
+  std::list<int> std_list{90, 10, 3, 40, 30, 20, 10, 10, 90, 90, 3};
+  my_list.unique();
+  std_list.unique();
+  EXPECT_TRUE(compare_lists(my_list, std_list));
+}
+
+TEST(ListTest, Sort) {
+  s21::list<int> my_list{90, 10, 3, 40, 30, 20, 2000, 10, 90, 100, 3};
+  std::list<int> std_list{90, 10, 3, 40, 30, 20, 2000, 10, 90, 100, 3};
+  my_list.sort();
+  std_list.sort();
+  EXPECT_TRUE(compare_lists(my_list, std_list));
+}
+
 // ------------Above checked---------------------
 
 int main(int argc, char *argv[]) {

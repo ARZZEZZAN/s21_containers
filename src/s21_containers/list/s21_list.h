@@ -147,9 +147,6 @@ class list {
     }
 
     ListIterator& operator--() {
-      // if (!ptr_) {
-      //   throw std::invalid_argument("hui");
-      // }
       ptr_ = ptr_->prev_;
       return *this;
     }
