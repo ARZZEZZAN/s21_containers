@@ -60,7 +60,65 @@ class list {
   void sort();              // TODO review
 
   template <typename value_type>
-  class ListConstIterator;
+  class ListConstIterator {
+    friend class list<T>;
+
+   public:
+    ListConstIterator() { ptr_ = nullptr; }
+    ListConstIterator(Node* ptr) : ptr_(ptr){};
+
+    reference operator*() { return this->ptr_->value_; }
+
+    ListConstIterator operator++(int) {
+      ptr_ = ptr_->next_;
+      return *this;
+    }
+
+    ListConstIterator operator--(int) {
+      ptr_ = ptr_->prev_;
+      return *this;
+    }
+
+    ListConstIterator& operator++() {
+      ptr_ = ptr_->next_;
+      return *this;
+    }
+
+    ListConstIterator& operator--() {
+      ptr_ = ptr_->prev_;
+      return *this;
+    }
+
+    ListConstIterator operator+(const size_type value) {
+      Node* tmp = ptr_;
+      for (size_type i = 0; i < value; i++) {
+        tmp = tmp->next_;
+      }
+
+      ListConstIterator res(tmp);
+      return res;
+    }
+
+    ListConstIterator operator-(const size_type value) {
+      Node* tmp = ptr_;
+      for (size_type i = 0; i < value; i++) {
+        tmp = tmp->prev_;
+      }
+      ListConstIterator res(tmp);
+      return res;
+    }
+
+    bool operator==(ListConstIterator other) {
+      return this->ptr_ == other.ptr_;
+    }
+
+    bool operator!=(ListConstIterator other) {
+      return this->ptr_ != other.ptr_;
+    }
+
+   private:
+    Node* ptr_ = nullptr;
+  };
 
   template <typename value_type>
   class ListIterator {
@@ -128,15 +186,19 @@ class list {
     Node* ptr_ = nullptr;
   };
 
+ public:
   using iterator = ListIterator<T>;
   using const_iterator = ListConstIterator<T>;
 
   iterator begin() { return iterator(head_); }  // TODO review
   iterator end() { return iterator(end_); }     // TODO review
 
+  const_iterator begin() const { return const_iterator(head_); }  // TODO review
+  const_iterator end() const { return const_iterator(end_); }     // TODO review
+
   iterator insert(iterator pos, const_reference value);  // TODO
   void erase(iterator pos);                              // TODO
-  void splice(iterator pos,
+  void splice(const_iterator pos,
               list& other);  // TODO поменять iterator на const_iterator
 
  private:

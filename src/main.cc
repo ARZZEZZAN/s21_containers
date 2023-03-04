@@ -11,40 +11,34 @@ void print_std_list(std::list<int>& l) {
 }
 
 int main() {
-  s21::list<int> l1 = {99, 9, 1, 2, 3};
-  std::list<int> l2 = {99, 9, 1, 2, 3};
-
-  l1.print_list();
-  print_std_list(l2);
-
-  l1.sort();
-  l2.sort();
-
-  l1.print_list();
-  print_std_list(l2);
-
   std::cout << "-------------------------------------------" << std::endl;
 
-  s21::list<int> l3 = {10000000, 9, 10000, 2, 10000000, 20000000};
-  std::list<int> l4 = {10000000, 9, 10000, 2, 10000000, 20000000};
+  s21::list<int> my_list1{1, 2, 3, 4, 5};
+  s21::list<int> my_list2{6, 7, 8, 9, 10, 11};
 
-  l3.insert(l3.begin() + 2, 99999999);
-  auto it = l4.begin();
-  it++;
-  it++;
-  l4.insert(l4.begin(), 99999999);
-  l3.print_list();
-  print_std_list(l4);
+  my_list1.print_list();
+  my_list2.print_list();
+  std::cout << std::endl;
 
-  l3.sort();
-  l4.sort();
+  my_list1.swap(my_list2);
 
-  l3.print_list();
-  print_std_list(l4);
-
+  my_list1.print_list();
+  my_list2.print_list();
+  std::cout << "-------------------------------------------" << std::endl;
   std::cout << "-------------------------------------------" << std::endl;
 
-  s21::list<int> lcopy(l3);
-  lcopy.print_list();
+  std::list<int> std_list1{1, 2, 3, 4, 5};
+  std::list<int> std_list2{6, 7, 8, 9, 10, 11};
+
+  print_std_list(std_list1);
+  print_std_list(std_list2);
+  std::cout << std::endl;
+
+  std_list1.swap(std_list2);
+
+  print_std_list(std_list1);
+  print_std_list(std_list2);
+  std::cout << "-------------------------------------------" << std::endl;
+
   return 0;
 }
