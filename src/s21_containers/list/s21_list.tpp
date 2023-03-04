@@ -1,8 +1,6 @@
 #include "s21_list.h"
-
 namespace s21 {
 
-//  List Functions
 template <typename value_type>
 list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {
   end_ = new Node(size_);
@@ -18,13 +16,15 @@ list<value_type>::list(size_type n) {
   add_end();
 }
 
-// template <typename value_type>
-// list<value_type>::list(std::initializer_list<value_type> const& items)
-//     : head_(nullptr), tail_(nullptr), size_(0) {
-//   for (const auto& item : items) {
-//     push_back(item);
-//   }
-// }
+template <typename value_type>
+list<value_type>::list(std::initializer_list<value_type> const& items)
+    : head_(nullptr), tail_(nullptr), size_(0) {
+  end_ = new Node(size_);
+  for (const auto& item : items) {
+    push_back(item);
+    add_end();
+  }
+}
 
 template <typename value_type>
 list<value_type>::list(const list& l)
@@ -36,28 +36,73 @@ list<value_type>::list(const list& l)
 
 template <typename value_type>
 list<value_type>::list(list&& l) : head_(nullptr), tail_(nullptr), size_(0) {
-  std::swap(this->head_, l.head_);
-  std::swap(this->tail_, l.tail_);
-  std::swap(this->size_, l.size_);
+  swap(l);  // TODO проверить точно ли правильно работает
 }
 
 template <typename value_type>
 list<value_type>::~list() {
   clear();
+  delete end_;
 }
 
 template <typename value_type>
 typename list<value_type>::list& list<value_type>::operator=(list&& l) {
   if (this != &l) {
     clear();
-    std::swap(head_, l.head_);
-    std::swap(tail_, l.tail_);
-    std::swap(size_, l.size_);
+    swap(l);  // TODO review
   }
   return *this;
 }
 
-// List Modifiers
+template <typename value_type>
+typename list<value_type>::const_reference list<value_type>::front() {
+  if (empty()) {
+    throw std::out_of_range("list is empty");
+  }
+  return head_->value_;
+}
+
+template <typename value_type>
+typename list<value_type>::const_reference list<value_type>::back() {
+  if (empty()) {
+    throw std::out_of_range("list is empty");
+  }
+  return tail_->value_;
+}
+
+template <typename value_type>
+void list<value_type>::print_list() {  // TODO review
+  std::cout << "[";
+  for (iterator it = begin(); it != end(); ++it) {
+    std::cout << *it;
+    if ((it + 1) != end()) {
+      std::cout << ", ";
+    }
+  }
+  std::cout << "]\n";
+  // old {
+  // for (auto i = this->begin(); i != this->end(); ++i) {
+  //   std::cout << *i << " ";
+  // }
+  // std::cout << std::endl;
+  // }
+}
+
+template <typename value_type>
+bool list<value_type>::empty() {
+  return size_ == 0;
+}
+
+template <typename value_type>
+typename list<value_type>::size_type list<value_type>::size() {
+  return size_;
+}
+
+template <typename value_type>
+typename list<value_type>::size_type list<value_type>::max_size() {
+  return std::numeric_limits<size_type>::max();
+}
+
 template <typename value_type>
 void list<value_type>::clear() {
   while (!empty()) {
@@ -86,7 +131,6 @@ typename list<value_type>::iterator list<value_type>::insert(
     current->prev_->next_ = add;
     current->prev_ = add;
   }
-
   size_++;
   add_end();
   return iterator(add);
@@ -111,6 +155,14 @@ void list<value_type>::erase(iterator pos) {
 }
 
 template <typename value_type>
+void list<value_type>::splice(const_iterator pos, list& other) {
+  for (iterator iter = other.begin(); iter != other.end(); ++iter) {
+    this->insert(pos, *iter);
+    other.erase(iter);
+  }
+}
+
+template <typename value_type>
 void list<value_type>::push_back(const_reference value) {
   Node* new_node = new Node(value);
   if (empty()) {
@@ -131,14 +183,12 @@ void list<value_type>::pop_back() {
     throw std::out_of_range("list is empty");
   }
   Node* last_node = tail_;
-
   if (size_ == 1) {
     head_ = nullptr;
     tail_ = nullptr;
-
   } else {
     tail_ = last_node->prev_;
-    tail_->next_ = end_;
+    tail_->next_ = nullptr;
   }
   delete last_node;
   size_--;
@@ -208,14 +258,6 @@ void list<value_type>::merge(list& other) {
 }
 
 template <typename value_type>
-void list<value_type>::splice(iterator pos, list& other) {
-  for (iterator iter = other.begin(); iter != other.end(); ++iter) {
-    this->insert(pos, *iter);
-    other.erase(iter);
-  }
-}
-
-template <typename value_type>
 void list<value_type>::reverse() {
   size_type step = 0;
   for (iterator iter = this->begin(); step <= this->size(); ++iter) {
@@ -236,25 +278,54 @@ void list<value_type>::unique() {
   }
 }
 
-// helpers
 template <typename value_type>
-void print_list(list<value_type>& l) {
-  for (auto i = l.begin(); i != l.end(); ++i) {
-    std::cout << *i << " ";
+void list<value_type>::sort() {
+  if (size_ > 1) {
+    quick_sort(begin(), --end());
   }
-  std::cout << std::endl;
+}
+
+// ---------------support functions-----------------
+template <typename value_type>
+void list<value_type>::add_end() {
+  if (end_) {
+    end_->next_ = head_;
+    end_->prev_ = tail_;
+    end_->value_ = size();
+    if (head_) {
+      head_->prev_ = end_;
+    }
+    if (tail_) {
+      tail_->next_ = end_;
+    }
+  }
 }
 
 template <typename value_type>
-void list<value_type>::add_end() {
-  end_->next_ = head_;
-  end_->prev_ = tail_;
-  end_->value_ = size();
-  if (head_) {
-    head_->prev_ = end_;
+void list<value_type>::quick_sort(iterator first, iterator last) {
+  if (first == last || first == end_ || last == end_ || first == tail_) {
+    return;
   }
-  if (tail_) {
-    tail_->next_ = end_;
+  iterator pivot = partition(first, last);
+  quick_sort(first, --pivot);
+  quick_sort(++pivot, last);
+}
+
+template <typename value_type>
+typename list<value_type>::iterator list<value_type>::partition(iterator first,
+                                                                iterator last) {
+  value_type pivot_value = last.ptr_->value_;
+  iterator i = first;
+
+  for (iterator j = first; j != last; ++j) {
+    if (j.ptr_->value_ <= pivot_value) {
+      std::swap(i.ptr_->value_, j.ptr_->value_);
+      i++;
+    }
   }
+
+  std::swap(i.ptr_->value_, last.ptr_->value_);
+
+  return i;
 }
 }  // namespace s21

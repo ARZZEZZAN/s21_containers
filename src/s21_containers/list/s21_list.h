@@ -6,152 +6,200 @@
 #include <limits>
 
 namespace s21 {
-template <typename T>
-class ListIterator;
-
-template <typename T>
-struct node {
-  T value_;
-  node* prev_;
-  node* next_;
-
-  node(const T& value) : value_(value), prev_(nullptr), next_(nullptr) {}
-};
-
-template <typename T>
-class ListConstIterator;
 
 template <typename T>
 class list {
-  // List Member type
+ public:
   using value_type = T;
   using reference = T&;
   using const_reference = const T&;
-  using iterator = ListIterator<T>;
-  using const_iterator = ListConstIterator<T>;
   using size_type = std::size_t;
-  using Node = node<T>;
+
+ private:
+  struct Node {
+    value_type value_;
+    Node* prev_;
+    Node* next_;
+
+    Node(const value_type& value)
+        : value_(value), prev_(nullptr), next_(nullptr) {}
+  };
+
+  Node* head_;
+  Node* tail_;
+  Node* end_;
+  size_type size_;
 
  public:
-  // List Functions -- DONE
   list();
   list(size_type n);
-  // list(std::initializer_list<value_type> const& items);
+  list(std::initializer_list<value_type> const& items);
   list(const list& l);
   list(list&& l);
   ~list();
   list& operator=(list&& l);
 
-  // List Element access -- DONE
-  const_reference front() { return head_->value_; }
-  const_reference back() { return tail_->value_; }
+  const_reference front();
+  const_reference back();
 
-  // List Iterators -- DONE
-  iterator begin() { return iterator(head_); }
-  iterator end() { return iterator(end_); }
+  void print_list();  // TODO review
 
-  // List Capacity -- DONE
-  bool empty() { return size_ == 0; }
-  size_type size() { return size_; }
-  size_type max_size() { return std::numeric_limits<size_type>::max(); }
+  bool empty();
+  size_type size();      // TODO review
+  size_type max_size();  // TODO review
 
-  // List Modifiers
-  void clear();
-  iterator insert(iterator pos, const_reference value);
-  void erase(iterator pos);
+  void clear();  //
   void push_back(const_reference value);
   void pop_back();
   void push_front(const_reference value);
   void pop_front();
   void swap(list& other);
-  void merge(list& other);
-  void splice(iterator pos, list& other);
-  void reverse();
-  void unique();
-  void sort();
+  void merge(list& other);  // TODO review
+  void reverse();           // TODO review
+  void unique();            // TODO review
+  void sort();              // TODO review
 
-  // Helpers
-  void print_list();
+  // template <typename value_type>
+  // class ListConstIterator {
+  //   friend class list<T>;
 
- private:
-  Node* head_;
-  Node* tail_;
-  Node* end_;
-  size_type size_;
-  void add_end();
-};
+  //  public:
+  //   ListConstIterator() { ptr_ = nullptr; }
+  //   ListConstIterator(Node* ptr) : ptr_(ptr){};
 
-template <typename T>
-class ListIterator {
-  friend class ListConstIterator<T>;
-  friend class list<T>;
+  //   reference operator*() { return this->ptr_->value_; }
 
-  using value_type = T;
-  using pointer = T*;
-  using reference = T&;
-  using Node = node<T>;
-  using size_type = std::size_t;
+  //   ListConstIterator operator++(int) {
+  //     ptr_ = ptr_->next_;
+  //     return *this;
+  //   }
 
- public:
-  ListIterator() { ptr_ = nullptr; }
-  ListIterator(Node* ptr) : ptr_(ptr){};
+  //   ListConstIterator operator--(int) {
+  //     ptr_ = ptr_->prev_;
+  //     return *this;
+  //   }
 
-  reference operator*() { return this->ptr_->value_; }
+  //   ListConstIterator& operator++() {
+  //     ptr_ = ptr_->next_;
+  //     return *this;
+  //   }
 
-  ListIterator operator++(int) {
-    ptr_ = ptr_->next_;
-    return *this;
-  }
+  //   ListConstIterator& operator--() {
+  //     ptr_ = ptr_->prev_;
+  //     return *this;
+  //   }
 
-  ListIterator operator--(int) {
-    ptr_ = ptr_->prev_;
-    return *this;
-  }
+  //   ListConstIterator operator+(const size_type value) {
+  //     Node* tmp = ptr_;
+  //     for (size_type i = 0; i < value; i++) {
+  //       tmp = tmp->next_;
+  //     }
 
-  ListIterator& operator++() {
-    ptr_ = ptr_->next_;
-    return *this;
-  }
+  //     ListConstIterator res(tmp);
+  //     return res;
+  //   }
 
-  ListIterator& operator--() {
-    // if (!ptr_) {
-    //   throw std::invalid_argument("hui");
-    // }
-    ptr_ = ptr_->prev_;
-    return *this;
-  }
+  //   ListConstIterator operator-(const size_type value) {
+  //     Node* tmp = ptr_;
+  //     for (size_type i = 0; i < value; i++) {
+  //       tmp = tmp->prev_;
+  //     }
+  //     ListConstIterator res(tmp);
+  //     return res;
+  //   }
 
-  ListIterator operator+(const size_type value) {
-    Node* tmp = ptr_;
-    for (size_type i = 0; i < value; i++) {
-      tmp = tmp->next_;
+  //   bool operator==(ListConstIterator other) {
+  //     return this->ptr_ == other.ptr_;
+  //   }
+
+  //   bool operator!=(ListConstIterator other) {
+  //     return this->ptr_ != other.ptr_;
+  //   }
+
+  //  private:
+  //   Node* ptr_ = nullptr;
+  // };
+
+  template <typename value_type>
+  class ListIterator {
+   public:
+    ListIterator() { ptr_ = nullptr; }
+    ListIterator(Node* ptr) : ptr_(ptr){};
+
+    reference operator*() { return this->ptr_->value_; }
+
+    ListIterator operator++(int) {
+      ptr_ = ptr_->next_;
+      return *this;
     }
 
-    ListIterator res(tmp);
-    return res;
-  }
-
-  ListIterator operator-(const size_type value) {
-    Node* tmp = ptr_;
-    for (size_type i = 0; i < value; i++) {
-      tmp = tmp->prev_;
+    ListIterator operator--(int) {
+      ptr_ = ptr_->prev_;
+      return *this;
     }
-    ListIterator res(tmp);
-    return res;
-  }
 
-  // ListIterator& operator=(const ListIterator other) {
-  //   this->ptr_ = other->ptr_;
-  //   return *this;
-  // }
+    ListIterator& operator++() {
+      ptr_ = ptr_->next_;
+      return *this;
+    }
 
-  bool operator==(ListIterator other) { return this->ptr_ == other.ptr_; }
+    ListIterator& operator--() {
+      ptr_ = ptr_->prev_;
+      return *this;
+    }
 
-  bool operator!=(ListIterator other) { return this->ptr_ != other.ptr_; }
+    ListIterator operator+(const size_type value) {
+      Node* tmp = ptr_;
+      for (size_type i = 0; i < value; i++) {
+        tmp = tmp->next_;
+      }
+
+      ListIterator res(tmp);
+      return res;
+    }
+
+    ListIterator operator-(const size_type value) {
+      Node* tmp = ptr_;
+      for (size_type i = 0; i < value; i++) {
+        tmp = tmp->prev_;
+      }
+      ListIterator res(tmp);
+      return res;
+    }
+
+    bool operator==(ListIterator other) { return this->ptr_ == other.ptr_; }
+
+    bool operator!=(ListIterator other) { return this->ptr_ != other.ptr_; }
+
+   private:
+    Node* ptr_ = nullptr;
+    friend class list<T>;
+  };
+
+  template <typename value_type>
+  class ListConstIterator : public ListIterator<T> {
+   public:
+    ListConstIterator(ListIterator<T> other) : ListIterator<T>(other) {}
+    const T& operator*() { return ListIterator<T>::operator*(); }
+  };
+  using iterator = ListIterator<T>;             // TODO
+  using const_iterator = ListConstIterator<T>;  // TODO
+
+  iterator begin() { return iterator(head_); }                    // TODO
+  iterator end() { return iterator(end_); }                       // TODO
+  const_iterator begin() const { return const_iterator(head_); }  // TODO
+  const_iterator end() const { return const_iterator(end_); }     // TODO
+
+  iterator insert(iterator pos, const_reference value);  // TODO
+  void erase(iterator pos);                              // TODO
+  void splice(const_iterator pos,
+              list& other);  // TODO поменять iterator на const_iterator
 
  private:
-  Node* ptr_ = nullptr;
+  // ---------------support functions-----------------
+  void add_end();  // TODO review и поменять название на change_end()
+  void quick_sort(iterator left, iterator right);
+  iterator partition(iterator first, iterator last);
 };
-
 }  // namespace s21
 #endif  // S21_LIST_H
