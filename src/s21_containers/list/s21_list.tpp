@@ -2,13 +2,15 @@
 namespace s21 {
 
 template <typename value_type>
-list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {
+list<value_type>::list()
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   end_ = new Node(size_);
   add_end();
 }
 
 template <typename value_type>
-list<value_type>::list(size_type n) {
+list<value_type>::list(size_type n)
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   end_ = new Node(size_);
   for (size_type i = 0; i < n; ++i) {
     push_back(value_type());
@@ -18,7 +20,7 @@ list<value_type>::list(size_type n) {
 
 template <typename value_type>
 list<value_type>::list(std::initializer_list<value_type> const& items)
-    : head_(nullptr), tail_(nullptr), size_(0) {
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   end_ = new Node(size_);
   for (const auto& item : items) {
     push_back(item);
@@ -38,7 +40,8 @@ list<value_type>::list(const list& l)  // TODO need review
 }
 
 template <typename value_type>
-list<value_type>::list(list&& l) : head_(nullptr), tail_(nullptr), size_(0) {
+list<value_type>::list(list&& l)
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   swap(l);  // TODO проверить точно ли правильно работает
 }
 
@@ -269,11 +272,10 @@ void list<value_type>::reverse() {
 
 template <typename value_type>
 void list<value_type>::unique() {
-  for (iterator it = this->begin(); it != this->end(); ++it) {
-    if (it.ptr_->next_ && it.ptr_->next_ != end_) {
-      if (it.ptr_->value_ == it.ptr_->next_->value_) {
-        this->erase(it);
-      }
+  for (iterator it = this->begin(); it != this->end(); it++) {
+    if (it.ptr_->value_ == it.ptr_->prev_->value_) {
+      iterator del_it = (it - 1);
+      this->erase(del_it);
     }
   }
 }

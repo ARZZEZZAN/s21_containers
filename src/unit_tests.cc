@@ -646,10 +646,10 @@ TEST(ListTest, DefaultConstructor) {
   EXPECT_THROW(my_list.back(), std::out_of_range);
 }
 
-// TEST(ListTest, SizeConstructor) {
-//   s21::list<int> my_list(1000000);
-//   EXPECT_EQ(my_list.size(), 1000000);
-// }
+TEST(ListTest, SizeConstructor) {
+  s21::list<int> my_list(1000000);
+  EXPECT_EQ(my_list.size(), 1000000);
+}
 
 TEST(ListTest, InitializerListConstructor) {
   s21::list<int> my_list{1, 2, 3};
