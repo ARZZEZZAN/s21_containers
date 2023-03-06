@@ -1,20 +1,23 @@
 #include "s21_vector.h"
-using namespace s21;
-// Vector Member functions
+namespace s21 {
+// vector Member functions
 template <class value_type>
-Vector<value_type>::Vector() {
+vector<value_type>::vector() {
   this->bring_to_zero();
 }
 
 template <class value_type>
-Vector<value_type>::Vector(size_type n) {
+vector<value_type>::vector(size_type n) {
+  if (this->max_size() < n) {
+    throw std::out_of_range("cannot create s21::vector larger than max_size()");
+  }
   this->size_ = n;
   this->capacity_ = n;
   this->container_ = new value_type[n];
 }
 
 template <class value_type>
-Vector<value_type>::Vector(std::initializer_list<value_type> const& items) {
+vector<value_type>::vector(std::initializer_list<value_type> const& items) {
   this->capacity_ = this->size_ = items.size();
   if (this->size_) {
     this->container_ = new value_type[this->size_];
@@ -25,12 +28,12 @@ Vector<value_type>::Vector(std::initializer_list<value_type> const& items) {
 }
 
 template <class value_type>
-Vector<value_type>::Vector(const Vector& v) {
+vector<value_type>::vector(const vector& v) {
   this->copy_vector(v);
 }
 
 template <class value_type>
-Vector<value_type>::Vector(Vector&& v) {
+vector<value_type>::vector(vector&& v) {
   this->size_ = v.size_;
   this->capacity_ = v.capacity_;
   this->container_ = v.container_;
@@ -38,19 +41,25 @@ Vector<value_type>::Vector(Vector&& v) {
 }
 
 template <class value_type>
-Vector<value_type>::~Vector() {
+vector<value_type>::~vector() {
   this->remove();
 }
 
 template <class value_type>
-Vector<value_type>& Vector<value_type>::operator=(const Vector&& v) {
-  this->copy_vector(v);
+typename s21::vector<value_type>& vector<value_type>::operator=(vector&& v) {
+  if (this != &v) {
+    this->remove();
+    this->size_ = v.size_;
+    this->capacity_ = v.capacity_;
+    this->container_ = v.container_;
+    v.bring_to_zero();
+  }
   return *this;
 }
 
-// Vector Element access
+// vector Element access
 template <class value_type>
-typename Vector<value_type>::reference Vector<value_type>::at(size_type pos) {
+typename vector<value_type>::reference vector<value_type>::at(size_type pos) {
   if (pos >= this->size_) {
     throw std::out_of_range("Index out of range");
   }
@@ -58,7 +67,17 @@ typename Vector<value_type>::reference Vector<value_type>::at(size_type pos) {
 }
 
 template <class value_type>
-typename Vector<value_type>::const_reference Vector<value_type>::front() {
+typename vector<value_type>::reference vector<value_type>::operator[](
+    size_type pos) {
+  size_type less_zero = 0;
+  if (this->size() < pos || less_zero > pos) {
+    throw std::out_of_range("Index out of range");
+  }
+  return container_[pos];
+}
+
+template <class value_type>
+typename vector<value_type>::const_reference vector<value_type>::front() {
   if (this->empty()) {
     throw std::out_of_range("Out of range");
   }
@@ -66,48 +85,41 @@ typename Vector<value_type>::const_reference Vector<value_type>::front() {
 }
 
 template <class value_type>
-typename Vector<value_type>::const_reference Vector<value_type>::back() {
+typename vector<value_type>::const_reference vector<value_type>::back() {
   if (this->empty()) {
     throw std::out_of_range("Out of range");
   }
   return *(container_ + size_ - 1);
 }
 
-// Vector Capacity
+// vector Capacity
 template <class value_type>
-void Vector<value_type>::reserve(size_type size) {
+void vector<value_type>::reserve(size_type size) {
+  size_type less_zero = 0;
+  if (less_zero > size) {
+    throw std::out_of_range("Index out of range");
+  }
   if (size > this->size_) {
     this->add_memory(size, true);
   }
 }
 
 template <class value_type>
-void Vector<value_type>::shrink_to_fit() {
+void vector<value_type>::shrink_to_fit() {
   if (this->size_ < this->capacity_) {
     this->add_memory(this->size_, true);
   }
 }
 
-// Vector Modifiers
+// vector Modifiers
 template <class value_type>
-void Vector<value_type>::push_back(const_reference value) {
-  if (this->size_ >= this->capacity_) {
-    add_memory(0, false);
-  }
-  this->container_[this->size_++] = value;
-}
-
-template <class value_type>
-void Vector<value_type>::swap(Vector& other) {
-  std::swap(other.size_, this->size_);
-  std::swap(other.capacity_, this->capacity_);
-  std::swap(other.container_, this->container_);
-}
-
-template <class value_type>
-typename Vector<value_type>::iterator Vector<value_type>::insert(
+typename vector<value_type>::iterator vector<value_type>::insert(
     iterator pos, const_reference value) {
   size_type position = &(*pos) - this->container_;
+  size_type zero = 0;
+  if (zero > position || position > this->size_) {
+    throw std::out_of_range("Index out ot range");
+  }
   if (this->size_ + 1 >= this->capacity_) {
     this->add_memory(this->capacity_ * 2, true);
   }
@@ -123,17 +135,36 @@ typename Vector<value_type>::iterator Vector<value_type>::insert(
 }
 
 template <class value_type>
-void Vector<value_type>::erase(iterator pos) {
+void vector<value_type>::erase(iterator pos) {
   size_type position = &(*pos) - this->container_;
+  size_type zero = 0;
+  if (zero > position || position > this->size_) {
+    throw std::out_of_range("Index out ot range");
+  }
   for (size_type i = position + 1; i < this->size_; i++) {
     this->container_[i - 1] = this->container_[i];
   }
   this->size_--;
 }
 
+template <class value_type>
+void vector<value_type>::push_back(const_reference value) {
+  if (this->size_ >= this->capacity_) {
+    add_memory(0, false);
+  }
+  this->container_[this->size_++] = value;
+}
+
+template <class value_type>
+void vector<value_type>::swap(vector& other) {
+  std::swap(other.size_, this->size_);
+  std::swap(other.capacity_, this->capacity_);
+  std::swap(other.container_, this->container_);
+}
+
 // Helpers
 template <class value_type>
-void Vector<value_type>::copy_vector(const Vector& v) {
+void vector<value_type>::copy_vector(const vector& v) {
   this->remove();
   this->size_ = v.size_;
   this->capacity_ = v.capacity_;
@@ -144,7 +175,7 @@ void Vector<value_type>::copy_vector(const Vector& v) {
 }
 
 template <class value_type>
-void Vector<value_type>::add_memory(size_type size, bool flag) {
+void vector<value_type>::add_memory(size_type size, bool flag) {
   this->capacity_ = this->add_memory_size(size, flag);
   value_type* tmp = this->container_;
   this->container_ = new value_type[this->capacity_];
@@ -155,42 +186,25 @@ void Vector<value_type>::add_memory(size_type size, bool flag) {
 }
 
 template <class value_type>
-typename Vector<value_type>::size_type Vector<value_type>::add_memory_size(
+typename vector<value_type>::size_type vector<value_type>::add_memory_size(
     size_type size, bool flag) {
   size_type n = 2;
-  if (this->size_ > 1e+5) {
-    n = 1.0;
-  } else if (this->size_ > 1e+4) {
-    n = 1.3;
-  } else if (this->size_ > 1e+3) {
-    n = 1.5;
-  }
   return flag ? size : n * (this->capacity_ > 0 ? this->capacity_ : n);
 }
 
 template <class value_type>
-void Vector<value_type>::bring_to_zero() {
+void vector<value_type>::bring_to_zero() {
   this->size_ = 0;
   this->capacity_ = 0;
   this->container_ = nullptr;
 }
 
 template <class value_type>
-void Vector<value_type>::remove() {
-  if (this->container_ != nullptr) {
+void vector<value_type>::remove() {
+  if (!this->container_) {
     delete[] this->container_;
   }
   this->container_ = nullptr;
   this->size_ = this->capacity_ = 0;
 }
-
-template <class value_type>
-void Vector<value_type>::printVector() {
-  std::cout << "size = " << this->size_ << std::endl;
-  std::cout << "capacity_ = " << this->capacity_ << std::endl;
-  std::cout << "container_: " << std::endl;
-  for (size_type i = 0; i < this->size_; i++) {
-    std::cout << "      i:" << i << " = " << this->container_[i] << std::endl;
-  }
-  std::cout << std::endl;
-}
+}  // namespace s21

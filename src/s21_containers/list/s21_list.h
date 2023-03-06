@@ -60,71 +60,7 @@ class list {
   void sort();              // TODO review
 
   template <typename value_type>
-  class ListConstIterator {
-    friend class list<T>;
-
-   public:
-    ListConstIterator() { ptr_ = nullptr; }
-    ListConstIterator(Node* ptr) : ptr_(ptr){};
-
-    reference operator*() { return this->ptr_->value_; }
-
-    ListConstIterator operator++(int) {
-      ptr_ = ptr_->next_;
-      return *this;
-    }
-
-    ListConstIterator operator--(int) {
-      ptr_ = ptr_->prev_;
-      return *this;
-    }
-
-    ListConstIterator& operator++() {
-      ptr_ = ptr_->next_;
-      return *this;
-    }
-
-    ListConstIterator& operator--() {
-      ptr_ = ptr_->prev_;
-      return *this;
-    }
-
-    ListConstIterator operator+(const size_type value) {
-      Node* tmp = ptr_;
-      for (size_type i = 0; i < value; i++) {
-        tmp = tmp->next_;
-      }
-
-      ListConstIterator res(tmp);
-      return res;
-    }
-
-    ListConstIterator operator-(const size_type value) {
-      Node* tmp = ptr_;
-      for (size_type i = 0; i < value; i++) {
-        tmp = tmp->prev_;
-      }
-      ListConstIterator res(tmp);
-      return res;
-    }
-
-    bool operator==(ListConstIterator other) {
-      return this->ptr_ == other.ptr_;
-    }
-
-    bool operator!=(ListConstIterator other) {
-      return this->ptr_ != other.ptr_;
-    }
-
-   private:
-    Node* ptr_ = nullptr;
-  };
-
-  template <typename value_type>
   class ListIterator {
-    friend class ListConstIterator<T>;
-    friend class list<T>;
-
    public:
     ListIterator() { ptr_ = nullptr; }
     ListIterator(Node* ptr) : ptr_(ptr){};
@@ -170,28 +106,29 @@ class list {
       return res;
     }
 
-    // ListIterator& operator=(const ListIterator other) {
-    //   this->ptr_ = other->ptr_;
-    //   return *this;
-    // }
-
     bool operator==(ListIterator other) { return this->ptr_ == other.ptr_; }
 
     bool operator!=(ListIterator other) { return this->ptr_ != other.ptr_; }
 
    private:
     Node* ptr_ = nullptr;
+    friend class list<T>;
   };
 
- public:
+  template <typename value_type>
+  class ListConstIterator : public ListIterator<T> {
+   public:
+    ListConstIterator(ListIterator<T> other) : ListIterator<T>(other) {}
+    const T& operator*() { return ListIterator<T>::operator*(); }
+  };
+
   using iterator = ListIterator<T>;
   using const_iterator = ListConstIterator<T>;
 
-  iterator begin() { return iterator(head_); }  // TODO review
-  iterator end() { return iterator(end_); }     // TODO review
-
-  const_iterator begin() const { return const_iterator(head_); }  // TODO review
-  const_iterator end() const { return const_iterator(end_); }     // TODO review
+  iterator begin() { return iterator(head_); }                    // TODO
+  iterator end() { return iterator(end_); }                       // TODO
+  const_iterator begin() const { return const_iterator(head_); }  // TODO
+  const_iterator end() const { return const_iterator(end_); }     // TODO
 
   iterator insert(iterator pos, const_reference value);  // TODO
   void erase(iterator pos);                              // TODO

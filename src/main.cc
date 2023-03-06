@@ -13,32 +13,30 @@ void print_std_list(std::list<int>& l) {
 int main() {
   std::cout << "-------------------------------------------" << std::endl;
 
-  s21::list<int> my_list1{1, 2, 3, 4, 5};
-  s21::list<int> my_list2{6, 7, 8, 9, 10, 11};
+  s21::list<int> my_list{90, 10, 3, 40, 30, 20, 10, 10, 90, 90, 3};
 
-  my_list1.print_list();
-  my_list2.print_list();
+  my_list.print_list();
   std::cout << std::endl;
 
-  my_list1.swap(my_list2);
+  my_list.unique();
 
-  my_list1.print_list();
-  my_list2.print_list();
+  my_list.print_list();
+
   std::cout << "-------------------------------------------" << std::endl;
   std::cout << "-------------------------------------------" << std::endl;
 
-  std::list<int> std_list1{1, 2, 3, 4, 5};
-  std::list<int> std_list2{6, 7, 8, 9, 10, 11};
+  std::list<int> std_list{90, 10, 3, 40, 30, 20, 10, 10, 90, 90, 3};
 
-  print_std_list(std_list1);
-  print_std_list(std_list2);
+  print_std_list(std_list);
   std::cout << std::endl;
 
-  std_list1.swap(std_list2);
+  std_list.unique();
 
-  print_std_list(std_list1);
-  print_std_list(std_list2);
+  print_std_list(std_list);
+
   std::cout << "-------------------------------------------" << std::endl;
+
+  // std::list<int> std_list2(-1);
 
   return 0;
 }

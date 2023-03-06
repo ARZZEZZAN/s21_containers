@@ -1,6 +1,5 @@
 #include "s21_list.h"
-
-using namespace s21;
+namespace s21 {
 
 template <typename value_type>
 list<value_type>::list()
@@ -12,6 +11,9 @@ list<value_type>::list()
 template <typename value_type>
 list<value_type>::list(size_type n)
     : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
+  if (n >= max_size()) {
+    throw std::out_of_range("Limit of the container is exceeded");
+  }
   end_ = new Node(size_);
   for (size_type i = 0; i < n; ++i) {
     push_back(value_type());
@@ -132,7 +134,6 @@ typename list<value_type>::iterator list<value_type>::insert(
     current->prev_->next_ = add;
     current->prev_ = add;
   }
-
   size_++;
   add_end();
   return iterator(add);
@@ -325,7 +326,7 @@ typename list<value_type>::iterator list<value_type>::partition(iterator first,
   for (iterator j = first; j != last; ++j) {
     if (j.ptr_->value_ <= pivot_value) {
       std::swap(i.ptr_->value_, j.ptr_->value_);
-      ++i;
+      i++;
     }
   }
 
@@ -333,4 +334,4 @@ typename list<value_type>::iterator list<value_type>::partition(iterator first,
 
   return i;
 }
-// -------------------------------------------------
+}  // namespace s21

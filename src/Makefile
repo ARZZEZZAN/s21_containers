@@ -1,7 +1,6 @@
 .PHONY: all clear rebuild
 CC = gcc
 GCOV = -fprofile-arcs -ftest-coverage
-# CFLAGS = -lstdc++ -lgtest -std=c++17
 CFLAGS = -lstdc++ -lgtest -std=c++17 -Wall -Werror -Wextra
 EXE = unit_tests
 TFN = unit_tests.cc
@@ -12,7 +11,7 @@ all: clean test
 
 test: $(TFN)
 	@${CC} $<  ${CFLAGS} -o $(EXE)
-	@./$(EXE)
+	@./$(BUILD)$(EXE)
 
 leaks: test
 	leaks --atExit -- ./$(EXE)
@@ -28,4 +27,3 @@ clean:
 	@/bin/rm -rf *.o *.a build *.gcno *gcda report *.info main *.dSYM *.out gcov_report $(EXE)
 
 rebuild: clean all
-

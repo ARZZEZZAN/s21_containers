@@ -39,20 +39,40 @@ TEST(ListTest, CompareLists) {
 
 TEST(ListTest, DefaultConstructor) {
   s21::list<int> my_list;
+  std::list<int> std_list;
   EXPECT_EQ(my_list.size(), 0);
   EXPECT_TRUE(my_list.empty());
   EXPECT_THROW(my_list.front(), std::out_of_range);
   EXPECT_THROW(my_list.back(), std::out_of_range);
+  EXPECT_TRUE(compare_lists(my_list, std_list));
 }
 
 TEST(ListTest, SizeConstructor) {
   s21::list<int> my_list(1000000);
+  std::list<int> std_list(1000000);
   EXPECT_EQ(my_list.size(), 1000000);
+  EXPECT_TRUE(compare_lists(my_list, std_list));
+}
+
+TEST(ListTest, SizeConstructorThrow) {
+  try {
+    s21::list<int> my_list(-1);
+    FAIL() << "Expected std::out_of_range";
+  } catch (std::out_of_range const& err) {
+    EXPECT_EQ(err.what(), std::string("Limit of the container is exceeded"));
+  }
 }
 
 TEST(ListTest, InitializerListConstructor) {
-  s21::list<int> my_list{1, 2, 3};
-  std::list<int> std_list{1, 2, 3};
+  s21::list<int> my_list{1, 2, 3, 7, 9};
+  std::list<int> std_list{1, 2, 3, 7, 9};
+  EXPECT_TRUE(compare_lists(my_list, std_list));
+}
+
+TEST(ListTest, InitializerListConstructor_2) {
+  std::initializer_list<int> b;
+  s21::list<int> my_list{b};
+  std::list<int> std_list{b};
   EXPECT_TRUE(compare_lists(my_list, std_list));
 }
 
@@ -112,9 +132,8 @@ TEST(ListTest, Size) {
 }
 
 TEST(ListTest, MaxSize) {
-  s21::list<int> my_list_empty;
-  EXPECT_EQ(my_list_empty.max_size(),
-            std::numeric_limits<typename list<int>::size_type>::max());
+  s21::list<size_t> my_list_empty;
+  EXPECT_EQ(my_list_empty.max_size(), std::numeric_limits<size_t>::max());
 }
 
 TEST(ListTest, Clear) {
@@ -207,7 +226,7 @@ TEST(ListTest, Sort) {
 
 // ------------Above checked---------------------
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
