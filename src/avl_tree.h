@@ -37,6 +37,7 @@ class AVLTree {
   AVLTree();
   ~AVLTree();
   Node<T, V>* insert(T key);
+  Node<T, V>* insert(T key, V value);
   void remove(T key);
   Node<T, V>* search(T key);
   Node<T, V>* getRoot();

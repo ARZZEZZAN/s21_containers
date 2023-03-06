@@ -1,7 +1,7 @@
 #include "s21_map.h"
 namespace s21 {
 template <typename T, typename V>
-Map<T, V>::Map() : set_() {}
+Map<T, V>::Map() : tree_() {}
 template <typename T, typename V>
 Map<T, V>::Map(
     std::initializer_list<typename Map<T, V>::value_type> const& items) {}
@@ -30,15 +30,11 @@ template <typename T, typename V>
 T& Map<T, V>::operator[](const T& key) {}
 
 template <typename T, typename V>
-typename Map<T, V>::iterator Map<T, V>::begin() {
-  set_.begin();
-}
+typename Map<T, V>::iterator Map<T, V>::begin() {}
 template <typename T, typename V>
-typename Map<T, V>::iterator Map<T, V>::end() {
-  set_.end();
-}
+typename Map<T, V>::iterator Map<T, V>::end() {}
 template <typename T, typename V>
 bool Map<T, V>::empty() {
-  return set_.empty();
+  return 0;
 }
 }  // namespace s21
