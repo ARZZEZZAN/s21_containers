@@ -21,25 +21,21 @@ list<value_type>::list(size_type n)
   add_end();
 }
 
-// template <typename value_type>
-// list<value_type>::list(std::initializer_list<value_type> const& items)
-//     : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
-//   end_ = new Node(size_);
-//   for (const auto& item : items) {
-//     push_back(item);
-//     add_end();
-//   }
-// }
+template <typename value_type>
+list<value_type>::list(std::initializer_list<value_type> const& items)
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
+  end_ = new Node(size_);
+  for (const auto& item : items) {
+    push_back(item);
+    add_end();
+  }
+}
 
 template <typename value_type>
 list<value_type>::list(const list& l)  // TODO need review
     : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   end_ = new Node(size_);
-  Node* current = l.head_;
-  for (size_type i = 0; i != l.size_; i++) {
-    push_back(current->value_);
-    current = current->next_;
-  }
+  this->copy(l);
 }
 
 template <typename value_type>
@@ -147,9 +143,11 @@ void list<value_type>::erase(iterator pos) {
 
 template <typename value_type>
 void list<value_type>::splice(const_iterator pos, list& other) {
-  for (iterator it = other.begin(); it != other.end(); ++it) {
-    this->insert(pos, *it);
-    other.erase(it);
+  if (!other.empty()) {
+    for (iterator it = other.begin(); it != other.end(); ++it) {
+      this->insert(pos, *it);
+    }
+    other.clear();
   }
 }
 
@@ -230,43 +228,50 @@ void list<value_type>::swap(list& other) {
 
 template <typename value_type>
 void list<value_type>::merge(list& other) {
-  iterator iter_this = this->begin();
-  iterator iter_other = other.begin();
-
-  while (iter_this != this->end()) {
-    if (iter_other != other.end()) {
-      if (iter_this.ptr_->value_ >= iter_other.ptr_->value_) {
-        this->insert(iter_this, iter_other.ptr_->value_);
-        iter_other++;
+  if (!this->empty() && !other.empty()) {
+    iterator iter_this = this->begin();
+    iterator iter_other = other.begin();
+    while (iter_this != this->end()) {
+      if (iter_other != other.end()) {
+        if (iter_this.ptr_->value_ >= iter_other.ptr_->value_) {
+          this->insert(iter_this, iter_other.ptr_->value_);
+          iter_other++;
+        } else {
+          iter_this++;
+        }
       } else {
         iter_this++;
       }
-    } else {
-      iter_this++;
     }
-  }
-  while (iter_other != other.end()) {
-    this->insert(iter_this, iter_other.ptr_->value_);
-    iter_other++;
+    while (iter_other != other.end()) {
+      this->insert(iter_this, iter_other.ptr_->value_);
+      iter_other++;
+    }
+  } else if (this->empty() && !other.empty()) {
+    this->copy(other);
   }
 }
 
 template <typename value_type>
 void list<value_type>::reverse() {
-  size_type step = 0;
-  for (iterator it = this->begin(); step <= this->size(); ++it) {
-    step++;
-    std::swap(it.ptr_->prev_, it.ptr_->next_);
+  if (!this->empty()) {
+    size_type step = 0;
+    for (iterator it = this->begin(); step <= this->size(); ++it) {
+      step++;
+      std::swap(it.ptr_->prev_, it.ptr_->next_);
+    }
+    std::swap(head_, tail_);
   }
-  std::swap(head_, tail_);
 }
 
 template <typename value_type>
 void list<value_type>::unique() {
-  for (iterator it = this->begin(); it != this->end(); it++) {
-    if (it.ptr_->value_ == it.ptr_->prev_->value_) {
-      iterator del_it = (it - 1);
-      this->erase(del_it);
+  if (!this->empty()) {
+    for (iterator it = this->begin(); it != this->end(); it++) {
+      if (it.ptr_->value_ == it.ptr_->prev_->value_) {
+        iterator del_it = (it - 1);
+        this->erase(del_it);
+      }
     }
   }
 }
@@ -334,4 +339,12 @@ void list<value_type>::print_list() {  // TODO review
   std::cout << "]\n";
 }
 
+template <typename value_type>
+void list<value_type>::copy(const list& l) {
+  Node* current = l.head_;
+  for (size_type i = 0; i != l.size_; i++) {
+    push_back(current->value_);
+    current = current->next_;
+  }
+}
 }  // namespace s21

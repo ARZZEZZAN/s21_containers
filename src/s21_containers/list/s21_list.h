@@ -33,7 +33,7 @@ class list {
  public:
   list();
   list(size_type n);
-  // list(std::initializer_list<value_type> const& items);
+  list(std::initializer_list<value_type> const& items);
   list(const list& l);
   list(list&& l);
   ~list();
@@ -65,7 +65,12 @@ class list {
     ListIterator() { ptr_ = nullptr; }
     ListIterator(Node* ptr) : ptr_(ptr){};
 
-    reference operator*() { return this->ptr_->value_; }
+    reference operator*() {
+      if (!this->ptr_) {
+        // throw std::invalid_argument("Value is nullptr");
+      }
+      return this->ptr_->value_;
+    }
 
     ListIterator operator++(int) {
       ptr_ = ptr_->next_;
@@ -142,6 +147,7 @@ class list {
                    // push мы вызываем add_end который уже был вызван в push
   void quick_sort(iterator left, iterator right);
   iterator partition(iterator first, iterator last);
+  void copy(const list& l);
 };
 }  // namespace s21
 #endif  // S21_LIST_H
