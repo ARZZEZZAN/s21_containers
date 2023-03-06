@@ -11,32 +11,38 @@ void print_std_list(std::list<int>& l) {
 }
 
 int main() {
+  // std::cout << "-------------------------------------------" << std::endl;
+
+  // s21::list<int> my_list;
+
+  // // my_list.print_list();
+  // std::cout << std::endl;
+
+  // my_list.front();
+
+  // // my_list.print_list();
+
+  // std::cout << "-------------------------------------------" << std::endl;
+  // std::cout << "-------------------------------------------" << std::endl;
+
+  // std::list<int> std_list;
+
+  // // print_std_list(std_list);
+  // std::cout << std::endl;
+
+  // std_list.front();
+
+  // // print_std_list(std_list);
+
+  // std::cout << "-------------------------------------------" << std::endl;
+
+  // // std::list<int> std_list2(-1);
+  s21::list<size_t> my_list_empty;
+  std::list<size_t> std_list_empty;
   std::cout << "-------------------------------------------" << std::endl;
-
-  s21::list<int> my_list{90, 10, 3, 40, 30, 20, 10, 10, 90, 90, 3};
-
-  my_list.print_list();
-  std::cout << std::endl;
-
-  my_list.unique();
-
-  my_list.print_list();
-
+  std::cout << my_list_empty.max_size();
   std::cout << "-------------------------------------------" << std::endl;
+  std::cout << std_list_empty.max_size();
   std::cout << "-------------------------------------------" << std::endl;
-
-  std::list<int> std_list{90, 10, 3, 40, 30, 20, 10, 10, 90, 90, 3};
-
-  print_std_list(std_list);
-  std::cout << std::endl;
-
-  std_list.unique();
-
-  print_std_list(std_list);
-
-  std::cout << "-------------------------------------------" << std::endl;
-
-  // std::list<int> std_list2(-1);
-
   return 0;
 }

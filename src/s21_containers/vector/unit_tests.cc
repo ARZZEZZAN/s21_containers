@@ -601,8 +601,3 @@ TEST(vector, Helpers_add_memotysize_3) {
 
   EXPECT_EQ(s21_v.size(), n + 3);
 }
-
-int main(int argc, char* argv[]) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}

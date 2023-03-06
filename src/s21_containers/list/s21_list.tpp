@@ -65,27 +65,23 @@ typename list<value_type>::list& list<value_type>::operator=(list&& l) {
 
 template <typename value_type>
 typename list<value_type>::const_reference list<value_type>::front() {
-  if (empty()) {
-    throw std::out_of_range("list is empty");
-  }
   return head_->value_;
 }
 
 template <typename value_type>
 typename list<value_type>::const_reference list<value_type>::back() {
-  if (empty()) {
-    throw std::out_of_range("list is empty");
-  }
   return tail_->value_;
 }
 
 template <typename value_type>
 void list<value_type>::print_list() {  // TODO review
   std::cout << "[";
-  for (iterator it = begin(); it != end(); ++it) {
-    std::cout << *it;
-    if ((it + 1) != end()) {
-      std::cout << ", ";
+  if (size_ > 0) {
+    for (iterator it = begin(); it != end(); ++it) {
+      std::cout << *it;
+      if ((it + 1) != end()) {
+        std::cout << ", ";
+      }
     }
   }
   std::cout << "]\n";
@@ -103,7 +99,7 @@ typename list<value_type>::size_type list<value_type>::size() {
 
 template <typename value_type>
 typename list<value_type>::size_type list<value_type>::max_size() {
-  return std::numeric_limits<size_type>::max();
+  return (std::numeric_limits<size_type>::max() / sizeof(Node) / 2);
 }
 
 template <typename value_type>
@@ -275,11 +271,10 @@ void list<value_type>::reverse() {
 
 template <typename value_type>
 void list<value_type>::unique() {
-  for (iterator it = this->begin(); it != this->end(); ++it) {
-    if (it.ptr_->next_ && it.ptr_->next_ != end_) {
-      if (it.ptr_->value_ == it.ptr_->next_->value_) {
-        this->erase(it);
-      }
+  for (iterator it = this->begin(); it != this->end(); it++) {
+    if (it.ptr_->value_ == it.ptr_->prev_->value_) {
+      iterator del_it = (it - 1);
+      this->erase(del_it);
     }
   }
 }
