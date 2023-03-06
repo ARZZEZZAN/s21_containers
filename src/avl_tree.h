@@ -29,13 +29,13 @@ class AVLTree {
   AVLTree();
   ~AVLTree();
   Node<T, V>* insert(T key);
-  void remove(T key) { root = remove(root, key); }
-  Node<T, V>* search(T key) { return search(root, key); }
-  Node<T, V>* getRoot() { return this->root; }
+  void remove(T key);
+  Node<T, V>* search(T key);
+  Node<T, V>* getRoot();
   void setRoot(Node<T, V>* root);
-  void swap(AVLTree<T, V>& other) { std::swap(root, other.root); }
+  void swap(AVLTree<T, V>& other);
   void clear(Node<T, V>* node);
-  bool getInserted() { return inserted; }
+  bool getInserted();
 
  private:
   Node<T, V>* root;

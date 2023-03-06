@@ -180,4 +180,24 @@ Node<T, V>* AVLTree<T, V>::insert(T key) {
   root = insert(root, key, nullptr);
   return root;
 }
+template <typename T, typename V>
+void AVLTree<T, V>::remove(T key) {
+  root = remove(root, key);
+}
+template <typename T, typename V>
+Node<T, V>* AVLTree<T, V>::search(T key) {
+  return search(root, key);
+}
+template <typename T, typename V>
+Node<T, V>* AVLTree<T, V>::getRoot() {
+  return this->root;
+}
+template <typename T, typename V>
+void AVLTree<T, V>::swap(AVLTree<T, V>& other) {
+  std::swap(root, other.root);
+}
+template <typename T, typename V>
+bool AVLTree<T, V>::getInserted() {
+  return inserted;
+}
 }  // namespace s21
