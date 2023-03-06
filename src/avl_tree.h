@@ -19,6 +19,7 @@ class Node {
   Node(T k) {
     key = k;
     height = 1;
+    size_ = 1;
     left = right = parent = nullptr;
   }
 };

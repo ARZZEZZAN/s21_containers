@@ -15,15 +15,22 @@ int main() {
   mySet.insert(13);
   mySet.insert(14);
   mySet.insert(15);
+  mySet.insert(16);
+  mySet.insert(17);
+  mySet.insert(18);
+  mySet.insert(19);
+  mySet.insert(20);
+  mySet.insert(205);
+  mySet.insert(234);
 
   mySet1.insert(1);
   mySet1.insert(2);
   mySet1.insert(3);
   mySet1.insert(4);
+  // mySet.erase(mySet.begin());
+  // mySet.erase(mySet.begin());
 
-  std::cout << *mySet.begin()++ << std::endl;
-
-  // for (auto i : mySet) {
-  //   std::cout << i << std::endl;
-  // }
+  for (auto i : mySet) {
+    std::cout << i << std::endl;
+  }
 }

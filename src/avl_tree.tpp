@@ -56,15 +56,20 @@ Node<T, V>* AVLTree<T, V>::balance(Node<T, V>* node) {
   if (balanceFactor(node) == 2) {
     if (balanceFactor(node->right) < -1) {
       node->left = rotateLeft(node->left);
+      updateSize(node->left);
     }
-    return rotateRight(node);
+    node = rotateRight(node);
+    updateSize(node);
   }
   if (balanceFactor(node) == -2) {
     if (balanceFactor(node->left) > 1) {
       node->right = rotateRight(node->right);
+      updateSize(node->right);
     }
-    return rotateLeft(node);
+    node = rotateLeft(node);
+    updateSize(node);
   }
+  updateSize(node);
   return node;
 }
 template <typename T, typename V>
@@ -73,9 +78,8 @@ Node<T, V>* AVLTree<T, V>::insert(Node<T, V>* node, T key, Node<T, V>* parent) {
   if (!node) {
     node = new Node<T, V>(key);
     node->parent = parent;
-    updateSize(node);
     this->inserted = true;
-    return node;
+    return balance(node);
   }
   if (key < node->key) {
     node->left = insert(node->left, key, node);
@@ -114,10 +118,11 @@ Node<T, V>* AVLTree<T, V>::remove(Node<T, V>* node, T key) {
     Node<T, V>* min = findMin(right);
     min->right = removeMin(right);
     min->left = left;
+    min->size_--;
     updateHeight(min);
-    node->size_--;
     return balance(min);
   }
+  node->size_--;
   updateHeight(node);
   return balance(node);
 }
@@ -157,9 +162,10 @@ void AVLTree<T, V>::setRoot(Node<T, V>* root) {
 }
 template <typename T, typename V>
 void AVLTree<T, V>::updateSize(Node<T, V>* node) {
-  node->size_ = 1 + size(node->left) + size(node->right);
-  if (node->parent) {
-    updateSize(node->parent);
+  if (node) {
+    node->size_ = 1 + size(node->left) + size(node->right);
+    updateSize(node->left);
+    updateSize(node->right);
   }
 }
 template <typename T, typename V>
