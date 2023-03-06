@@ -27,36 +27,17 @@ bool compare_lists(s21::list<value_type> my_list,
 }
 
 int main() {
-  s21::list<int> my_list;
-  my_list.push_back(90);
-  my_list.push_back(10);
-  my_list.push_back(3);
-  my_list.push_back(40);
-  my_list.push_back(30);
-  my_list.push_back(20);
-  my_list.push_back(10);  // del
-  my_list.push_back(10);
-  my_list.push_back(90);  // del
-  my_list.push_back(90);
-  my_list.push_back(3);
+  s21::list<int> my_list1;
 
-  std::list<int> std_list;
-  std_list.push_back(90);
-  std_list.push_back(10);
-  std_list.push_back(3);
-  std_list.push_back(40);
-  std_list.push_back(30);
-  std_list.push_back(20);
-  std_list.push_back(10);
-  std_list.push_back(10);
-  std_list.push_back(90);
-  std_list.push_back(90);
-  std_list.push_back(3);
+  *my_list1.begin();
+  cout << *my_list1.begin() << endl;
 
-  my_list.unique();
-  std_list.unique();
-
-  cout << compare_lists(my_list, std_list) << endl;
-
+  std::list<int> std_list2;
+  cout << *std_list2.begin() << endl;
+  // std::cout << "[";
+  // for (auto it = std_list1.begin(); it != std_list1.end(); ++it) {
+  //   std::cout << *it << ", ";
+  // }
+  // std::cout << "]\n";
   return 0;
 }

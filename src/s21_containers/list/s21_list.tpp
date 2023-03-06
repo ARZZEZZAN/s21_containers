@@ -21,15 +21,15 @@ list<value_type>::list(size_type n)
   add_end();
 }
 
-template <typename value_type>
-list<value_type>::list(std::initializer_list<value_type> const& items)
-    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
-  end_ = new Node(size_);
-  for (const auto& item : items) {
-    push_back(item);
-    add_end();
-  }
-}
+// template <typename value_type>
+// list<value_type>::list(std::initializer_list<value_type> const& items)
+//     : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
+//   end_ = new Node(size_);
+//   for (const auto& item : items) {
+//     push_back(item);
+//     add_end();
+//   }
+// }
 
 template <typename value_type>
 list<value_type>::list(const list& l)  // TODO need review
@@ -77,18 +77,6 @@ typename list<value_type>::const_reference list<value_type>::back() {
     throw std::out_of_range("list is empty");
   }
   return tail_->value_;
-}
-
-template <typename value_type>
-void list<value_type>::print_list() {  // TODO review
-  std::cout << "[";
-  for (iterator it = begin(); it != end(); ++it) {
-    std::cout << *it;
-    if ((it + 1) != end()) {
-      std::cout << ", ";
-    }
-  }
-  std::cout << "]\n";
 }
 
 template <typename value_type>
@@ -333,4 +321,17 @@ typename list<value_type>::iterator list<value_type>::partition(iterator first,
 
   return i;
 }
+
+template <typename value_type>
+void list<value_type>::print_list() {  // TODO review
+  std::cout << "[";
+  for (iterator it = begin(); it != end(); ++it) {
+    std::cout << *it;
+    if ((it + 1) != end()) {
+      std::cout << ", ";
+    }
+  }
+  std::cout << "]\n";
+}
+
 }  // namespace s21
