@@ -1,7 +1,6 @@
 #ifndef AVL_SET_H_
 #define AVL_SET_H_
 
-#include <iterator>
 #include <limits>
 
 #include "../Iterators/Iterator.h"

@@ -11,6 +11,7 @@ template <typename T, typename V>
 class Node {
  public:
   T key;
+  V value;
   int height;
   size_t size_;
   Node<T, V>* left;
