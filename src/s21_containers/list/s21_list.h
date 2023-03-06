@@ -39,8 +39,8 @@ class list {
   ~list();
   list& operator=(list&& l);
 
-  const_reference front() { return head_->value_; }
-  const_reference back() { return tail_->value_; }
+  const_reference front() { return !head_ ? end_->value_ : head_->value_; }
+  const_reference back() { return !tail_ ? end_->value_ : tail_->value_; }
 
   void print_list();  // TODO review
 

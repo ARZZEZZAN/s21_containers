@@ -14,6 +14,7 @@ class const_iterator_vector;
 
 template <class T>
 class vector {
+ public:
   // vector Member type
   using value_type = T;
   using reference = value_type &;

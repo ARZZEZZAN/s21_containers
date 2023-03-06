@@ -2,7 +2,7 @@
 
 #include <list>
 
-#include "s21_containers/list/s21_list.tpp"
+#include "s21_containers/s21_containers.h"
 
 template <typename value_type>
 bool compare_lists(s21::list<value_type> my_list,
