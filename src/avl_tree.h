@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "s21_set.h"
+#include "./Set/s21_set.h"
 
 namespace s21 {
 // AVL tree node
