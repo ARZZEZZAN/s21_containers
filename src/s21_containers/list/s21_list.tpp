@@ -5,7 +5,7 @@ template <typename value_type>
 list<value_type>::list()
     : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   end_ = new Node(size_);
-  add_end();
+  change_end();
 }
 
 template <typename value_type>
@@ -18,7 +18,7 @@ list<value_type>::list(size_type n)
   for (size_type i = 0; i < n; ++i) {
     push_back(value_type());
   }
-  add_end();
+  change_end();
 }
 
 template <typename value_type>
@@ -27,7 +27,7 @@ list<value_type>::list(std::initializer_list<value_type> const& items)
   end_ = new Node(size_);
   for (const auto& item : items) {
     push_back(item);
-    add_end();
+    change_end();
   }
 }
 
@@ -60,18 +60,8 @@ typename list<value_type>::list& list<value_type>::operator=(list&& l) {
 }
 
 template <typename value_type>
-bool list<value_type>::empty() {
-  return size_ == 0;
-}
-
-template <typename value_type>
-typename list<value_type>::size_type list<value_type>::size() {
-  return size_;
-}
-
-template <typename value_type>
 typename list<value_type>::size_type list<value_type>::max_size() {
-  return std::numeric_limits<size_type>::max();
+  return (std::numeric_limits<size_type>::max() / sizeof(Node) / 2);
 }
 
 template <typename value_type>
@@ -103,7 +93,7 @@ typename list<value_type>::iterator list<value_type>::insert(
     current->prev_ = add;
   }
   size_++;
-  add_end();
+  change_end();
   return iterator(add);
 }
 
@@ -130,16 +120,6 @@ void list<value_type>::erase(iterator pos) {
 }
 
 template <typename value_type>
-void list<value_type>::splice(const_iterator pos, list& other) {
-  if (!other.empty()) {
-    for (iterator it = other.begin(); it != other.end(); ++it) {
-      this->insert(pos, *it);
-    }
-    other.clear();
-  }
-}
-
-template <typename value_type>
 void list<value_type>::push_back(const_reference value) {
   Node* new_node = new Node(value);
   if (empty()) {
@@ -151,7 +131,7 @@ void list<value_type>::push_back(const_reference value) {
     tail_ = new_node;
   }
   size_++;
-  add_end();
+  change_end();
 }
 
 template <typename value_type>
@@ -169,7 +149,7 @@ void list<value_type>::pop_back() {
   }
   delete last_node;
   size_--;
-  add_end();
+  change_end();
 }
 
 template <typename value_type>
@@ -184,7 +164,7 @@ void list<value_type>::push_front(const_reference value) {
     head_ = new_node;
   }
   size_++;
-  add_end();
+  change_end();
 }
 
 template <typename value_type>
@@ -202,7 +182,7 @@ void list<value_type>::pop_front() {
   }
   delete first_node;
   size_--;
-  add_end();
+  change_end();
 }
 
 template <typename value_type>
@@ -265,6 +245,16 @@ void list<value_type>::unique() {
 }
 
 template <typename value_type>
+void list<value_type>::splice(const_iterator pos, list& other) {
+  if (!other.empty()) {
+    for (iterator it = other.begin(); it != other.end(); ++it) {
+      this->insert(pos, *it);
+    }
+    other.clear();
+  }
+}
+
+template <typename value_type>
 void list<value_type>::sort() {
   if (size_ > 1) {
     quick_sort(begin(), --end());
@@ -273,7 +263,7 @@ void list<value_type>::sort() {
 
 // ---------------support functions-----------------
 template <typename value_type>
-void list<value_type>::add_end() {
+void list<value_type>::change_end() {
   if (end_) {
     end_->next_ = head_;
     end_->prev_ = tail_;

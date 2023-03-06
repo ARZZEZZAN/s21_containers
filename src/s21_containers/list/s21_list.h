@@ -44,9 +44,9 @@ class list {
 
   void print_list();  // TODO review
 
-  bool empty();
-  size_type size();      // TODO review
-  size_type max_size();  // TODO review
+  bool empty() { return size_ == 0; }
+  size_type size() { return size_; }
+  size_type max_size();
 
   void clear();  //
   void push_back(const_reference value);
@@ -143,9 +143,10 @@ class list {
 
  private:
   // ---------------support functions-----------------
-  void add_end();  // TODO review и поменять название на change_end() и убрать
-                   // излишний вызов например в push и поп он вызывается, после
-                   // push мы вызываем add_end который уже был вызван в push
+  void
+  change_end();  // TODO review и поменять название на change_end() и убрать
+                 // излишний вызов например в push и поп он вызывается, после
+                 // push мы вызываем change_end который уже был вызван в push
   void quick_sort(iterator left, iterator right);
   iterator partition(iterator first, iterator last);
   void copy(const list& l);
