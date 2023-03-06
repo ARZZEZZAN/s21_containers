@@ -1,9 +1,20 @@
 // #include <iostream>
+#include <list>
 #include <queue>
 
 #include "s21_containers/queue/s21_queue.h"
 
 int main() {
+  s21::queue<int> my_queue{1, 2, 3, 4, 5, 6, 7, 8};
+  std::initializer_list<int> il = {1, 2, 3, 4, 5, 6, 7, 8};
+  std::queue<int> std_queue{il};
+  my_queue.pop();
+  my_queue.pop();
+  std_queue.pop();
+  std_queue.pop();
+  std::cout << "my_queue: " << my_queue.front() << std::endl;
+  std::cout << "std_queue: " << std_queue.front() << std::endl;
+
   // std::cout << "-------------------------------------------" << std::endl;
 
   // s21::list<int> my_list;
@@ -30,12 +41,12 @@ int main() {
   // std::cout << "-------------------------------------------" << std::endl;
 
   // // std::list<int> std_list2(-1);
-  s21::queue<size_t> my_queue_empty;
-  std::queue<size_t> std_queue_empty;
-  std::cout << "-------------------------------------------" << std::endl;
-  std::cout << my_queue_empty.front();
-  std::cout << "-------------------------------------------" << std::endl;
-  std::cout << std_queue_empty.front();
-  std::cout << "-------------------------------------------" << std::endl;
+  // s21::queue<int> my_queue{1, 2, 3};
+  // std::queue<int, std::list<int>> std_queue{std::list<int>{1, 2, 3}};
+  // std::cout << "-------------------------------------------" << std::endl;
+  // std::cout << my_queue.front() << std::endl;
+  // std::cout << "-------------------------------------------" << std::endl;
+  // std::cout << std_queue.front() << std::endl;
+  // std::cout << "-------------------------------------------" << std::endl;
   return 0;
 }
