@@ -46,6 +46,7 @@ class Map {
 
  private:
   AVLTree<T, V> tree_;
+  SetType set_;
   Allocator allocator;
 };
 

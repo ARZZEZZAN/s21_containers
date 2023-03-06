@@ -23,6 +23,13 @@ class Node {
     size_ = 1;
     left = right = parent = nullptr;
   }
+  Node(T k, V v) {
+    key = k;
+    value = v;
+    height = 1;
+    size_ = 1;
+    left = right = parent = nullptr;
+  }
 };
 template <typename T, typename V>
 class AVLTree {
