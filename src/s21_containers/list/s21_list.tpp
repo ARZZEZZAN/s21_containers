@@ -9,10 +9,10 @@ list<value_type>::list() : head_(nullptr), tail_(nullptr), size_(0) {
 
 template <typename value_type>
 list<value_type>::list(size_type n) {
+  end_ = new Node(size_);
   for (size_type i = 0; i < n; ++i) {
     push_back(value_type());
   }
-  end_ = new Node(size_);
   add_end();
 }
 
@@ -27,10 +27,13 @@ list<value_type>::list(std::initializer_list<value_type> const& items)
 }
 
 template <typename value_type>
-list<value_type>::list(const list& l)
-    : head_(nullptr), tail_(nullptr), size_(0) {
-  for (const auto& item : l) {
-    push_back(item);
+list<value_type>::list(const list& l)  // TODO need review
+    : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
+  end_ = new Node(size_);
+  Node* current = l.head_;
+  for (size_type i = 0; i != l.size_; i++) {
+    push_back(current->value_);
+    current = current->next_;
   }
 }
 
@@ -80,12 +83,6 @@ void list<value_type>::print_list() {  // TODO review
     }
   }
   std::cout << "]\n";
-  // old {
-  // for (auto i = this->begin(); i != this->end(); ++i) {
-  //   std::cout << *i << " ";
-  // }
-  // std::cout << std::endl;
-  // }
 }
 
 template <typename value_type>
@@ -156,9 +153,9 @@ void list<value_type>::erase(iterator pos) {
 
 template <typename value_type>
 void list<value_type>::splice(const_iterator pos, list& other) {
-  for (iterator iter = other.begin(); iter != other.end(); ++iter) {
-    this->insert(pos, *iter);
-    other.erase(iter);
+  for (iterator it = other.begin(); it != other.end(); ++it) {
+    this->insert(pos, *it);
+    other.erase(it);
   }
 }
 
@@ -247,6 +244,8 @@ void list<value_type>::merge(list& other) {
       if (iter_this.ptr_->value_ >= iter_other.ptr_->value_) {
         this->insert(iter_this, iter_other.ptr_->value_);
         iter_other++;
+      } else {
+        iter_this++;
       }
     } else {
       iter_this++;
@@ -254,25 +253,26 @@ void list<value_type>::merge(list& other) {
   }
   while (iter_other != other.end()) {
     this->insert(iter_this, iter_other.ptr_->value_);
+    iter_other++;
   }
 }
 
 template <typename value_type>
 void list<value_type>::reverse() {
   size_type step = 0;
-  for (iterator iter = this->begin(); step <= this->size(); ++iter) {
+  for (iterator it = this->begin(); step <= this->size(); ++it) {
     step++;
-    std::swap(iter.ptr_->prev_, iter.ptr_->next_);
+    std::swap(it.ptr_->prev_, it.ptr_->next_);
   }
   std::swap(head_, tail_);
 }
 
 template <typename value_type>
 void list<value_type>::unique() {
-  for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-    if (iter.ptr_->next_ && iter.ptr_->next_ != end_) {
-      if (iter.ptr_->value_ == iter.ptr_->next_->value_) {
-        this->erase(iter);
+  for (iterator it = this->begin(); it != this->end(); ++it) {
+    if (it.ptr_->next_ && it.ptr_->next_ != end_) {
+      if (it.ptr_->value_ == it.ptr_->next_->value_) {
+        this->erase(it);
       }
     }
   }

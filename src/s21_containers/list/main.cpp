@@ -2,33 +2,23 @@
 #include "s21_list.tpp"
 using namespace s21;
 using namespace std;
+
 int main() {
-  // s21::list<int> s21_l{1, 2, 3};
-  // s21::list<int> s21_l2;
+  s21::list<int> my_list1;
+  my_list1.push_back(1);
+  my_list1.push_back(3);
+  my_list1.push_back(5);
+  s21::list<int> my_list2;
+  my_list2.push_back(2);
+  my_list2.push_back(4);
+  my_list2.push_back(6);
+  my_list1.merge(my_list2);
 
-  // s21_l2.push_back(10);
-  // s21_l2.push_back(20);
-  // s21_l2.push_back(30);
-  // s21_l.splice((s21_l.begin()), s21_l2);
-  // cout << *(s21_l.begin()) << endl;
-  // std::list<int> std_l{1, 2, 3};
-  // std_l.insert(std_l.begin(), 5);
-
-  // cout << *(std_l.begin()) << endl;
-
-  s21::list<int> list1 = {1, 2, 3, 4, 5};
-  s21::list<int> list2 = {10, 20, 30, 40, 50};
-
-  auto it = list1.begin();
-
-  list1.splice(it, list2);
-
-  std::cout << "list1:" << *(list1.begin()) << "\n";
-  std::cout << "list1:" << list1 << "\n";
-  std::cout << "list2:" << list2 << "\n";
-
-  list2.splice(list2.begin(), list1, it, list1.end());
-
-  std::cout << "list1:" << list1 << "\n";
-  std::cout << "list2:" << list2 << "\n";
+  for (auto it = my_list1.begin(); it != my_list1.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  // EXPECT_EQ(my_list1.size(), 6);
+  // EXPECT_TRUE(my_list2.empty());
+  // EXPECT_EQ(my_list1.front(), 1);
+  // EXPECT_EQ(my_list1.back(), 6);
 }

@@ -59,67 +59,6 @@ class list {
   void unique();            // TODO review
   void sort();              // TODO review
 
-  // template <typename value_type>
-  // class ListConstIterator {
-  //   friend class list<T>;
-
-  //  public:
-  //   ListConstIterator() { ptr_ = nullptr; }
-  //   ListConstIterator(Node* ptr) : ptr_(ptr){};
-
-  //   reference operator*() { return this->ptr_->value_; }
-
-  //   ListConstIterator operator++(int) {
-  //     ptr_ = ptr_->next_;
-  //     return *this;
-  //   }
-
-  //   ListConstIterator operator--(int) {
-  //     ptr_ = ptr_->prev_;
-  //     return *this;
-  //   }
-
-  //   ListConstIterator& operator++() {
-  //     ptr_ = ptr_->next_;
-  //     return *this;
-  //   }
-
-  //   ListConstIterator& operator--() {
-  //     ptr_ = ptr_->prev_;
-  //     return *this;
-  //   }
-
-  //   ListConstIterator operator+(const size_type value) {
-  //     Node* tmp = ptr_;
-  //     for (size_type i = 0; i < value; i++) {
-  //       tmp = tmp->next_;
-  //     }
-
-  //     ListConstIterator res(tmp);
-  //     return res;
-  //   }
-
-  //   ListConstIterator operator-(const size_type value) {
-  //     Node* tmp = ptr_;
-  //     for (size_type i = 0; i < value; i++) {
-  //       tmp = tmp->prev_;
-  //     }
-  //     ListConstIterator res(tmp);
-  //     return res;
-  //   }
-
-  //   bool operator==(ListConstIterator other) {
-  //     return this->ptr_ == other.ptr_;
-  //   }
-
-  //   bool operator!=(ListConstIterator other) {
-  //     return this->ptr_ != other.ptr_;
-  //   }
-
-  //  private:
-  //   Node* ptr_ = nullptr;
-  // };
-
   template <typename value_type>
   class ListIterator {
    public:
@@ -182,8 +121,9 @@ class list {
     ListConstIterator(ListIterator<T> other) : ListIterator<T>(other) {}
     const T& operator*() { return ListIterator<T>::operator*(); }
   };
-  using iterator = ListIterator<T>;             // TODO
-  using const_iterator = ListConstIterator<T>;  // TODO
+
+  using iterator = ListIterator<T>;
+  using const_iterator = ListConstIterator<T>;
 
   iterator begin() { return iterator(head_); }                    // TODO
   iterator end() { return iterator(end_); }                       // TODO
@@ -197,7 +137,9 @@ class list {
 
  private:
   // ---------------support functions-----------------
-  void add_end();  // TODO review и поменять название на change_end()
+  void add_end();  // TODO review и поменять название на change_end() и убрать
+                   // излишний вызов например в push и поп он вызывается, после
+                   // push мы вызываем add_end который уже был вызван в push
   void quick_sort(iterator left, iterator right);
   iterator partition(iterator first, iterator last);
 };
