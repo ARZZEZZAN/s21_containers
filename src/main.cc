@@ -1,14 +1,7 @@
 // #include <iostream>
-#include <list>
+#include <queue>
 
-#include "s21_containers/list/s21_list.tpp"
-
-void print_std_list(std::list<int>& l) {
-  for (auto i = l.begin(); i != l.end(); ++i) {
-    std::cout << *i << " ";
-  }
-  std::cout << std::endl;
-}
+#include "s21_containers/queue/s21_queue.h"
 
 int main() {
   // std::cout << "-------------------------------------------" << std::endl;
@@ -37,12 +30,12 @@ int main() {
   // std::cout << "-------------------------------------------" << std::endl;
 
   // // std::list<int> std_list2(-1);
-  s21::list<size_t> my_list_empty;
-  std::list<size_t> std_list_empty;
+  s21::queue<size_t> my_queue_empty;
+  std::queue<size_t> std_queue_empty;
   std::cout << "-------------------------------------------" << std::endl;
-  std::cout << my_list_empty.max_size();
+  std::cout << my_queue_empty.front();
   std::cout << "-------------------------------------------" << std::endl;
-  std::cout << std_list_empty.max_size();
+  std::cout << std_queue_empty.front();
   std::cout << "-------------------------------------------" << std::endl;
   return 0;
 }

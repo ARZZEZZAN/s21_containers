@@ -39,14 +39,14 @@ class list {
   ~list();
   list& operator=(list&& l);
 
-  const_reference front();
-  const_reference back();
+  const_reference front() { return !head_ ? end_->value_ : head_->value_; }
+  const_reference back() { return !tail_ ? end_->value_ : tail_->value_; }
 
   void print_list();  // TODO review
 
-  bool empty();
-  size_type size();      // TODO review
-  size_type max_size();  // TODO review
+  bool empty() { return size_ == 0; }
+  size_type size() { return size_; }
+  size_type max_size();
 
   void clear();  //
   void push_back(const_reference value);
@@ -65,7 +65,12 @@ class list {
     ListIterator() { ptr_ = nullptr; }
     ListIterator(Node* ptr) : ptr_(ptr){};
 
-    reference operator*() { return this->ptr_->value_; }
+    reference operator*() {
+      if (!this->ptr_) {
+        throw std::invalid_argument("Value is nullptr");
+      }
+      return this->ptr_->value_;
+    }
 
     ListIterator operator++(int) {
       ptr_ = ptr_->next_;
@@ -125,23 +130,26 @@ class list {
   using iterator = ListIterator<T>;
   using const_iterator = ListConstIterator<T>;
 
-  iterator begin() { return iterator(head_); }                    // TODO
-  iterator end() { return iterator(end_); }                       // TODO
-  const_iterator begin() const { return const_iterator(head_); }  // TODO
-  const_iterator end() const { return const_iterator(end_); }     // TODO
+  iterator begin() { return !head_ ? iterator(end_) : iterator(head_); }
+  iterator end() { return iterator(end_); }
+  const_iterator begin() const {
+    return !head_ ? const_iterator(end_) : const_iterator(head_);
+  }
+  const_iterator end() const { return const_iterator(end_); }
 
-  iterator insert(iterator pos, const_reference value);  // TODO
-  void erase(iterator pos);                              // TODO
-  void splice(const_iterator pos,
-              list& other);  // TODO поменять iterator на const_iterator
+  iterator insert(iterator pos, const_reference value);
+  void erase(iterator pos);
+  void splice(const_iterator pos, list& other);
 
  private:
   // ---------------support functions-----------------
-  void add_end();  // TODO review и поменять название на change_end() и убрать
-                   // излишний вызов например в push и поп он вызывается, после
-                   // push мы вызываем add_end который уже был вызван в push
+  void
+  change_end();  // TODO review и поменять название на change_end() и убрать
+                 // излишний вызов например в push и поп он вызывается, после
+                 // push мы вызываем change_end который уже был вызван в push
   void quick_sort(iterator left, iterator right);
   iterator partition(iterator first, iterator last);
+  void copy(const list& l);
 };
 }  // namespace s21
 #endif  // S21_LIST_H
