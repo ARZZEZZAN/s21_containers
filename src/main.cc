@@ -4,9 +4,9 @@
 using namespace std;
 using namespace s21;
 int main() {
-  map<string, int> myMap;
-  auto res = myMap.insert(make_pair("Armen", 1));
-  std::cout << res.second << std::endl;
+  Map<string, int> myMap;
+  // auto res = myMap.insert(make_pair("Armen", 1));
+  std::cout << myMap.empty() << std::endl;
   // Set<int> mySet;
   // Set<int> mySet1;
   // std::cout << mySet.size() << std::endl;

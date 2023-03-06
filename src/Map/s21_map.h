@@ -45,7 +45,6 @@ class Map {
   bool contains(const T& key);
 
  private:
-  AVLTree<T, V> tree_;
   SetType set_;
   Allocator allocator;
 };
