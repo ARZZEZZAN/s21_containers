@@ -6,53 +6,52 @@
 #include "s21_set.h"
 
 namespace s21 {
-enum Duplicate { WITH_DUPLICATE, WITHOUT_DUPLICATE };
 // AVL tree node
-template <typename T>
+template <typename T, typename V>
 class Node {
  public:
   T key;
   int height;
   size_t size_;
-  Node<T>* left;
-  Node<T>* right;
-  Node<T>* parent;
+  Node<T, V>* left;
+  Node<T, V>* right;
+  Node<T, V>* parent;
   Node(T k) {
     key = k;
     height = 1;
     left = right = parent = nullptr;
   }
 };
-template <typename T>
+template <typename T, typename V>
 class AVLTree {
  public:
   AVLTree();
   ~AVLTree();
-  Node<T>* insert(T key);
+  Node<T, V>* insert(T key);
   void remove(T key) { root = remove(root, key); }
-  Node<T>* search(T key) { return search(root, key); }
-  Node<T>* getRoot() { return this->root; }
-  void setRoot(Node<T>* root);
-  void swap(AVLTree<T>& other) { std::swap(root, other.root); }
-  void clear(Node<T>* node);
+  Node<T, V>* search(T key) { return search(root, key); }
+  Node<T, V>* getRoot() { return this->root; }
+  void setRoot(Node<T, V>* root);
+  void swap(AVLTree<T, V>& other) { std::swap(root, other.root); }
+  void clear(Node<T, V>* node);
   bool getInserted() { return inserted; }
 
  private:
-  Node<T>* root;
+  Node<T, V>* root;
   bool inserted;
-  int size(Node<T>* node);
-  int height(Node<T>* node);
-  void updateSize(Node<T>* node);
-  int balanceFactor(Node<T>* node);
-  void updateHeight(Node<T>* node);
-  Node<T>* balance(Node<T>* node);
-  Node<T>* findMin(Node<T>* node);
-  Node<T>* rotateLeft(Node<T>* node);
-  Node<T>* rotateRight(Node<T>* node);
-  Node<T>* removeMin(Node<T>* node);
-  Node<T>* remove(Node<T>* node, T key);
-  Node<T>* search(Node<T>* node, T key);
-  Node<T>* insert(Node<T>* node, T key, Node<T>* parent);
+  int size(Node<T, V>* node);
+  int height(Node<T, V>* node);
+  void updateSize(Node<T, V>* node);
+  int balanceFactor(Node<T, V>* node);
+  void updateHeight(Node<T, V>* node);
+  Node<T, V>* balance(Node<T, V>* node);
+  Node<T, V>* findMin(Node<T, V>* node);
+  Node<T, V>* rotateLeft(Node<T, V>* node);
+  Node<T, V>* rotateRight(Node<T, V>* node);
+  Node<T, V>* removeMin(Node<T, V>* node);
+  Node<T, V>* remove(Node<T, V>* node, T key);
+  Node<T, V>* search(Node<T, V>* node, T key);
+  Node<T, V>* insert(Node<T, V>* node, T key, Node<T, V>* parent);
 };
 }  // namespace s21
 

@@ -12,8 +12,8 @@ template <typename T>
 class Set {
  public:
   using value_type = T;
-  using iterator = Iterator<T>;
-  using constIterator = ConstIterator<T>;
+  using iterator = Iterator<T, T>;
+  using constIterator = ConstIterator<T, T>;
   using size_type = size_t;
   using Allocator = std::allocator<T>;
 
@@ -41,7 +41,7 @@ class Set {
   iterator find(const T& key);
 
  private:
-  AVLTree<T> tree_;
+  AVLTree<T, T> tree_;
   Allocator allocator;
 };
 }  // namespace s21

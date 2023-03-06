@@ -30,7 +30,7 @@ Set<T> Set<T>::operator=(Set&& s) {
 
 template <typename T>
 typename Set<T>::iterator Set<T>::begin() {
-  Node<T>* node = tree_.getRoot();
+  Node<T, T>* node = tree_.getRoot();
   while (node != nullptr && node->left != nullptr) {
     node = node->left;
   }
@@ -64,7 +64,7 @@ typename Set<T>::size_type Set<T>::max_size() {
 template <typename T>
 void Set<T>::clear() {
   if (this->tree_.getRoot()) {
-    Node<T>* root = this->tree_.getRoot();
+    Node<T, T>* root = this->tree_.getRoot();
     this->tree_.clear(root);
     this->tree_.setRoot(nullptr);
   }
