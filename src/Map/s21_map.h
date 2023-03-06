@@ -3,8 +3,7 @@
 
 #include <limits>
 
-#include "../Iterators/Iterator.h"
-#include "../Set/s21_set.tpp"
+#include "../Set/s21_set.h"
 
 namespace s21 {
 template <typename T, typename V>
@@ -16,14 +15,14 @@ class Map {
   using constIterator = ConstIterator<T, V>;
   using size_type = size_t;
   using Allocator = std::allocator<T>;
-  using Set = Set<T, T>;
+  using SetType = Set<T>;
 
   Map();
   Map(std::initializer_list<value_type> const& items);
   Map(const Map& m);
   Map(Map&& m);
   ~Map();
-  operator=(Map&& m);
+  Map<T, V> operator=(Map&& m);
 
   T& at(const T& key);
   T& operator[](const T& key);
@@ -46,6 +45,10 @@ class Map {
   bool contains(const T& key);
 
  private:
+  AVLTree<T, V> tree_;
+  Allocator allocator;
 };
+
 }  // namespace s21
+
 #endif  // AVL_MAP_H_
