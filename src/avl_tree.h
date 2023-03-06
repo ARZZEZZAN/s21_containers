@@ -62,6 +62,7 @@ class AVLTree {
   Node<T, V>* remove(Node<T, V>* node, T key);
   Node<T, V>* search(Node<T, V>* node, T key);
   Node<T, V>* insert(Node<T, V>* node, T key, Node<T, V>* parent);
+  Node<T, V>* insert(Node<T, V>* node, T key, V value, Node<T, V>* parent);
 };
 }  // namespace s21
 
