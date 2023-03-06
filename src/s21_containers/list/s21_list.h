@@ -39,8 +39,8 @@ class list {
   ~list();
   list& operator=(list&& l);
 
-  const_reference front();
-  const_reference back();
+  const_reference front() { return head_->value_; }
+  const_reference back() { return tail_->value_; }
 
   void print_list();  // TODO review
 
@@ -67,7 +67,7 @@ class list {
 
     reference operator*() {
       if (!this->ptr_) {
-        // throw std::invalid_argument("Value is nullptr");
+        throw std::invalid_argument("Value is nullptr");
       }
       return this->ptr_->value_;
     }
@@ -130,15 +130,16 @@ class list {
   using iterator = ListIterator<T>;
   using const_iterator = ListConstIterator<T>;
 
-  iterator begin() { return iterator(head_); }                    // TODO
-  iterator end() { return iterator(end_); }                       // TODO
-  const_iterator begin() const { return const_iterator(head_); }  // TODO
-  const_iterator end() const { return const_iterator(end_); }     // TODO
+  iterator begin() { return !head_ ? iterator(end_) : iterator(head_); }
+  iterator end() { return iterator(end_); }
+  const_iterator begin() const {
+    return !head_ ? const_iterator(end_) : const_iterator(head_);
+  }
+  const_iterator end() const { return const_iterator(end_); }
 
-  iterator insert(iterator pos, const_reference value);  // TODO
-  void erase(iterator pos);                              // TODO
-  void splice(const_iterator pos,
-              list& other);  // TODO поменять iterator на const_iterator
+  iterator insert(iterator pos, const_reference value);
+  void erase(iterator pos);
+  void splice(const_iterator pos, list& other);
 
  private:
   // ---------------support functions-----------------

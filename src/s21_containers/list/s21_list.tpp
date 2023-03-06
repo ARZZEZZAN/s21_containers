@@ -32,7 +32,7 @@ list<value_type>::list(std::initializer_list<value_type> const& items)
 }
 
 template <typename value_type>
-list<value_type>::list(const list& l)  // TODO need review
+list<value_type>::list(const list& l)
     : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
   end_ = new Node(size_);
   this->copy(l);
@@ -41,7 +41,7 @@ list<value_type>::list(const list& l)  // TODO need review
 template <typename value_type>
 list<value_type>::list(list&& l)
     : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
-  swap(l);  // TODO проверить точно ли правильно работает
+  swap(l);
 }
 
 template <typename value_type>
@@ -57,22 +57,6 @@ typename list<value_type>::list& list<value_type>::operator=(list&& l) {
     swap(l);  // TODO review
   }
   return *this;
-}
-
-template <typename value_type>
-typename list<value_type>::const_reference list<value_type>::front() {
-  if (empty()) {
-    throw std::out_of_range("list is empty");
-  }
-  return head_->value_;
-}
-
-template <typename value_type>
-typename list<value_type>::const_reference list<value_type>::back() {
-  if (empty()) {
-    throw std::out_of_range("list is empty");
-  }
-  return tail_->value_;
 }
 
 template <typename value_type>
@@ -130,6 +114,10 @@ void list<value_type>::erase(iterator pos) {
     if (current == head_) {
       if (current->next_ && current->next_ != end_) {
         head_ = current->next_;
+      }
+    } else if (current == tail_) {
+      if (current->prev_ && current->prev_ != end_) {
+        tail_ = current->prev_;
       }
     }
     current->prev_->next_ = current->next_;

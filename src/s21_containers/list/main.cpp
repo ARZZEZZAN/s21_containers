@@ -28,25 +28,21 @@ bool compare_lists(s21::list<value_type> my_list,
 
 int main() {
   // s21::list<int> my_list1;
-  // s21::list<int> my_list2{500, 15000, 30000};
-  // my_list1.splice(my_list1.begin(), my_list2);
-  // my_list1.print_list();
+  // my_list1.push_back(1);
+  // my_list1.push_back(9999);
+  // my_list1.push_back(20000);
+  // my_list1.erase(--my_list1.end());
 
-  std::list<int> std_list1;
-  std::list<int> std_list2{500, 15000, 30000};
-  std_list1.splice(std_list1.begin(), std_list2);
+  std::list<int> std_list1{1, 9999, 20000};
+  cout << *(std_list1.begin()++) << endl;
+  // cout << *std_list1.begin() << endl;
+  // std_list1.erase(std_list1.end().operator--());
 
-  std::cout << "[";
-  for (auto it = std_list1.begin(); it != std_list1.end(); ++it) {
-    std::cout << *it << ", ";
-  }
-  std::cout << "]\n";
+  // cout << compare_lists(my_list1, std_list1) << endl;
 
-  std::cout << "[";
-  for (auto it = std_list2.begin(); it != std_list2.end(); ++it) {
+  for (auto it = std_list1.begin(); it != std_list1.end(); it++) {
     std::cout << *it << ", ";
   }
 
-  std::cout << "]\n";
   return 0;
 }

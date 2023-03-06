@@ -207,7 +207,7 @@ TEST(ListTest, begin_3_throw) {
   s21::list<int> my_list1;
   std::list<int> std_list2;
 
-  EXPECT_THROW(*my_list1.begin(), std::invalid_argument);
+  EXPECT_EQ(*my_list1.begin(), 0);
 }
 
 TEST(ListTest, end_1) {
@@ -386,6 +386,108 @@ TEST(ListTest, Splice_4) {
   std::list<int> std_list1;
   std::list<int> std_list2;
   std_list1.splice(std_list1.begin(), std_list2);
+  EXPECT_TRUE(compare_lists(my_list1, std_list1));
+}
+
+TEST(ListTest, Insert_1) {
+  s21::list<int> my_list1{1, 9999, 20000};
+  my_list1.insert(my_list1.begin(), 5);
+
+  std::list<int> std_list1{1, 9999, 20000};
+  std_list1.insert(std_list1.begin(), 5);
+
+  EXPECT_TRUE(compare_lists(my_list1, std_list1));
+}
+
+TEST(ListTest, Insert_2) {
+  s21::list<int> my_list1{1, 9999, 20000};
+  my_list1.insert(my_list1.end(), 5);
+
+  std::list<int> std_list1{1, 9999, 20000};
+  std_list1.insert(std_list1.end(), 5);
+
+  EXPECT_TRUE(compare_lists(my_list1, std_list1));
+}
+
+TEST(ListTest, Insert_3) {
+  s21::list<int> my_list1;
+  my_list1.insert(my_list1.begin(), 5);
+
+  std::list<int> std_list1;
+  std_list1.insert(std_list1.begin(), 5);
+
+  EXPECT_TRUE(compare_lists(my_list1, std_list1));
+}
+
+TEST(ListTest, Insert_4) {
+  s21::list<int> my_list1;
+  my_list1.insert(my_list1.end(), 5);
+
+  std::list<int> std_list1;
+  std_list1.insert(std_list1.end(), 5);
+
+  EXPECT_TRUE(compare_lists(my_list1, std_list1));
+}
+
+TEST(ListTest, Insert_5) {
+  s21::list<int> my_list1(4);
+  my_list1.insert(my_list1.begin(), 5);
+
+  std::list<int> std_list1(4);
+  std_list1.insert(std_list1.begin(), 5);
+
+  EXPECT_TRUE(compare_lists(my_list1, std_list1));
+}
+
+TEST(ListTest, Insert_6) {
+  s21::list<int> my_list1(4);
+  my_list1.insert(my_list1.end(), 5);
+
+  std::list<int> std_list1(4);
+  std_list1.insert(std_list1.end(), 5);
+
+  EXPECT_TRUE(compare_lists(my_list1, std_list1));
+}
+
+TEST(ListTest, Erase_1) {
+  s21::list<int> my_list1{1, 9999, 20000};
+  my_list1.erase(my_list1.begin());
+
+  std::list<int> std_list1{1, 9999, 20000};
+  std_list1.erase(std_list1.begin());
+
+  EXPECT_TRUE(compare_lists(my_list1, std_list1));
+}
+
+TEST(ListTest, Erase_2_throw) {
+  s21::list<int> my_list1{1, 9999, 20000};
+
+  EXPECT_THROW(my_list1.erase(my_list1.end()), std::invalid_argument);
+}
+
+TEST(ListTest, Erase_3) {
+  s21::list<int> my_list1{1, 9999, 20000};
+  my_list1.erase(--my_list1.end());
+
+  std::list<int> std_list1{1, 9999, 20000};
+  std_list1.erase(std_list1.end().operator--());
+
+  EXPECT_TRUE(compare_lists(my_list1, std_list1));
+}
+
+TEST(ListTest, Erase_4_throw) {
+  s21::list<int> my_list1;
+
+  EXPECT_THROW(my_list1.erase(my_list1.end()--), std::invalid_argument);
+}
+
+TEST(ListTest, Erase_5) {
+  s21::list<int> my_list1(5);
+  my_list1.erase(--my_list1.end());
+
+  std::list<int> std_list1(5);
+  std_list1.erase(std_list1.end().operator--());
+
   EXPECT_TRUE(compare_lists(my_list1, std_list1));
 }
 
