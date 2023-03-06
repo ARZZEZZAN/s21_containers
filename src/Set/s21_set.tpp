@@ -30,7 +30,7 @@ Set<T> Set<T>::operator=(Set&& s) {
 
 template <typename T>
 typename Set<T>::iterator Set<T>::begin() {
-  Node<T, V>* node = tree_.getRoot();
+  Node<T, T>* node = tree_.getRoot();
   while (node != nullptr && node->left != nullptr) {
     node = node->left;
   }
