@@ -208,7 +208,7 @@ void list<value_type>::merge(list& other) {
           iter_this++;
         }
       } else {
-        iter_this++;
+        break;
       }
     }
     while (iter_other != other.end()) {
