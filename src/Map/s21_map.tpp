@@ -39,18 +39,33 @@ typename Map<T, V>::iterator Map<T, V>::end() {
 }
 template <typename T, typename V>
 bool Map<T, V>::empty() {
-  return tree_.empty();
+  if (this->tree_.getRoot() == nullptr) {
+    return true;
+  }
+  if (this->tree_.getRoot()->size_ == 0) {
+    return true;
+  }
+  return false;
 }
 template <typename T, typename V>
 typename Map<T, V>::size_type Map<T, V>::size() {
-  return 0;
+  if (this->tree_.getRoot() == nullptr) {
+    return 0;
+  }
+  return tree_.getRoot()->size_;
 }
 template <typename T, typename V>
 typename Map<T, V>::size_type Map<T, V>::max_size() {
-  return 0;
+  return allocator.max_size() / 10;
 }
 template <typename T, typename V>
-void Map<T, V>::clear() {}
+void Map<T, V>::clear() {
+  if (this->tree_.getRoot()) {
+    Node<T, T>* root = this->tree_.getRoot();
+    this->tree_.clear(root);
+    this->tree_.setRoot(nullptr);
+  }
+}
 template <typename T, typename V>
 void Map<T, V>::erase(typename Map<T, V>::iterator pos) {}
 template <typename T, typename V>

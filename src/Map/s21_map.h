@@ -11,11 +11,10 @@ class Map {
  public:
   using mapped_type = V;
   using value_type = std::pair<const T, V>;
-  using iterator = Iterator<T, V>;
-  using constIterator = ConstIterator<T, V>;
+  using iterator = MapIterator<T, V>;
+  using constIterator = MapConstIterator<T, V>;
   using size_type = size_t;
   using Allocator = std::allocator<T>;
-  using SetType = Set<value_type>;
 
   Map();
   Map(std::initializer_list<value_type> const& items);
@@ -45,7 +44,7 @@ class Map {
   bool contains(const T& key);
 
  private:
-  SetType tree_;
+  AVLTree<value_type, V> tree_;
   Allocator allocator;
 };
 

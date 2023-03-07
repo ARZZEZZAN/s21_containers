@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-#include "./Set/s21_set.h"
-
 namespace s21 {
 // AVL tree node
 template <typename T, typename V>
