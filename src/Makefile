@@ -1,4 +1,4 @@
-.PHONY: all clear rebuild
+.PHONY: all clean rebuild test leaks gcov_report
 CC = gcc
 GCOV = -fprofile-arcs -ftest-coverage
 CFLAGS = -lstdc++ -lgtest -std=c++17 -Wall -Werror -Wextra -fsanitize=address -g
