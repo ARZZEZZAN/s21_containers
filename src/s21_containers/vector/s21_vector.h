@@ -76,122 +76,83 @@ class vector {
   void remove();
 };
 
-template <class T>
-class iterator_vector {
+template <typename T>
+class iterator_base {
+ public:
   friend class vector<T>;
-  friend class const_iterator_vector<T>;
 
   using value_type = T;
   using pointer = T *;
   using reference = T &;
 
- public:
-  iterator_vector() { ptr_ = nullptr; }
-  iterator_vector(pointer ptr) { ptr_ = ptr; }
+  iterator_base() { ptr_ = nullptr; }
+  iterator_base(pointer ptr) { ptr_ = ptr; }
 
-  value_type &operator*() const { return (*ptr_); }
+  value_type &operator*() { return (*ptr_); }
   pointer operator->() { return ptr_; }
 
-  iterator_vector &operator++() {
+  iterator_base &operator++() {
     ptr_++;
     return *this;
   }
 
-  iterator_vector &operator--() {
+  iterator_base &operator--() {
     ptr_--;
     return *this;
   }
 
-  iterator_vector operator++(int) {
-    iterator_vector tmp = *this;
+  iterator_base operator++(int) {
+    iterator_base tmp = *this;
     ++(*this);
     return tmp;
   }
 
-  iterator_vector operator--(int) {
-    iterator_vector tmp = *this;
+  iterator_base operator--(int) {
+    iterator_base tmp = *this;
     --(*this);
     return tmp;
   }
 
-  iterator_vector operator+(const size_t value) {
-    iterator_vector tmp(this->ptr_ + value);
+  iterator_base operator+(const size_t value) {
+    iterator_base tmp(this->ptr_ + value);
     return tmp;
   }
 
-  iterator_vector operator-(const size_t value) {
-    iterator_vector tmp(this->ptr_ - value);
+  iterator_base operator-(const size_t value) {
+    iterator_base tmp(this->ptr_ - value);
     return tmp;
   }
 
-  friend bool operator==(const iterator_vector &a, const iterator_vector &b) {
-    return a.ptr_ == b.ptr_;
+  bool operator==(const iterator_base &other) const {
+    return ptr_ == other.ptr_;
+  }
+  bool operator!=(const iterator_base &other) const {
+    return ptr_ != other.ptr_;
   }
 
-  friend bool operator!=(const iterator_vector &a, const iterator_vector &b) {
-    return a.ptr_ != b.ptr_;
-  }
-
-  operator const_iterator_vector<T>() const {
-    return const_iterator_vector<T>(ptr_);
-  }
-
- private:
+ protected:
   pointer ptr_;
 };
 
 template <class T>
-class const_iterator_vector {
-  friend class vector<T>;
-  friend class iterator_vector<T>;
-
-  using value_type = T;
-  using pointer = T *;
-  using reference = T &;
-
+class iterator_vector : public iterator_base<T> {
  public:
-  const_iterator_vector() { ptr_ = nullptr; };
-  const_iterator_vector(pointer ptr) { ptr_ = ptr; };
-  value_type operator*() const { return (*ptr_); }
-  pointer operator->() { return ptr_; }
+  using iterator_base<T>::iterator_base;
 
-  const_iterator_vector &operator++() {
-    ptr_++;
-    return *this;
-  }
-
-  const_iterator_vector &operator--() {
-    ptr_--;
-    return *this;
-  }
-
-  const_iterator_vector operator++(int) {
-    const_iterator_vector tmp = *this;
-    ++(*this);
-    return tmp;
-  }
-
-  const_iterator_vector operator--(int) {
-    const_iterator_vector tmp = *this;
-    --(*this);
-    return tmp;
-  }
-
-  friend bool operator==(const const_iterator_vector &a,
-                         const const_iterator_vector &b) {
-    return a.ptr_ == b.ptr_;
-  }
-
-  friend bool operator!=(const const_iterator_vector &a,
-                         const const_iterator_vector &b) {
-    return a.ptr_ != b.ptr_;
-  }
-
-  operator iterator_vector<T>() const { return iterator_vector<T>(ptr_); }
-
- private:
-  pointer ptr_;
+  using typename iterator_base<T>::value_type;
+  using typename iterator_base<T>::pointer;
+  using typename iterator_base<T>::reference;
 };
+
+// template <class T>
+// class const_iterator_vector : public iterator_base<T, const T *, const T &> {
+//  public:
+//   using iterator_base<T, const T &, const T *>::iterator_base;
+
+//   using typename iterator_base<T, const T &, const T *>::value_type;
+//   using typename iterator_base<T, const T &, const T *>::pointer;
+//   using typename iterator_base<T, const T &, const T *>::reference;
+// };
 
 }  // namespace s21
 #endif  // VECTOR_H
