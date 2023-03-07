@@ -9,6 +9,7 @@ namespace s21 {
 template <typename T, typename V>
 class Map {
  public:
+  using key_type = T;
   using mapped_type = V;
   using value_type = std::pair<const T, V>;
   using iterator = MapIterator<T, V>;
