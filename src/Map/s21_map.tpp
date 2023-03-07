@@ -30,11 +30,35 @@ template <typename T, typename V>
 T& Map<T, V>::operator[](const T& key) {}
 
 template <typename T, typename V>
-typename Map<T, V>::iterator Map<T, V>::begin() {}
+typename Map<T, V>::iterator Map<T, V>::begin() {
+  return nullptr;
+}
 template <typename T, typename V>
-typename Map<T, V>::iterator Map<T, V>::end() {}
+typename Map<T, V>::iterator Map<T, V>::end() {
+  return nullptr;
+}
 template <typename T, typename V>
 bool Map<T, V>::empty() {
+  return tree_.empty();
+}
+template <typename T, typename V>
+typename Map<T, V>::size_type Map<T, V>::size() {
   return 0;
+}
+template <typename T, typename V>
+typename Map<T, V>::size_type Map<T, V>::max_size() {
+  return 0;
+}
+template <typename T, typename V>
+void Map<T, V>::clear() {}
+template <typename T, typename V>
+void Map<T, V>::erase(typename Map<T, V>::iterator pos) {}
+template <typename T, typename V>
+void Map<T, V>::swap(Map& other) {}
+template <typename T, typename V>
+void Map<T, V>::merge(Map& other) {}
+template <typename T, typename V>
+bool Map<T, V>::contains(const T& key) {
+  return false;
 }
 }  // namespace s21
