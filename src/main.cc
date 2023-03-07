@@ -7,9 +7,9 @@ int main() {
   Map<string, int> myMap = {{"apple", 1}};
 
   // Output the keys of the map
-  for (const auto& kv : myMap) {
-    std::cout << myMap.empty() << std::endl;
-  }
+  // for (const auto& kv : myMap) {
+  //   std::cout << myMap.empty() << std::endl;
+  // }
   // Set<int> mySet;
   // mySet.insert(5);
   // // Set<int> mySet1;
