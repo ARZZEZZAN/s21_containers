@@ -32,10 +32,10 @@ class Node {
 template <typename T, typename V>
 class AVLTree {
  public:
+  using value_type = std::pair<const T, V>;
   AVLTree();
   ~AVLTree();
   Node<T, V>* insert(T key);
-  Node<T, V>* insert(T key, V value);
   void remove(T key);
   Node<T, V>* search(T key);
   Node<T, V>* getRoot();
@@ -60,7 +60,6 @@ class AVLTree {
   Node<T, V>* remove(Node<T, V>* node, T key);
   Node<T, V>* search(Node<T, V>* node, T key);
   Node<T, V>* insert(Node<T, V>* node, T key, Node<T, V>* parent);
-  Node<T, V>* insert(Node<T, V>* node, T key, V value, Node<T, V>* parent);
 };
 }  // namespace s21
 

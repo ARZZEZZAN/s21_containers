@@ -47,6 +47,8 @@ class Map {
  private:
   AVLTree<value_type, V> tree_;
   Allocator allocator;
+
+  iterator find(const T& key);
 };
 
 }  // namespace s21

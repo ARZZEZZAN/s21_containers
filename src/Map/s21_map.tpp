@@ -18,6 +18,10 @@ template <typename T, typename V>
 std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
     const value_type& value) {}
 template <typename T, typename V>
+typename Map<T, V>::iterator Map<T, V>::find(const T& key) {
+  return iterator(tree_.search(key));
+}
+template <typename T, typename V>
 std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(const T& key,
                                                                 const T& obj) {}
 template <typename T, typename V>

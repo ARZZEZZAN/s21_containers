@@ -200,4 +200,5 @@ template <typename T, typename V>
 bool AVLTree<T, V>::getInserted() {
   return inserted;
 }
+
 }  // namespace s21
