@@ -4,6 +4,7 @@
 #include <limits>
 
 #include "../Iterators/Iterator.h"
+#include "../Set/s21_set.tpp"
 
 namespace s21 {
 template <typename T, typename V>
@@ -11,7 +12,7 @@ class Map {
  public:
   using key_type = T;
   using mapped_type = V;
-  using value_type = std::pair<const T, V>;
+  using value_type = std::pair<T, V>;
   using iterator = MapIterator<T, V>;
   using constIterator = MapConstIterator<T, V>;
   using size_type = size_t;
@@ -36,7 +37,7 @@ class Map {
 
   void clear();
 
-  std::pair<iterator, bool> insert(const value_type& value);
+  void insert(const value_type& value);
   std::pair<iterator, bool> insert(const T& key, const T& obj);
   std::pair<iterator, bool> insert_or_assign(const T& key, const T& obj);
   void erase(iterator pos);
@@ -45,7 +46,7 @@ class Map {
   bool contains(const T& key);
 
  private:
-  AVLTree<value_type, V> tree_;
+  Set<value_type> tree_;
   Allocator allocator;
 
   iterator find(const T& key);

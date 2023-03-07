@@ -15,8 +15,10 @@ template <typename T, typename V>
 Map<T, V> Map<T, V>::operator=(Map&& m) {}
 
 template <typename T, typename V>
-std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
-    const value_type& value) {}
+void Map<T, V>::insert(const value_type& value) {
+  auto pair_set = tree_.insert(value);
+  //   return std::make_pair(iterator(pair_set.first), pair_set.second);
+}
 template <typename T, typename V>
 typename Map<T, V>::iterator Map<T, V>::find(const T& key) {
   return iterator(tree_.search(key));

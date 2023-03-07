@@ -9,7 +9,6 @@ template <typename T, typename V>
 class Node {
  public:
   T key;
-  V value;
   int height;
   size_t size_;
   Node<T, V>* left;
@@ -17,13 +16,6 @@ class Node {
   Node<T, V>* parent;
   Node(T k) {
     key = k;
-    height = 1;
-    size_ = 1;
-    left = right = parent = nullptr;
-  }
-  Node(T k, V v) {
-    key = k;
-    value = v;
     height = 1;
     size_ = 1;
     left = right = parent = nullptr;
