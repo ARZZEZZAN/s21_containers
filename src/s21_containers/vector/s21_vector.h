@@ -7,25 +7,25 @@ using namespace std;
 namespace s21 {
 
 template <class T>
-class iterator_vector;
+class VectorIterator;
 
 template <class T>
-class const_iterator_vector;
+class VectorConstIterator;
 
 template <class T>
 class vector {
  public:
-  // vector Member type
+  // Vector Member type
   using value_type = T;
   using reference = value_type &;
   using const_reference = const value_type &;
-  using iterator = iterator_vector<T>;
-  using const_iterator = const_iterator_vector<T>;
+  using iterator = VectorIterator<T>;
+  using const_iterator = VectorConstIterator<T>;
   using size_type = std::size_t;
   using pointer = T *;
 
  public:
-  // vector Member functions
+  // Vector Member functions
   vector();
   vector(size_type n);
   vector(std::initializer_list<value_type> const &items);
@@ -34,33 +34,33 @@ class vector {
   ~vector();
   vector &operator=(vector &&v);
 
-  // vector Element access
+  // Vector Element access
   reference at(size_type pos);
   reference operator[](size_type pos);
   const_reference front();
   const_reference back();
-  pointer data() { return container_; }
+  pointer data();
 
-  // vector Iterators
-  iterator begin() { return iterator(container_); }
-  iterator end() { return iterator(container_ + size_); }
-  const_iterator begin() const { return const_iterator(container_); }
-  const_iterator end() const { return const_iterator(container_ + size_); }
+  // Vector Iterators
+  iterator begin();
+  iterator end();
+  const_iterator begin() const;
+  const_iterator end() const;
 
-  // vector Capacity
-  bool empty() const { return size_ == 0; }
-  size_type size() const { return size_; }
-  size_type max_size() const { return capacity_ * sizeof(value_type); }
-  size_type capacity() const { return capacity_; }
+  // Vector Capacity
+  bool empty() const;
+  size_type size() const;
+  size_type max_size() const;
+  size_type capacity() const;
   void reserve(size_type size);
   void shrink_to_fit();
 
-  // vector Modifiers
-  void clear() { this->size_ = 0; }
+  // Vector Modifiers
+  void clear();
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
   void push_back(const_reference value);
-  void pop_back() { this->size_ > 0 ? this->size_-- : 0; };
+  void pop_back();
   void swap(vector &other);
 
  private:
@@ -76,83 +76,116 @@ class vector {
   void remove();
 };
 
-template <typename T>
-class iterator_base {
- public:
+template <class T>
+class VectorIterator {
   friend class vector<T>;
+  friend class VectorConstIterator<T>;
 
   using value_type = T;
   using pointer = T *;
   using reference = T &;
 
-  iterator_base() { ptr_ = nullptr; }
-  iterator_base(pointer ptr) { ptr_ = ptr; }
+ public:
+  VectorIterator() { ptr_ = nullptr; }
+  VectorIterator(pointer ptr) { ptr_ = ptr; }
 
-  value_type &operator*() { return (*ptr_); }
+  value_type &operator*() const { return (*ptr_); }
   pointer operator->() { return ptr_; }
 
-  iterator_base &operator++() {
+  VectorIterator &operator++() {
     ptr_++;
     return *this;
   }
 
-  iterator_base &operator--() {
+  VectorIterator &operator--() {
     ptr_--;
     return *this;
   }
 
-  iterator_base operator++(int) {
-    iterator_base tmp = *this;
+  VectorIterator operator++(int) {
+    VectorIterator tmp = *this;
     ++(*this);
     return tmp;
   }
 
-  iterator_base operator--(int) {
-    iterator_base tmp = *this;
+  VectorIterator operator--(int) {
+    VectorIterator tmp = *this;
     --(*this);
     return tmp;
   }
 
-  iterator_base operator+(const size_t value) {
-    iterator_base tmp(this->ptr_ + value);
+  VectorIterator operator+(const size_t value) {
+    VectorIterator tmp(this->ptr_ + value);
     return tmp;
   }
 
-  iterator_base operator-(const size_t value) {
-    iterator_base tmp(this->ptr_ - value);
+  VectorIterator operator-(const size_t value) {
+    VectorIterator tmp(this->ptr_ - value);
     return tmp;
   }
 
-  bool operator==(const iterator_base &other) const {
-    return ptr_ == other.ptr_;
-  }
-  bool operator!=(const iterator_base &other) const {
-    return ptr_ != other.ptr_;
+  bool operator==(const VectorIterator &other) { return ptr_ == other.ptr_; }
+
+  bool operator!=(const VectorIterator &other) { return ptr_ != other.ptr_; }
+
+  operator VectorConstIterator<T>() const {
+    return VectorConstIterator<T>(ptr_);
   }
 
- protected:
+ private:
   pointer ptr_;
 };
 
 template <class T>
-class iterator_vector : public iterator_base<T> {
+class VectorConstIterator {
+  friend class vector<T>;
+  friend class VectorIterator<T>;
+
+  using value_type = T;
+  using pointer = T *;
+  using reference = T &;
+
  public:
-  using iterator_base<T>::iterator_base;
+  VectorConstIterator() { ptr_ = nullptr; };
+  VectorConstIterator(pointer ptr) { ptr_ = ptr; };
+  value_type operator*() const { return (*ptr_); }
+  pointer operator->() { return ptr_; }
 
-  using typename iterator_base<T>::value_type;
-  using typename iterator_base<T>::pointer;
-  using typename iterator_base<T>::reference;
+  VectorConstIterator &operator++() {
+    ptr_++;
+    return *this;
+  }
+
+  VectorConstIterator &operator--() {
+    ptr_--;
+    return *this;
+  }
+
+  VectorConstIterator operator++(int) {
+    VectorConstIterator tmp = *this;
+    ++(*this);
+    return tmp;
+  }
+
+  VectorConstIterator operator--(int) {
+    VectorConstIterator tmp = *this;
+    --(*this);
+    return tmp;
+  }
+
+  bool operator==(const VectorConstIterator &other) {
+    return ptr_ == other.ptr_;
+  }
+
+  bool operator!=(const VectorConstIterator &other) {
+    return ptr_ != other.ptr_;
+  }
+
+  operator VectorIterator<T>() const { return VectorIterator<T>(ptr_); }
+
+ private:
+  pointer ptr_;
 };
-
-// template <class T>
-// class const_iterator_vector : public iterator_base<T, const T *, const T &> {
-//  public:
-//   using iterator_base<T, const T &, const T *>::iterator_base;
-
-//   using typename iterator_base<T, const T &, const T *>::value_type;
-//   using typename iterator_base<T, const T &, const T *>::pointer;
-//   using typename iterator_base<T, const T &, const T *>::reference;
-// };
 
 }  // namespace s21
 #endif  // VECTOR_H

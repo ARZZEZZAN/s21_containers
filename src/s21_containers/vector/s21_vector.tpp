@@ -1,6 +1,6 @@
 #include "s21_vector.h"
 namespace s21 {
-// vector Member functions
+// Vector Member functions
 template <class value_type>
 vector<value_type>::vector() {
   this->bring_to_zero();
@@ -57,7 +57,7 @@ typename s21::vector<value_type>& vector<value_type>::operator=(vector&& v) {
   return *this;
 }
 
-// vector Element access
+// Vector Element access
 template <class value_type>
 typename vector<value_type>::reference vector<value_type>::at(size_type pos) {
   if (pos >= this->size_) {
@@ -92,7 +92,53 @@ typename vector<value_type>::const_reference vector<value_type>::back() {
   return *(container_ + size_ - 1);
 }
 
-// vector Capacity
+template <class value_type>
+typename vector<value_type>::pointer vector<value_type>::data() {
+  return container_;
+}
+
+// Vector Iterators
+template <class value_type>
+typename vector<value_type>::iterator vector<value_type>::begin() {
+  return iterator(container_);
+}
+
+template <class value_type>
+typename vector<value_type>::iterator vector<value_type>::end() {
+  return iterator(container_ + size_);
+}
+
+template <class value_type>
+typename vector<value_type>::const_iterator vector<value_type>::begin() const {
+  return const_iterator(container_);
+}
+
+template <class value_type>
+typename vector<value_type>::const_iterator vector<value_type>::end() const {
+  return const_iterator(container_ + size_);
+}
+
+// Vector Capacity
+template <class value_type>
+bool vector<value_type>::empty() const {
+  return size_ == 0;
+}
+
+template <class value_type>
+typename vector<value_type>::size_type vector<value_type>::size() const {
+  return size_;
+}
+
+template <class value_type>
+typename vector<value_type>::size_type vector<value_type>::max_size() const {
+  return capacity_ * sizeof(value_type);
+}
+
+template <class value_type>
+typename vector<value_type>::size_type vector<value_type>::capacity() const {
+  return capacity_;
+}
+
 template <class value_type>
 void vector<value_type>::reserve(size_type size) {
   size_type less_zero = 0;
@@ -111,7 +157,12 @@ void vector<value_type>::shrink_to_fit() {
   }
 }
 
-// vector Modifiers
+// Vector Modifiers
+template <class value_type>
+void vector<value_type>::clear() {
+  this->size_ = 0;
+}
+
 template <class value_type>
 typename vector<value_type>::iterator vector<value_type>::insert(
     iterator pos, const_reference value) {
@@ -153,6 +204,11 @@ void vector<value_type>::push_back(const_reference value) {
     add_memory(0, false);
   }
   this->container_[this->size_++] = value;
+}
+
+template <class value_type>
+void vector<value_type>::pop_back() {
+  this->size_ > 0 ? this->size_-- : 0;
 }
 
 template <class value_type>

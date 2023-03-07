@@ -10,6 +10,7 @@ namespace s21 {
 template <typename T>
 class list {
  public:
+  //  List Member type
   using value_type = T;
   using reference = T&;
   using const_reference = const T&;
@@ -31,6 +32,7 @@ class list {
   size_type size_;
 
  public:
+  //  List Functions
   list();
   list(size_type n);
   list(std::initializer_list<value_type> const& items);
@@ -39,25 +41,26 @@ class list {
   ~list();
   list& operator=(list&& l);
 
-  const_reference front() { return !head_ ? end_->value_ : head_->value_; }
-  const_reference back() { return !tail_ ? end_->value_ : tail_->value_; }
+  // List Element access
+  const_reference front();
+  const_reference back();
 
-  void print_list();  // TODO review
-
-  bool empty() { return size_ == 0; }
-  size_type size() { return size_; }
+  // List Capacity
+  bool empty();
+  size_type size();
   size_type max_size();
 
-  void clear();  //
+  // List Modifiers
+  void clear();
   void push_back(const_reference value);
   void pop_back();
   void push_front(const_reference value);
   void pop_front();
   void swap(list& other);
-  void merge(list& other);  // TODO review
-  void reverse();           // TODO review
-  void unique();            // TODO review
-  void sort();              // TODO review
+  void merge(list& other);
+  void reverse();
+  void unique();
+  void sort();
 
   template <typename value_type>
   class ListIterator {
@@ -127,29 +130,28 @@ class list {
     const T& operator*() { return ListIterator<T>::operator*(); }
   };
 
+  //  List Member type
   using iterator = ListIterator<T>;
   using const_iterator = ListConstIterator<T>;
 
-  iterator begin() { return !head_ ? iterator(end_) : iterator(head_); }
-  iterator end() { return iterator(end_); }
-  const_iterator begin() const {
-    return !head_ ? const_iterator(end_) : const_iterator(head_);
-  }
-  const_iterator end() const { return const_iterator(end_); }
+  // List Iterators
+  iterator begin();
+  iterator end();
+  const_iterator begin() const;
+  const_iterator end() const;
 
+  // List Modifiers
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
   void splice(const_iterator pos, list& other);
 
  private:
-  // ---------------support functions-----------------
-  void
-  change_end();  // TODO review и поменять название на change_end() и убрать
-                 // излишний вызов например в push и поп он вызывается, после
-                 // push мы вызываем change_end который уже был вызван в push
+  // Support
+  void change_end();
   void quick_sort(iterator left, iterator right);
   iterator partition(iterator first, iterator last);
   void copy(const list& l);
+  void print_list();
 };
 }  // namespace s21
 #endif  // S21_LIST_H

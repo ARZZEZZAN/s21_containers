@@ -1,6 +1,6 @@
 #include "s21_list.h"
 namespace s21 {
-
+//  List Functions
 template <typename value_type>
 list<value_type>::list()
     : head_(nullptr), tail_(nullptr), end_(nullptr), size_(0) {
@@ -54,9 +54,52 @@ template <typename value_type>
 typename list<value_type>::list& list<value_type>::operator=(list&& l) {
   if (this != &l) {
     clear();
-    swap(l);  // TODO review
+    swap(l);
   }
   return *this;
+}
+
+// List Element access
+template <typename value_type>
+typename list<value_type>::const_reference list<value_type>::front() {
+  return !head_ ? end_->value_ : head_->value_;
+}
+
+template <typename value_type>
+typename list<value_type>::const_reference list<value_type>::back() {
+  return !tail_ ? end_->value_ : tail_->value_;
+}
+
+// List Iterators
+template <typename value_type>
+typename list<value_type>::iterator list<value_type>::begin() {
+  return !head_ ? iterator(end_) : iterator(head_);
+}
+
+template <typename value_type>
+typename list<value_type>::iterator list<value_type>::end() {
+  return iterator(end_);
+}
+
+template <typename value_type>
+typename list<value_type>::const_iterator list<value_type>::begin() const {
+  return !head_ ? const_iterator(end_) : const_iterator(head_);
+}
+
+template <typename value_type>
+typename list<value_type>::const_iterator list<value_type>::end() const {
+  return const_iterator(end_);
+}
+
+// List Capacity
+template <typename value_type>
+bool list<value_type>::empty() {
+  return size_ == 0;
+}
+
+template <typename value_type>
+typename list<value_type>::size_type list<value_type>::size() {
+  return size_;
 }
 
 template <typename value_type>
@@ -64,6 +107,7 @@ typename list<value_type>::size_type list<value_type>::max_size() {
   return (std::numeric_limits<size_type>::max() / sizeof(Node) / 2);
 }
 
+// List Modifiers
 template <typename value_type>
 void list<value_type>::clear() {
   while (!empty()) {
@@ -261,7 +305,7 @@ void list<value_type>::sort() {
   }
 }
 
-// ---------------support functions-----------------
+// Support
 template <typename value_type>
 void list<value_type>::change_end() {
   if (end_) {
@@ -306,7 +350,7 @@ typename list<value_type>::iterator list<value_type>::partition(iterator first,
 }
 
 template <typename value_type>
-void list<value_type>::print_list() {  // TODO review
+void list<value_type>::print_list() {
   std::cout << "[";
   for (iterator it = begin(); it != end(); ++it) {
     std::cout << *it;
@@ -325,4 +369,5 @@ void list<value_type>::copy(const list& l) {
     current = current->next_;
   }
 }
+
 }  // namespace s21
