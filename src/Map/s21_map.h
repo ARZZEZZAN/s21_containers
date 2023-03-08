@@ -38,8 +38,9 @@ class Map {
   void clear();
 
   std::pair<iterator, bool> insert(const value_type& value);
-  std::pair<iterator, bool> insert(const T& key, const T& obj);
-  std::pair<iterator, bool> insert_or_assign(const T& key, const T& obj);
+  std::pair<iterator, bool> insert(const key_type& key, const mapped_type& obj);
+  std::pair<iterator, bool> insert_or_assign(const key_type& key,
+                                             const mapped_type& obj);
   void erase(iterator pos);
   void swap(Map& other);
   void merge(Map& other);

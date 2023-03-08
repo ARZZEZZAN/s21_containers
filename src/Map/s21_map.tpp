@@ -26,13 +26,26 @@ std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
   }
   return result;
 }
-
 template <typename T, typename V>
-std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(const T& key,
-                                                                const T& obj) {}
+std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
+    const key_type& key, const mapped_type& obj) {
+  return insert(std::pair<key_type, mapped_type>(key, obj));
+}
 template <typename T, typename V>
 std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert_or_assign(
-    const T& key, const T& obj) {}
+    const key_type& key, const mapped_type& obj) {
+  iterator i = this->begin();
+  if (i != nullptr) {
+    for (; i != this->end(); ++i) {
+      if (i->first == key) {
+        i->second = obj;
+      } else {
+        return insert(std::pair<key_type, mapped_type>(key, obj));
+      }
+    }
+  }
+  return insert(std::pair<key_type, mapped_type>(key, obj));
+}
 
 template <typename T, typename V>
 typename Map<T, V>::mapped_type& Map<T, V>::at(const T& key) {
