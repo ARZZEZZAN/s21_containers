@@ -7,20 +7,29 @@ using namespace std;
 using namespace s21;
 int main() {
   Map<string, int> myMap;
+  Map<string, int> myMap1;
   myMap.insert(std::make_pair("apple", 1));
   myMap.insert(std::make_pair("or", 1));
   myMap.insert(std::make_pair("adf", 1));
   myMap.insert(std::make_pair("appsafsle", 1));
   myMap.insert(std::make_pair("appfafale", 1));
-  for (auto i : myMap) {
-    std::cout << i.first << std::endl;
+
+  myMap1.insert(std::make_pair("orange", 1));
+  myMap1.insert(std::make_pair("slivki", 1));
+  myMap1.insert(std::make_pair("yabloko", 1));
+
+  myMap.merge(myMap1);
+  // for (auto i : myMap) {
+  //   std::cout << i.first << std::endl;
+  // }
+  // std::cout << "\n" << std::endl;
+  if (myMap.contains("apple")) {
+    std::cout << "\n" << std::endl;
   }
-  std::cout << "\n" << std::endl;
-  myMap.erase(myMap.begin() + 1);
   for (auto i = myMap.begin(); i != myMap.end(); i++) {
     std::cout << i.operator->()->first << std::endl;
   }
-  // Output the keys of the map
+
   // for (const auto& kv : myMap) {
   //   std::cout << myMap.empty() << std::endl;
   // }

@@ -87,11 +87,22 @@ void Map<T, V>::erase(typename Map<T, V>::iterator pos) {
   }
 }
 template <typename T, typename V>
-void Map<T, V>::swap(Map& other) {}
+void Map<T, V>::swap(Map& other) {
+  tree_.swap(other.tree_);
+}
 template <typename T, typename V>
-void Map<T, V>::merge(Map& other) {}
+void Map<T, V>::merge(Map& other) {
+  iterator iter = other.begin();
+  while (iter != other.end()) {
+    this->insert(*iter);
+    iter++;
+  }
+}
 template <typename T, typename V>
 bool Map<T, V>::contains(const T& key) {
+  for (iterator i = this->begin(); i != this->end(); i++) {
+    if (i->first == key) return true;
+  }
   return false;
 }
 }  // namespace s21
