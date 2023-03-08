@@ -35,10 +35,13 @@ std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert_or_assign(
     const T& key, const T& obj) {}
 
 template <typename T, typename V>
-T& Map<T, V>::at(const T& key) {}
+typename Map<T, V>::mapped_type& Map<T, V>::at(const T& key) {
+  return operatorHelper(key, 0);
+}
 template <typename T, typename V>
-T& Map<T, V>::operator[](const T& key) {}
-
+typename Map<T, V>::mapped_type& Map<T, V>::operator[](const T& key) {
+  return operatorHelper(key, 1);
+}
 template <typename T, typename V>
 typename Map<T, V>::iterator Map<T, V>::begin() {
   Node<value_type, V>* node = tree_.getRoot();
@@ -104,5 +107,25 @@ bool Map<T, V>::contains(const T& key) {
     if (i->first == key) return true;
   }
   return false;
+}
+template <typename T, typename V>
+typename Map<T, V>::mapped_type& Map<T, V>::operatorHelper(const T& key,
+                                                           int flag) {
+  iterator i = this->begin();
+  if (i != nullptr) {
+    for (; i != this->end(); ++i) {
+      if (i->first == key) {
+        return i->second;
+      } else {
+        if (flag) {
+          insert(value_type(key, mapped_type()));
+          return i->second;
+        } else {
+          throw std::out_of_range("There is no such key");
+        }
+      }
+    }
+  }
+  return i->second;
 }
 }  // namespace s21

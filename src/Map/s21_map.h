@@ -25,8 +25,8 @@ class Map {
   ~Map();
   Map<T, V> operator=(Map&& m);
 
-  T& at(const T& key);
-  T& operator[](const T& key);
+  mapped_type& at(const T& key);
+  mapped_type& operator[](const T& key);
 
   iterator begin();
   iterator end();
@@ -48,6 +48,8 @@ class Map {
  private:
   AVLTree<value_type, V> tree_;
   Allocator allocator;
+
+  mapped_type& operatorHelper(const T& key, int flag);
 };
 
 }  // namespace s21
