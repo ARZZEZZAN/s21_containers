@@ -18,7 +18,8 @@ template <typename T, typename V>
 std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
     const value_type& value) {
   std::pair<typename Map<T, V>::iterator, bool> result;
-  auto res = this->tree_.insert(value);
+  this->tree_.insert(value);
+  auto res = this->tree_.search(value);
   if (this->tree_.getInserted()) {
     result = std::make_pair(iterator(res), true);
   } else {
@@ -34,19 +35,18 @@ std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
 template <typename T, typename V>
 std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert_or_assign(
     const key_type& key, const mapped_type& obj) {
+  std::pair<typename Map<T, V>::iterator, bool> res;
   iterator i = this->begin();
   if (i != nullptr) {
     for (; i != this->end(); ++i) {
       if (i->first == key) {
         i->second = obj;
-      } else {
-        return insert(std::pair<key_type, mapped_type>(key, obj));
+        return res;
       }
     }
   }
   return insert(std::pair<key_type, mapped_type>(key, obj));
 }
-
 template <typename T, typename V>
 typename Map<T, V>::mapped_type& Map<T, V>::at(const T& key) {
   return operatorHelper(key, 0);
@@ -129,14 +129,12 @@ typename Map<T, V>::mapped_type& Map<T, V>::operatorHelper(const T& key,
     for (; i != this->end(); ++i) {
       if (i->first == key) {
         return i->second;
-      } else {
-        if (flag) {
-          insert(value_type(key, mapped_type()));
-          return i->second;
-        } else {
-          throw std::out_of_range("There is no such key");
-        }
       }
+    }
+    if (flag) {
+      return insert(value_type(key, mapped_type())).first->second;
+    } else {
+      throw std::out_of_range("There is no such key");
     }
   }
   return i->second;

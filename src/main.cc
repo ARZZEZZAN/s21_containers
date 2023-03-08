@@ -13,9 +13,7 @@ int main() {
   myMap.insert(std::make_pair("adf", 1));
   myMap.insert(std::make_pair("appsafsle", 1));
   myMap.insert(std::make_pair("appfafale", 1));
-  myMap.insert("string", 1000);
-  myMap.insert_or_assign("string", 10002);
-
+  myMap["string"] = 999;
   std::cout << myMap["string"] << std::endl;
   // for (auto i : myMap) {
   //   std::cout << i.first << std::endl;
@@ -23,6 +21,7 @@ int main() {
   // std::cout << "\n" << std::endl;
   for (auto i = myMap.begin(); i != myMap.end(); i++) {
     std::cout << i.operator->()->first << std::endl;
+    std::cout << i.operator->()->second << std::endl;
   }
 
   // for (const auto& kv : myMap) {
