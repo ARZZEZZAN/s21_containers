@@ -83,7 +83,9 @@ std::pair<typename Set<T>::iterator, bool> Set<T>::insert(const T& value) {
 
 template <typename T>
 void Set<T>::erase(Set<T>::iterator pos) {
-  tree_.remove(*pos);
+  if (pos != nullptr) {
+    tree_.remove(*pos);
+  }
 }
 template <typename T>
 void Set<T>::swap(Set<T>& other) {

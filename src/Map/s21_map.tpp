@@ -82,7 +82,9 @@ void Map<T, V>::clear() {
 }
 template <typename T, typename V>
 void Map<T, V>::erase(typename Map<T, V>::iterator pos) {
-  this->tree_.remove(*pos);
+  if (pos != nullptr) {
+    this->tree_.remove(*pos);
+  }
 }
 template <typename T, typename V>
 void Map<T, V>::swap(Map& other) {}
@@ -91,13 +93,5 @@ void Map<T, V>::merge(Map& other) {}
 template <typename T, typename V>
 bool Map<T, V>::contains(const T& key) {
   return false;
-}
-template <typename T, typename V>
-typename Map<T, V>::iterator Map<T, V>::find(const T& key) {
-  auto node = tree_.search(std::make_pair(key, V{}));
-  if (node == nullptr) {
-    return end();
-  }
-  return iterator(node);
 }
 }  // namespace s21

@@ -5,41 +5,45 @@
 
 namespace s21 {
 
-template <typename T, typename V, typename Ref, typename Ptr>
-class IteratorBase {
+template <typename T, typename V>
+class Iterator {
  public:
   using key_type = T;
-  using reference = Ref;
-  using const_reference = const Ref;
-  using pointer = Ptr;
+  using reference = T&;
+  using const_reference = const reference;
+  using pointer = T*;
 
-  IteratorBase(Node<T, V>* node = nullptr) : node_(node) {}
-
-  IteratorBase& operator++() {
+  Iterator(Node<T, V>* node = nullptr) : node_(node) {}
+  Iterator operator+(const size_t value) {
+    Iterator tmp = *this;
+    for (size_t i = 0; i < value; i++) {
+      ++tmp;
+    }
+    return tmp;
+  }
+  Iterator& operator++() {
     if (this->node_ == nullptr) {
       throw std::length_error("Node is nullptr");
     }
-    if (node_->right != nullptr) {
-      node_ = node_->right;
-      while (node_->left != nullptr) node_ = node_->left;
+    if (this->node_->right != nullptr) {
+      this->node_ = this->node_->right;
+      while (this->node_->left != nullptr) this->node_ = this->node_->left;
     } else {
-      Node<T, V>* parent = node_->parent;
-      while (parent != nullptr && node_ == parent->right) {
-        node_ = parent;
+      Node<T, V>* parent = this->node_->parent;
+      while (parent != nullptr && this->node_ == parent->right) {
+        this->node_ = parent;
         parent = parent->parent;
       }
-      node_ = parent;
+      this->node_ = parent;
     }
     return *this;
   }
-
-  IteratorBase operator++(int) {
-    IteratorBase tmp = *this;
+  Iterator operator++(int) {
+    Iterator tmp = *this;
     ++(*this);
     return tmp;
   }
-
-  IteratorBase& operator--() {
+  Iterator& operator--() {
     if (this->node_ == nullptr) {
       throw std::length_error("Node is nullptr");
     }
@@ -60,18 +64,14 @@ class IteratorBase {
     return *this;
   }
 
-  IteratorBase operator--(int) {
-    IteratorBase tmp = *this;
+  Iterator operator--(int) {
+    Iterator tmp = *this;
     --(*this);
     return tmp;
   }
 
-  bool operator==(const IteratorBase& other) const {
-    return node_ == other.node_;
-  }
-  bool operator!=(const IteratorBase& other) const {
-    return node_ != other.node_;
-  }
+  bool operator==(const Iterator& other) const { return node_ == other.node_; }
+  bool operator!=(const Iterator& other) const { return node_ != other.node_; }
 
   reference operator*() const { return node_->key; }
   pointer operator->() const { return &(node_->key); }
@@ -81,25 +81,14 @@ class IteratorBase {
 };
 
 template <typename T, typename V>
-class Iterator : public IteratorBase<T, V, T&, T*> {
+class ConstIterator : public Iterator<const T, const V> {
  public:
-  using IteratorBase<T, V, T&, T*>::IteratorBase;
+  using Iterator<const T, const V>::Iterator;
 
-  using typename IteratorBase<T, V, T&, T*>::key_type;
-  using typename IteratorBase<T, V, T&, T*>::reference;
-  using typename IteratorBase<T, V, T&, T*>::const_reference;
-  using typename IteratorBase<T, V, T&, T*>::pointer;
-};
-
-template <typename T, typename V>
-class ConstIterator : public IteratorBase<T, V, const T&, const T*> {
- public:
-  using IteratorBase<T, V, const T&, const T*>::IteratorBase;
-
-  using typename IteratorBase<T, V, const T&, const T*>::key_type;
-  using typename IteratorBase<T, V, const T&, const T*>::reference;
-  using typename IteratorBase<T, V, const T&, const T*>::const_reference;
-  using typename IteratorBase<T, V, const T&, const T*>::pointer;
+  using typename Iterator<const T, const V>::key_type;
+  using typename Iterator<const T, const V>::reference;
+  using typename Iterator<const T, const V>::const_reference;
+  using typename Iterator<const T, const V>::pointer;
 };
 
 }  // namespace s21

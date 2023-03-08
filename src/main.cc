@@ -15,7 +15,11 @@ int main() {
   for (auto i : myMap) {
     std::cout << i.first << std::endl;
   }
-  myMap.erase(myMap.find("apple"));
+  std::cout << "\n" << std::endl;
+  myMap.erase(myMap.begin() + 1);
+  for (auto i = myMap.begin(); i != myMap.end(); i++) {
+    std::cout << i.operator->()->first << std::endl;
+  }
   // Output the keys of the map
   // for (const auto& kv : myMap) {
   //   std::cout << myMap.empty() << std::endl;
