@@ -15,8 +15,11 @@ template <typename T, typename V>
 Map<T, V> Map<T, V>::operator=(Map&& m) {}
 
 template <typename T, typename V>
-void Map<T, V>::insert(const value_type& value) {
-  this->tree_.insert(value);
+std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
+    const value_type& value) {
+  std::pair<typename Map<T, V>::iterator, bool> result;
+  auto res = this->tree_.insert(value);
+  return std::make_pair(iterator(res), true);
 }
 
 template <typename T, typename V>

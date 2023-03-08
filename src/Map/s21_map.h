@@ -37,7 +37,7 @@ class Map {
 
   void clear();
 
-  void insert(const value_type& value);
+  std::pair<iterator, bool> insert(const value_type& value);
   std::pair<iterator, bool> insert(const T& key, const T& obj);
   std::pair<iterator, bool> insert_or_assign(const T& key, const T& obj);
   void erase(iterator pos);
