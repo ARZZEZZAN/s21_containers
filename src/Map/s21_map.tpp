@@ -4,15 +4,31 @@ template <typename T, typename V>
 Map<T, V>::Map() : tree_() {}
 template <typename T, typename V>
 Map<T, V>::Map(
-    std::initializer_list<typename Map<T, V>::value_type> const& items) {}
+    std::initializer_list<typename Map<T, V>::value_type> const& items) {
+  for (auto i = items.begin(); i != items.end(); ++i) {
+    this->insert(*i);
+  }
+}
 template <typename T, typename V>
-Map<T, V>::Map(const Map& m) {}
+Map<T, V>::Map(const Map& m) : tree_() {
+  *this = m;
+}
 template <typename T, typename V>
-Map<T, V>::Map(Map&& m) {}
+Map<T, V>::Map(Map&& m) : tree_() {
+  if (this != &m) {
+    *this = m;
+  }
+}
+template <typename T, typename V>
+Map<T, V> Map<T, V>::operator=(Map&& m) {
+  if (this != &m) {
+    clear();
+    swap(m);
+  }
+  return *this;
+}
 template <typename T, typename V>
 Map<T, V>::~Map() {}
-template <typename T, typename V>
-Map<T, V> Map<T, V>::operator=(Map&& m) {}
 
 template <typename T, typename V>
 std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
@@ -132,7 +148,8 @@ typename Map<T, V>::mapped_type& Map<T, V>::operatorHelper(const T& key,
       }
     }
     if (flag) {
-      return insert(value_type(key, mapped_type())).first->second;
+      auto res = insert(value_type(key, mapped_type()));
+      return res.first->second;
     } else {
       throw std::out_of_range("There is no such key");
     }

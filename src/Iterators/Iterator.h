@@ -1,7 +1,7 @@
 #ifndef AVL_ITERATOR_H_
 #define AVL_ITERATOR_H_
 
-#include "../avl_tree.tpp"
+#include "../AvlTree/avl_tree.tpp"
 
 namespace s21 {
 

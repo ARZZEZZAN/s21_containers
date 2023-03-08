@@ -27,10 +27,10 @@ int main() {
   // for (const auto& kv : myMap) {
   //   std::cout << myMap.empty() << std::endl;
   // }
-  // Set<int> mySet;
-  // mySet.insert(5);
-  // // Set<int> mySet1;
-  // std::cout << *mySet.begin() << std::endl;
+  Set<int> mySet;
+  mySet.insert(5);
+  // Set<int> mySet1;
+  std::cout << *mySet.begin() << std::endl;
 
   // for (auto i : mySet) {
   //   std::cout << i << std::endl;
