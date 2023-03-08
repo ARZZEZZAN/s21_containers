@@ -44,6 +44,7 @@ class Map {
   void swap(Map& other);
   void merge(Map& other);
   bool contains(const T& key);
+  iterator find(const T& key);
 
  private:
   AVLTree<value_type, V> tree_;

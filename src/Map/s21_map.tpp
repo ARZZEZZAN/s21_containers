@@ -19,7 +19,12 @@ std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
     const value_type& value) {
   std::pair<typename Map<T, V>::iterator, bool> result;
   auto res = this->tree_.insert(value);
-  return std::make_pair(iterator(res), true);
+  if (this->tree_.getInserted()) {
+    result = std::make_pair(iterator(res), true);
+  } else {
+    result = std::make_pair(iterator(res), false);
+  }
+  return result;
 }
 
 template <typename T, typename V>
@@ -36,11 +41,15 @@ T& Map<T, V>::operator[](const T& key) {}
 
 template <typename T, typename V>
 typename Map<T, V>::iterator Map<T, V>::begin() {
-  return nullptr;
+  Node<value_type, V>* node = tree_.getRoot();
+  while (node != nullptr && node->left != nullptr) {
+    node = node->left;
+  }
+  return iterator(node);
 }
 template <typename T, typename V>
 typename Map<T, V>::iterator Map<T, V>::end() {
-  return nullptr;
+  return iterator(nullptr);
 }
 template <typename T, typename V>
 bool Map<T, V>::empty() {
@@ -72,7 +81,9 @@ void Map<T, V>::clear() {
   }
 }
 template <typename T, typename V>
-void Map<T, V>::erase(typename Map<T, V>::iterator pos) {}
+void Map<T, V>::erase(typename Map<T, V>::iterator pos) {
+  this->tree_.remove(*pos);
+}
 template <typename T, typename V>
 void Map<T, V>::swap(Map& other) {}
 template <typename T, typename V>
@@ -80,5 +91,13 @@ void Map<T, V>::merge(Map& other) {}
 template <typename T, typename V>
 bool Map<T, V>::contains(const T& key) {
   return false;
+}
+template <typename T, typename V>
+typename Map<T, V>::iterator Map<T, V>::find(const T& key) {
+  auto node = tree_.search(std::make_pair(key, V{}));
+  if (node == nullptr) {
+    return end();
+  }
+  return iterator(node);
 }
 }  // namespace s21
