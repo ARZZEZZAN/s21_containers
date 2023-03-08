@@ -101,41 +101,6 @@ class ConstIterator : public IteratorBase<T, V, const T&, const T*> {
   using typename IteratorBase<T, V, const T&, const T*>::const_reference;
   using typename IteratorBase<T, V, const T&, const T*>::pointer;
 };
-template <typename T, typename V>
-class MapIterator : public IteratorBase<T, V, std::pair<const T, V>&,
-                                        std::pair<const T, V>*> {
- public:
-  using IteratorBase<T, V, std::pair<const T, V>&,
-                     std::pair<const T, V>*>::IteratorBase;
-
-  using typename IteratorBase<T, V, std::pair<const T, V>&,
-                              std::pair<const T, V>*>::key_type;
-  using typename IteratorBase<T, V, std::pair<const T, V>&,
-                              std::pair<const T, V>*>::reference;
-  using typename IteratorBase<T, V, std::pair<const T, V>&,
-                              std::pair<const T, V>*>::const_reference;
-  using typename IteratorBase<T, V, std::pair<const T, V>&,
-                              std::pair<const T, V>*>::pointer;
-  using value_type = std::pair<const T, V>;
-};
-
-template <typename T, typename V>
-class MapConstIterator : public IteratorBase<T, V, const std::pair<const T, V>&,
-                                             const std::pair<const T, V>*> {
- public:
-  using IteratorBase<T, V, const std::pair<const T, V>&,
-                     const std::pair<const T, V>*>::IteratorBase;
-
-  using typename IteratorBase<T, V, const std::pair<const T, V>&,
-                              const std::pair<const T, V>*>::key_type;
-  using typename IteratorBase<T, V, const std::pair<const T, V>&,
-                              const std::pair<const T, V>*>::reference;
-  using typename IteratorBase<T, V, const std::pair<const T, V>&,
-                              const std::pair<const T, V>*>::const_reference;
-  using typename IteratorBase<T, V, const std::pair<const T, V>&,
-                              const std::pair<const T, V>*>::pointer;
-  using value_type = std::pair<const T, V>;
-};
 
 }  // namespace s21
 

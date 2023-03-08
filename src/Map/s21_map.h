@@ -12,9 +12,9 @@ class Map {
  public:
   using key_type = T;
   using mapped_type = V;
-  using value_type = std::pair<T, V>;
-  using iterator = MapIterator<T, V>;
-  using constIterator = MapConstIterator<T, V>;
+  using value_type = std::pair<const key_type, mapped_type>;
+  using iterator = Iterator<value_type, V>;
+  using constIterator = ConstIterator<value_type, V>;
   using size_type = size_t;
   using Allocator = std::allocator<T>;
 
@@ -46,10 +46,8 @@ class Map {
   bool contains(const T& key);
 
  private:
-  Set<value_type> tree_;
+  AVLTree<value_type, V> tree_;
   Allocator allocator;
-
-  iterator find(const T& key);
 };
 
 }  // namespace s21

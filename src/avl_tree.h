@@ -8,23 +8,32 @@ namespace s21 {
 template <typename T, typename V>
 class Node {
  public:
-  T key;
-  int height;
-  size_t size_;
+  mutable T key;
   Node<T, V>* left;
   Node<T, V>* right;
   Node<T, V>* parent;
-  Node(T k) {
-    key = k;
-    height = 1;
-    size_ = 1;
-    left = right = parent = nullptr;
-  }
+  int height;
+  size_t size_;
+
+  Node(const T& k)
+      : key(k),
+        height(1),
+        size_(1),
+        left(nullptr),
+        right(nullptr),
+        parent(nullptr) {}
+
+  Node(T& k)
+      : key(k),
+        height(1),
+        size_(1),
+        left(nullptr),
+        right(nullptr),
+        parent(nullptr) {}
 };
 template <typename T, typename V>
 class AVLTree {
  public:
-  using value_type = std::pair<const T, V>;
   AVLTree();
   ~AVLTree();
   Node<T, V>* insert(T key);
