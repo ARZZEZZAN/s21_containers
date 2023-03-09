@@ -35,8 +35,9 @@ template <typename T, typename V>
 class AVLTree {
  public:
   AVLTree();
-  AVLTree(const AVLTree<T, T>& other);
+  AVLTree(const AVLTree& other);
   ~AVLTree();
+  AVLTree<T, V> operator=(AVLTree&& other);
   Node<T, V>* Insert(T key);
   void Remove(T key);
   Node<T, V>* Search(T key);

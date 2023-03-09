@@ -6,8 +6,16 @@ AVLTree<T, V>::AVLTree() {
   inserted = false;
 }
 template <typename T, typename V>
-AVLTree<T, V>::AVLTree(const AVLTree<T, T>& other) {
-  this->root = this->copyTree(other.getRoot());
+AVLTree<T, V>::AVLTree(const AVLTree& other) {
+  this->root = this->CopyTree(other.GetRoot());
+}
+template <typename T, typename V>
+AVLTree<T, V> AVLTree<T, V>::operator=(AVLTree&& other) {
+  if (this != &other) {
+    Clear(root);
+    root = std::move(other.GetRoot());
+  }
+  return *this;
 }
 template <typename T, typename V>
 int AVLTree<T, V>::Height(Node<T, V>* node) {
@@ -131,22 +139,15 @@ Node<T, V>* AVLTree<T, V>::Remove(Node<T, V>* node, T key) {
 }
 template <typename T, typename V>
 AVLTree<T, V>::~AVLTree() {
-  if (root) {
-    Clear(root);
-  }
+  Clear(root);
 }
 template <typename T, typename V>
 void AVLTree<T, V>::Clear(Node<T, V>* node) {
   if (!node) {
     return;
   }
-  if (node->left) {
-    Clear(node->left);
-  }
-  if (node->right) {
-    Clear(node->right);
-  }
-  node->size_--;
+  Clear(node->left);
+  Clear(node->right);
   delete node;
   node = nullptr;
 }
@@ -202,7 +203,7 @@ Node<T, V>* AVLTree<T, V>::GetRoot() const {
 }
 template <typename T, typename V>
 void AVLTree<T, V>::Swap(AVLTree<T, V>& other) {
-  std::Swap(root, other.root);
+  std::swap(root, other.root);
 }
 template <typename T, typename V>
 bool AVLTree<T, V>::GetInserted() {

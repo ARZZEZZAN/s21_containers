@@ -14,8 +14,7 @@ Map<T, V>::Map(const Map& m) : tree_(m.getTree()) {}
 template <typename T, typename V>
 Map<T, V> Map<T, V>::operator=(Map&& m) {
   if (this != &m) {
-    clear();
-    swap(m);
+    tree_ = std::move(m.tree_);
   }
   return *this;
 }
@@ -26,9 +25,9 @@ template <typename T, typename V>
 std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
     const value_type& value) {
   std::pair<typename Map<T, V>::iterator, bool> result;
-  this->tree_.insert(value);
-  auto res = this->tree_.search(value);
-  if (this->tree_.getInserted()) {
+  this->tree_.Insert(value);
+  auto res = this->tree_.Search(value);
+  if (this->tree_.GetInserted()) {
     result = std::make_pair(iterator(res), true);
   } else {
     result = std::make_pair(iterator(res), false);
@@ -43,17 +42,18 @@ std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert(
 template <typename T, typename V>
 std::pair<typename Map<T, V>::iterator, bool> Map<T, V>::insert_or_assign(
     const key_type& key, const mapped_type& obj) {
-  std::pair<typename Map<T, V>::iterator, bool> res;
-  iterator i = this->begin();
-  if (i != nullptr) {
+  if (this->empty()) {
+    return insert(std::make_pair(key, obj));
+  } else {
+    iterator i = this->begin();
     for (; i != this->end(); ++i) {
       if (i->first == key) {
         i->second = obj;
-        return res;
+        return std::make_pair(i, false);
       }
     }
+    return insert(std::make_pair(key, obj));
   }
-  return insert(std::pair<key_type, mapped_type>(key, obj));
 }
 template <typename T, typename V>
 typename Map<T, V>::mapped_type& Map<T, V>::at(const T& key) {
@@ -65,7 +65,7 @@ typename Map<T, V>::mapped_type& Map<T, V>::operator[](const T& key) {
 }
 template <typename T, typename V>
 typename Map<T, V>::iterator Map<T, V>::begin() {
-  Node<value_type, V>* node = tree_.getRoot();
+  Node<value_type, V>* node = tree_.GetRoot();
   while (node != nullptr && node->left != nullptr) {
     node = node->left;
   }
@@ -77,20 +77,20 @@ typename Map<T, V>::iterator Map<T, V>::end() {
 }
 template <typename T, typename V>
 bool Map<T, V>::empty() {
-  if (this->tree_.getRoot() == nullptr) {
+  if (this->tree_.GetRoot() == nullptr) {
     return true;
   }
-  if (this->tree_.getRoot()->size_ == 0) {
+  if (this->tree_.GetRoot()->size_ == 0) {
     return true;
   }
   return false;
 }
 template <typename T, typename V>
 typename Map<T, V>::size_type Map<T, V>::size() {
-  if (this->tree_.getRoot() == nullptr) {
+  if (this->tree_.GetRoot() == nullptr) {
     return 0;
   }
-  return tree_.getRoot()->size_;
+  return tree_.GetRoot()->size_;
 }
 template <typename T, typename V>
 typename Map<T, V>::size_type Map<T, V>::max_size() {
@@ -98,21 +98,21 @@ typename Map<T, V>::size_type Map<T, V>::max_size() {
 }
 template <typename T, typename V>
 void Map<T, V>::clear() {
-  if (this->tree_.getRoot()) {
-    Node<T, T>* root = this->tree_.getRoot();
-    this->tree_.clear(root);
-    this->tree_.setRoot(nullptr);
+  if (this->tree_.GetRoot()) {
+    Node<T, T>* root = this->tree_.GetRoot();
+    this->tree_.Clear(root);
+    this->tree_.SetRoot(nullptr);
   }
 }
 template <typename T, typename V>
 void Map<T, V>::erase(typename Map<T, V>::iterator pos) {
   if (pos != nullptr) {
-    this->tree_.remove(*pos);
+    this->tree_.Remove(*pos);
   }
 }
 template <typename T, typename V>
 void Map<T, V>::swap(Map& other) {
-  tree_.swap(other.tree_);
+  tree_.Swap(other.tree_);
 }
 template <typename T, typename V>
 void Map<T, V>::merge(Map& other) {
@@ -143,7 +143,7 @@ typename Map<T, V>::mapped_type& Map<T, V>::operatorHelper(const T& key,
       auto res = insert(value_type(key, mapped_type()));
       return res.first->second;
     } else {
-      throw std::out_of_range("There is no such key");
+      throw std::invalid_argument("This key doesn't exist");
     }
   }
   return i->second;

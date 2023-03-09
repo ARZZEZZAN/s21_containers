@@ -10,11 +10,10 @@ Set<T>::Set(std::initializer_list<value_type> const& items) : tree_() {
   }
 }
 template <typename T>
-Set<T>::Set(const Set& s) : tree_(s.GetTree()) {}
+Set<T>::Set(const Set& s) : tree_(s.getTree()) {}
 template <typename T>
 Set<T> Set<T>::operator=(Set<T>&& s) {
   if (this != &s) {
-    clear();
     tree_ = std::move(s.tree_);
   }
   return *this;
@@ -47,7 +46,7 @@ typename Set<T>::size_type Set<T>::size() {
   if (this->tree_.GetRoot() == nullptr) {
     return 0;
   }
-  return tree_.getRoot()->size_;
+  return tree_.GetRoot()->size_;
 }
 template <typename T>
 typename Set<T>::size_type Set<T>::max_size() {
@@ -58,7 +57,7 @@ void Set<T>::clear() {
   if (this->tree_.GetRoot()) {
     Node<T, T>* root = this->tree_.GetRoot();
     this->tree_.Clear(root);
-    this->tree_.GetRoot(nullptr);
+    this->tree_.SetRoot(nullptr);
   }
 }
 template <typename T>
@@ -90,7 +89,7 @@ void Set<T>::merge(Set<T>& other) {
       insert(elem);
     }
   }
-  other.Clear();
+  other.clear();
 }
 template <typename T>
 bool Set<T>::contains(const T& key) {
