@@ -10,7 +10,7 @@ Set<T>::Set(std::initializer_list<value_type> const& items) : tree_() {
   }
 }
 template <typename T>
-Set<T>::Set(const Set& s) : tree_(s.getTree()) {}
+Set<T>::Set(const Set& s) : tree_(s.GetTree()) {}
 template <typename T>
 Set<T> Set<T>::operator=(Set<T>&& s) {
   if (this != &s) {
@@ -22,7 +22,7 @@ Set<T> Set<T>::operator=(Set<T>&& s) {
 
 template <typename T>
 typename Set<T>::iterator Set<T>::begin() {
-  Node<T, T>* node = tree_.getRoot();
+  Node<T, T>* node = tree_.GetRoot();
   while (node != nullptr && node->left != nullptr) {
     node = node->left;
   }
@@ -34,17 +34,17 @@ typename Set<T>::iterator Set<T>::end() {
 }
 template <typename T>
 bool Set<T>::empty() {
-  if (this->tree_.getRoot() == nullptr) {
+  if (this->tree_.GetRoot() == nullptr) {
     return true;
   }
-  if (this->tree_.getRoot()->size_ == 0) {
+  if (this->tree_.GetRoot()->size_ == 0) {
     return true;
   }
   return false;
 }
 template <typename T>
 typename Set<T>::size_type Set<T>::size() {
-  if (this->tree_.getRoot() == nullptr) {
+  if (this->tree_.GetRoot() == nullptr) {
     return 0;
   }
   return tree_.getRoot()->size_;
@@ -55,17 +55,17 @@ typename Set<T>::size_type Set<T>::max_size() {
 }
 template <typename T>
 void Set<T>::clear() {
-  if (this->tree_.getRoot()) {
-    Node<T, T>* root = this->tree_.getRoot();
-    this->tree_.clear(root);
-    this->tree_.setRoot(nullptr);
+  if (this->tree_.GetRoot()) {
+    Node<T, T>* root = this->tree_.GetRoot();
+    this->tree_.Clear(root);
+    this->tree_.GetRoot(nullptr);
   }
 }
 template <typename T>
 std::pair<typename Set<T>::iterator, bool> Set<T>::insert(const T& value) {
   std::pair<typename Set<T>::iterator, bool> result;
-  this->tree_.insert(value);
-  if (this->tree_.getInserted()) {
+  this->tree_.Insert(value);
+  if (this->tree_.GetInserted()) {
     result = std::pair<typename Set<T>::iterator, bool>(find(value), true);
   } else {
     result = std::pair<typename Set<T>::iterator, bool>(find(value), false);
@@ -76,12 +76,12 @@ std::pair<typename Set<T>::iterator, bool> Set<T>::insert(const T& value) {
 template <typename T>
 void Set<T>::erase(Set<T>::iterator pos) {
   if (pos != nullptr) {
-    tree_.remove(*pos);
+    tree_.Remove(*pos);
   }
 }
 template <typename T>
 void Set<T>::swap(Set<T>& other) {
-  tree_.swap(other.tree_);
+  tree_.Swap(other.tree_);
 }
 template <typename T>
 void Set<T>::merge(Set<T>& other) {
@@ -90,15 +90,15 @@ void Set<T>::merge(Set<T>& other) {
       insert(elem);
     }
   }
-  other.clear();
+  other.Clear();
 }
 template <typename T>
 bool Set<T>::contains(const T& key) {
-  return tree_.search(key) != nullptr;
+  return tree_.Search(key) != nullptr;
 }
 template <typename T>
 typename Set<T>::iterator Set<T>::find(const T& key) {
-  return iterator(tree_.search(key));
+  return iterator(tree_.Search(key));
 }
 template <typename T>
 const AVLTree<T, T>& Set<T>::getTree() const {

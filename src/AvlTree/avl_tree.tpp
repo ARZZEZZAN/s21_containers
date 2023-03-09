@@ -10,23 +10,23 @@ AVLTree<T, V>::AVLTree(const AVLTree<T, T>& other) {
   this->root = this->copyTree(other.getRoot());
 }
 template <typename T, typename V>
-int AVLTree<T, V>::height(Node<T, V>* node) {
+int AVLTree<T, V>::Height(Node<T, V>* node) {
   if (!node) return 0;
   return node->height;
 }
 template <typename T, typename V>
-int AVLTree<T, V>::balanceFactor(Node<T, V>* node) {
+int AVLTree<T, V>::BalanceFactor(Node<T, V>* node) {
   if (!node) return 0;
-  return (height(node->left) - height(node->right));
+  return (Height(node->left) - Height(node->right));
 }
 template <typename T, typename V>
-void AVLTree<T, V>::updateHeight(Node<T, V>* node) {
-  int hl = height(node->left);
-  int hr = height(node->right);
+void AVLTree<T, V>::UpdateHeight(Node<T, V>* node) {
+  int hl = Height(node->left);
+  int hr = Height(node->right);
   node->height = (hl > hr ? hl : hr) + 1;
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::rotateRight(Node<T, V>* node) {
+Node<T, V>* AVLTree<T, V>::RotateRight(Node<T, V>* node) {
   Node<T, V>* newRoot = node->left;
   node->left = newRoot->right;
   if (newRoot->right) {
@@ -35,12 +35,12 @@ Node<T, V>* AVLTree<T, V>::rotateRight(Node<T, V>* node) {
   newRoot->right = node;
   newRoot->parent = node->parent;
   node->parent = newRoot;
-  updateHeight(newRoot);
-  updateHeight(node);
+  UpdateHeight(newRoot);
+  UpdateHeight(node);
   return newRoot;
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::rotateLeft(Node<T, V>* node) {
+Node<T, V>* AVLTree<T, V>::RotateLeft(Node<T, V>* node) {
   Node<T, V>* newRoot = node->right;
   node->right = newRoot->left;
   if (newRoot->left) {
@@ -49,174 +49,174 @@ Node<T, V>* AVLTree<T, V>::rotateLeft(Node<T, V>* node) {
   newRoot->left = node;
   newRoot->parent = node->parent;
   node->parent = newRoot;
-  updateHeight(newRoot);
-  updateHeight(node);
+  UpdateHeight(newRoot);
+  UpdateHeight(node);
   return newRoot;
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::balance(Node<T, V>* node) {
-  updateHeight(node);
-  if (balanceFactor(node) == 2) {
-    if (balanceFactor(node->right) < -1) {
-      node->left = rotateLeft(node->left);
-      updateSize(node->left);
+Node<T, V>* AVLTree<T, V>::Balance(Node<T, V>* node) {
+  UpdateHeight(node);
+  if (BalanceFactor(node) == 2) {
+    if (BalanceFactor(node->right) < -1) {
+      node->left = RotateLeft(node->left);
+      UpdateSize(node->left);
     }
-    node = rotateRight(node);
-    updateSize(node);
+    node = RotateRight(node);
+    UpdateSize(node);
   }
-  if (balanceFactor(node) == -2) {
-    if (balanceFactor(node->left) > 1) {
-      node->right = rotateRight(node->right);
-      updateSize(node->right);
+  if (BalanceFactor(node) == -2) {
+    if (BalanceFactor(node->left) > 1) {
+      node->right = RotateRight(node->right);
+      UpdateSize(node->right);
     }
-    node = rotateLeft(node);
-    updateSize(node);
+    node = RotateLeft(node);
+    UpdateSize(node);
   }
-  updateSize(node);
+  UpdateSize(node);
   return node;
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::insert(Node<T, V>* node, T key, Node<T, V>* parent) {
+Node<T, V>* AVLTree<T, V>::Insert(Node<T, V>* node, T key, Node<T, V>* parent) {
   inserted = false;
   if (!node) {
     node = new Node<T, V>(key);
     node->parent = parent;
     this->inserted = true;
-    return balance(node);
+    return Balance(node);
   }
   if (key < node->key) {
-    node->left = insert(node->left, key, node);
+    node->left = Insert(node->left, key, node);
   } else if (key > node->key) {
-    node->right = insert(node->right, key, node);
+    node->right = Insert(node->right, key, node);
   } else {
     inserted = false;
   }
-  return balance(node);
+  return Balance(node);
 }
 
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::findMin(Node<T, V>* node) {
+Node<T, V>* AVLTree<T, V>::FindMin(Node<T, V>* node) {
   if (!node->left) return node;
-  return findMin(node->left);
+  return FindMin(node->left);
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::removeMin(Node<T, V>* node) {
+Node<T, V>* AVLTree<T, V>::RemoveMin(Node<T, V>* node) {
   if (!node->left) return node->right;
-  node->left = removeMin(node->left);
-  return balance(node);
+  node->left = RemoveMin(node->left);
+  return Balance(node);
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::remove(Node<T, V>* node, T key) {
+Node<T, V>* AVLTree<T, V>::Remove(Node<T, V>* node, T key) {
   if (!node) return nullptr;
   if (key < node->key) {
-    node->left = remove(node->left, key);
+    node->left = Remove(node->left, key);
   } else if (key > node->key) {
-    node->right = remove(node->right, key);
+    node->right = Remove(node->right, key);
   } else {
     Node<T, V>* left = node->left;
     Node<T, V>* right = node->right;
     delete node;
     if (!right) return left;
     if (!left) return right;
-    Node<T, V>* min = findMin(right);
-    min->right = removeMin(right);
+    Node<T, V>* min = FindMin(right);
+    min->right = RemoveMin(right);
     min->left = left;
     min->size_--;
-    updateHeight(min);
-    return balance(min);
+    UpdateHeight(min);
+    return Balance(min);
   }
   node->size_--;
-  updateHeight(node);
-  return balance(node);
+  UpdateHeight(node);
+  return Balance(node);
 }
 template <typename T, typename V>
 AVLTree<T, V>::~AVLTree() {
   if (root) {
-    clear(root);
+    Clear(root);
   }
 }
 template <typename T, typename V>
-void AVLTree<T, V>::clear(Node<T, V>* node) {
+void AVLTree<T, V>::Clear(Node<T, V>* node) {
   if (!node) {
     return;
   }
   if (node->left) {
-    clear(node->left);
+    Clear(node->left);
   }
   if (node->right) {
-    clear(node->right);
+    Clear(node->right);
   }
   node->size_--;
   delete node;
   node = nullptr;
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::search(Node<T, V>* node, T key) {
+Node<T, V>* AVLTree<T, V>::Search(Node<T, V>* node, T key) {
   if (!node || node->key == key) {
     return node;
   }
   if (key < node->key) {
-    return search(node->left, key);
+    return Search(node->left, key);
   } else {
-    return search(node->right, key);
+    return Search(node->right, key);
   }
 }
 template <typename T, typename V>
-void AVLTree<T, V>::setRoot(Node<T, V>* root) {
+void AVLTree<T, V>::SetRoot(Node<T, V>* root) {
   this->root = root;
   if (this->root != nullptr) {
     this->root->parent = nullptr;
   }
 }
 template <typename T, typename V>
-void AVLTree<T, V>::updateSize(Node<T, V>* node) {
+void AVLTree<T, V>::UpdateSize(Node<T, V>* node) {
   if (node) {
-    node->size_ = 1 + size(node->left) + size(node->right);
-    updateSize(node->left);
-    updateSize(node->right);
+    node->size_ = 1 + Size(node->left) + Size(node->right);
+    UpdateSize(node->left);
+    UpdateSize(node->right);
   }
 }
 template <typename T, typename V>
-int AVLTree<T, V>::size(Node<T, V>* node) {
+int AVLTree<T, V>::Size(Node<T, V>* node) {
   if (node) {
     return node->size_;
   }
   return 0;
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::insert(T key) {
-  root = insert(root, key, nullptr);
+Node<T, V>* AVLTree<T, V>::Insert(T key) {
+  root = Insert(root, key, nullptr);
   return root;
 }
 template <typename T, typename V>
-void AVLTree<T, V>::remove(T key) {
-  root = remove(root, key);
+void AVLTree<T, V>::Remove(T key) {
+  root = Remove(root, key);
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::search(T key) {
-  return search(root, key);
+Node<T, V>* AVLTree<T, V>::Search(T key) {
+  return Search(root, key);
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::getRoot() const {
+Node<T, V>* AVLTree<T, V>::GetRoot() const {
   return this->root;
 }
 template <typename T, typename V>
-void AVLTree<T, V>::swap(AVLTree<T, V>& other) {
-  std::swap(root, other.root);
+void AVLTree<T, V>::Swap(AVLTree<T, V>& other) {
+  std::Swap(root, other.root);
 }
 template <typename T, typename V>
-bool AVLTree<T, V>::getInserted() {
+bool AVLTree<T, V>::GetInserted() {
   return inserted;
 }
 template <typename T, typename V>
-Node<T, V>* AVLTree<T, V>::copyTree(Node<T, V>* node) {
+Node<T, V>* AVLTree<T, V>::CopyTree(Node<T, V>* node) {
   if (node == nullptr) {
     return nullptr;
   }
   Node<T, V>* new_node = new Node<T, V>(node->key);
   new_node->size_ = node->size_;
-  new_node->left = copyTree(node->left);
-  new_node->right = copyTree(node->right);
+  new_node->left = CopyTree(node->left);
+  new_node->right = CopyTree(node->right);
   return new_node;
 }
 }  // namespace s21

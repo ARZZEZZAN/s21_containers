@@ -37,32 +37,32 @@ class AVLTree {
   AVLTree();
   AVLTree(const AVLTree<T, T>& other);
   ~AVLTree();
-  Node<T, V>* insert(T key);
-  void remove(T key);
-  Node<T, V>* search(T key);
-  Node<T, V>* getRoot() const;
-  void setRoot(Node<T, V>* root);
-  void swap(AVLTree<T, V>& other);
-  void clear(Node<T, V>* node);
-  bool getInserted();
+  Node<T, V>* Insert(T key);
+  void Remove(T key);
+  Node<T, V>* Search(T key);
+  Node<T, V>* GetRoot() const;
+  void SetRoot(Node<T, V>* root);
+  void Swap(AVLTree<T, V>& other);
+  void Clear(Node<T, V>* node);
+  bool GetInserted();
 
  private:
   Node<T, V>* root;
   bool inserted;
-  int size(Node<T, V>* node);
-  int height(Node<T, V>* node);
-  void updateSize(Node<T, V>* node);
-  int balanceFactor(Node<T, V>* node);
-  void updateHeight(Node<T, V>* node);
-  Node<T, V>* balance(Node<T, V>* node);
-  Node<T, V>* findMin(Node<T, V>* node);
-  Node<T, V>* copyTree(Node<T, V>* node);
-  Node<T, V>* rotateLeft(Node<T, V>* node);
-  Node<T, V>* rotateRight(Node<T, V>* node);
-  Node<T, V>* removeMin(Node<T, V>* node);
-  Node<T, V>* remove(Node<T, V>* node, T key);
-  Node<T, V>* search(Node<T, V>* node, T key);
-  Node<T, V>* insert(Node<T, V>* node, T key, Node<T, V>* parent);
+  int Size(Node<T, V>* node);
+  int Height(Node<T, V>* node);
+  void UpdateSize(Node<T, V>* node);
+  int BalanceFactor(Node<T, V>* node);
+  void UpdateHeight(Node<T, V>* node);
+  Node<T, V>* Balance(Node<T, V>* node);
+  Node<T, V>* FindMin(Node<T, V>* node);
+  Node<T, V>* CopyTree(Node<T, V>* node);
+  Node<T, V>* RotateLeft(Node<T, V>* node);
+  Node<T, V>* RotateRight(Node<T, V>* node);
+  Node<T, V>* RemoveMin(Node<T, V>* node);
+  Node<T, V>* Remove(Node<T, V>* node, T key);
+  Node<T, V>* Search(Node<T, V>* node, T key);
+  Node<T, V>* Insert(Node<T, V>* node, T key, Node<T, V>* parent);
 };
 }  // namespace s21
 
