@@ -20,9 +20,9 @@ class Map {
   Map();
   Map(std::initializer_list<value_type> const& items);
   Map(const Map& m);
-  Map(Map&& m);
-  ~Map();
+  Map(Map&& m) = default;
   Map<T, V> operator=(Map&& m);
+  ~Map();
 
   mapped_type& at(const T& key);
   mapped_type& operator[](const T& key);
@@ -44,6 +44,7 @@ class Map {
   void swap(Map& other);
   void merge(Map& other);
   bool contains(const T& key);
+  const AVLTree<value_type, V>& getTree() const;
 
  private:
   AVLTree<value_type, V> tree_;

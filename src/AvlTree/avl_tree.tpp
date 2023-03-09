@@ -9,7 +9,6 @@ template <typename T, typename V>
 AVLTree<T, V>::AVLTree(const AVLTree<T, T>* other) {
   this->copyTree(other->getRoot());
 }
-
 template <typename T, typename V>
 int AVLTree<T, V>::height(Node<T, V>* node) {
   if (!node) return 0;

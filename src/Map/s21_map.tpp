@@ -10,15 +10,7 @@ Map<T, V>::Map(
   }
 }
 template <typename T, typename V>
-Map<T, V>::Map(const Map& m) : tree_() {
-  *this = m;
-}
-template <typename T, typename V>
-Map<T, V>::Map(Map&& m) : tree_() {
-  if (this != &m) {
-    *this = m;
-  }
-}
+Map<T, V>::Map(const Map& m) : tree_(m.getTree()) {}
 template <typename T, typename V>
 Map<T, V> Map<T, V>::operator=(Map&& m) {
   if (this != &m) {
@@ -155,5 +147,9 @@ typename Map<T, V>::mapped_type& Map<T, V>::operatorHelper(const T& key,
     }
   }
   return i->second;
+}
+template <typename T, typename V>
+const AVLTree<typename Map<T, V>::value_type, V>& Map<T, V>::getTree() const {
+  return tree_;
 }
 }  // namespace s21

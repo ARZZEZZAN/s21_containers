@@ -19,7 +19,7 @@ class Set {
   Set();
   Set(std::initializer_list<value_type> const& items);
   Set(const Set& s);
-  Set(Set&& s);
+  Set(Set<T>&& s) = default;
   Set<T> operator=(Set&& s);
   ~Set() {}
 
@@ -38,7 +38,7 @@ class Set {
 
   bool contains(const T& key);
   iterator find(const T& key);
-  const AVLTree<T, T>& getTree() const { return tree_; }
+  const AVLTree<T, T>& getTree() const;
 
  private:
   AVLTree<T, T> tree_;
