@@ -4,7 +4,6 @@
 #include <limits>
 
 #include "../Iterators/Iterator.h"
-#include "../Set/s21_set.tpp"
 
 namespace s21 {
 template <typename T, typename V>

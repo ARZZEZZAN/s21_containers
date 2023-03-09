@@ -10,20 +10,14 @@ Set<T>::Set(std::initializer_list<value_type> const& items) : tree_() {
   }
 }
 template <typename T>
-Set<T>::Set(const Set& s) : tree_() {
-  *this = s;
-}
+Set<T>::Set(const Set& s) : tree_(s.getTree()) {}
 template <typename T>
-Set<T>::Set(Set&& s) : tree_() {
-  if (this != &s) {
-    *this = s;
-  }
-}
+Set<T>::Set(Set&& s) : tree_(std::move(s.getTree())) {}
 template <typename T>
 Set<T> Set<T>::operator=(Set&& s) {
   if (this != &s) {
     clear();
-    swap(s);
+    tree_ = std::move(s.tree_);
   }
   return *this;
 }
@@ -108,4 +102,5 @@ template <typename T>
 typename Set<T>::iterator Set<T>::find(const T& key) {
   return iterator(tree_.search(key));
 }
+
 }  // namespace s21

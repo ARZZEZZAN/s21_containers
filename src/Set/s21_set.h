@@ -1,6 +1,8 @@
 #ifndef AVL_SET_H_
 #define AVL_SET_H_
 
+#include <algorithm>
+
 #include "../Iterators/Iterator.h"
 
 namespace s21 {
@@ -36,6 +38,7 @@ class Set {
 
   bool contains(const T& key);
   iterator find(const T& key);
+  const AVLTree<T, T>& getTree() const { return tree_; }
 
  private:
   AVLTree<T, T> tree_;

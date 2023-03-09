@@ -5,6 +5,10 @@ AVLTree<T, V>::AVLTree() {
   root = nullptr;
   inserted = false;
 }
+template <typename T, typename V>
+AVLTree<T, V>::AVLTree(const AVLTree<T, T>* other) {
+  this->copyTree(other->getRoot());
+}
 
 template <typename T, typename V>
 int AVLTree<T, V>::height(Node<T, V>* node) {
@@ -134,13 +138,18 @@ AVLTree<T, V>::~AVLTree() {
 }
 template <typename T, typename V>
 void AVLTree<T, V>::clear(Node<T, V>* node) {
-  if (node) {
-    clear(node->left);
-    clear(node->right);
-    node->size_--;
-    delete node;
+  if (!node) {
+    return;
   }
+  if (node->left) {
+    clear(node->left);
+  }
+  if (node->right) {
+    clear(node->right);
+  }
+  node->size_--;
   node = nullptr;
+  delete node;
 }
 template <typename T, typename V>
 Node<T, V>* AVLTree<T, V>::search(Node<T, V>* node, T key) {
@@ -200,5 +209,14 @@ template <typename T, typename V>
 bool AVLTree<T, V>::getInserted() {
   return inserted;
 }
-
+template <typename T, typename V>
+Node<T, V>* AVLTree<T, V>::copyTree(Node<T, V>* node) {
+  if (node == nullptr) {
+    return nullptr;
+  }
+  Node<T, V>* new_node = new Node<T, V>(node->key);
+  new_node->left = copyTree(node->left);
+  new_node->right = copyTree(node->right);
+  return new_node;
+}
 }  // namespace s21

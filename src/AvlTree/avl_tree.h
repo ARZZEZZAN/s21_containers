@@ -9,11 +9,11 @@ template <typename T, typename V>
 class Node {
  public:
   mutable T key;
+  int height;
+  size_t size_;
   Node<T, V>* left;
   Node<T, V>* right;
   Node<T, V>* parent;
-  int height;
-  size_t size_;
 
   Node(const T& k)
       : key(k),
@@ -35,6 +35,7 @@ template <typename T, typename V>
 class AVLTree {
  public:
   AVLTree();
+  AVLTree(const AVLTree<T, T>* other);
   ~AVLTree();
   Node<T, V>* insert(T key);
   void remove(T key);
@@ -55,6 +56,7 @@ class AVLTree {
   void updateHeight(Node<T, V>* node);
   Node<T, V>* balance(Node<T, V>* node);
   Node<T, V>* findMin(Node<T, V>* node);
+  Node<T, V>* copyTree(Node<T, V>* node);
   Node<T, V>* rotateLeft(Node<T, V>* node);
   Node<T, V>* rotateRight(Node<T, V>* node);
   Node<T, V>* removeMin(Node<T, V>* node);
