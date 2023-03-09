@@ -35,12 +35,12 @@ template <typename T, typename V>
 class AVLTree {
  public:
   AVLTree();
-  AVLTree(const AVLTree<T, T>* other);
+  AVLTree(const AVLTree<T, T>& other);
   ~AVLTree();
   Node<T, V>* insert(T key);
   void remove(T key);
   Node<T, V>* search(T key);
-  Node<T, V>* getRoot();
+  Node<T, V>* getRoot() const;
   void setRoot(Node<T, V>* root);
   void swap(AVLTree<T, V>& other);
   void clear(Node<T, V>* node);
