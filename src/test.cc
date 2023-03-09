@@ -181,6 +181,107 @@ TEST(MapTest, InsertOrAssign) {
   EXPECT_EQ(map[4], "four");
   EXPECT_EQ(map[5], "five");
 }
+TEST(MapTest, AtAndOperatorBrackets) {
+  Map<int, std::string> map = {{1, "one"}, {2, "two"}, {3, "three"}};
+
+  EXPECT_EQ(map.at(1), "one");
+  EXPECT_EQ(map[2], "two");
+  EXPECT_THROW(map.at(4), std::invalid_argument);
+  map[4] = "four";
+  EXPECT_EQ(map[4], "four");
+  map[2] = "TWO";
+  EXPECT_EQ(map[2], "TWO");
+}
+
+TEST(MapTest, EmptyAndSize) {
+  Map<int, std::string> empty_map;
+  Map<int, std::string> map = {{1, "one"}, {2, "two"}, {3, "three"}};
+
+  EXPECT_TRUE(empty_map.empty());
+  EXPECT_EQ(empty_map.size(), 0);
+
+  EXPECT_FALSE(map.empty());
+  EXPECT_EQ(map.size(), 3);
+}
+
+TEST(MapTest, MaxSize) {
+  Map<int, std::string> map;
+  std::map<int, std::string> map1;
+
+  // Max size is implementation-dependent, but it should be greater than 0
+  EXPECT_GT(map.max_size(), map1.max_size());
+}
+// TEST(MapTest, Erase) {
+//   Map<int, std::string> map;
+
+//   map.insert({1, "one"});
+//   map.insert({2, "two"});
+//   map.insert({3, "three"});
+
+//   // Erase an existing element.
+//   auto it1 = map.getTree().Search(2);
+//   EXPECT_NE(it1, map.end());
+//   map.erase(it1);
+//   EXPECT_EQ(map.size(), 2);
+//   EXPECT_FALSE(map.contains(2));
+
+//   // Erase a non-existing element.
+//   auto it2 = map.find(4);
+//   EXPECT_EQ(it2, map.end());
+//   map.erase(it2);
+//   EXPECT_EQ(map.size(), 2);
+// }
+
+TEST(MapTest, Swap) {
+  Map<int, std::string> map1;
+  map1.insert({1, "one"});
+  map1.insert({2, "two"});
+
+  Map<int, std::string> map2;
+  map2.insert({3, "three"});
+  map2.insert({4, "four"});
+
+  map1.swap(map2);
+
+  EXPECT_EQ(map1.size(), 2);
+  EXPECT_TRUE(map1.contains(3));
+  EXPECT_TRUE(map1.contains(4));
+
+  EXPECT_EQ(map2.size(), 2);
+  EXPECT_TRUE(map2.contains(1));
+  EXPECT_TRUE(map2.contains(2));
+}
+
+TEST(MapTest, Merge) {
+  Map<int, std::string> map1;
+  map1.insert({1, "one"});
+  map1.insert({2, "two"});
+
+  Map<int, std::string> map2;
+  map2.insert({3, "three"});
+  map2.insert({4, "four"});
+
+  map1.merge(map2);
+
+  EXPECT_EQ(map1.size(), 4);
+  EXPECT_TRUE(map1.contains(1));
+  EXPECT_TRUE(map1.contains(2));
+  EXPECT_TRUE(map1.contains(3));
+  EXPECT_TRUE(map1.contains(4));
+
+  EXPECT_EQ(map2.size(), 0);
+}
+
+TEST(MapTest, Contains) {
+  Map<int, std::string> map;
+
+  map.insert({1, "one"});
+  map.insert({2, "two"});
+
+  EXPECT_TRUE(map.contains(1));
+  EXPECT_TRUE(map.contains(2));
+  EXPECT_FALSE(map.contains(3));
+}
 
 // TEST(MapConstructorTest, MoveConstructor) {
 //   Map<int, std::string> m{{1, "one"}, {2, "two"}, {3, "three"}};
