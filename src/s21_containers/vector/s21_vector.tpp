@@ -8,7 +8,8 @@ vector<value_type>::vector() {
 
 template <class value_type>
 vector<value_type>::vector(size_type n) {
-  if (this->max_size() < n) {
+  size_type zero = 0;
+  if (n < zero) {
     throw std::out_of_range("cannot create s21::vector larger than max_size()");
   }
   this->size_ = n;
@@ -29,7 +30,12 @@ vector<value_type>::vector(std::initializer_list<value_type> const& items) {
 
 template <class value_type>
 vector<value_type>::vector(const vector& v) {
-  this->copy_vector(v);
+  this->size_ = v.size_;
+  this->capacity_ = v.capacity_;
+  this->container_ = new value_type[this->size_];
+  for (size_type i = 0; i < this->size_; i++) {
+    this->container_[i] = v.container_[i];
+  }
 }
 
 template <class value_type>
@@ -131,7 +137,7 @@ typename vector<value_type>::size_type vector<value_type>::size() const {
 
 template <class value_type>
 typename vector<value_type>::size_type vector<value_type>::max_size() const {
-  return capacity_ * sizeof(value_type);
+  return this->capacity() * sizeof(value_type);
 }
 
 template <class value_type>
@@ -220,17 +226,6 @@ void vector<value_type>::swap(vector& other) {
 
 // Helpers
 template <class value_type>
-void vector<value_type>::copy_vector(const vector& v) {
-  this->remove();
-  this->size_ = v.size_;
-  this->capacity_ = v.capacity_;
-  this->container_ = new value_type[this->size_];
-  for (size_type i = 0; i < this->size_; i++) {
-    this->container_[i] = v.container_[i];
-  }
-}
-
-template <class value_type>
 void vector<value_type>::add_memory(size_type size, bool flag) {
   this->capacity_ = this->add_memory_size(size, flag);
   value_type* tmp = this->container_;
@@ -257,10 +252,9 @@ void vector<value_type>::bring_to_zero() {
 
 template <class value_type>
 void vector<value_type>::remove() {
-  if (!this->container_) {
+  if (this->container_) {
     delete[] this->container_;
   }
-  this->container_ = nullptr;
-  this->size_ = this->capacity_ = 0;
+  bring_to_zero();
 }
 }  // namespace s21
