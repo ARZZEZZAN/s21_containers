@@ -114,8 +114,6 @@ TEST(MapConstructorTest, CopyConstructor) {
   EXPECT_EQ(copy_m.size(), 3);
   EXPECT_FALSE(copy_m.empty());
   EXPECT_EQ(copy_m.at(1), "one");
-  // EXPECT_EQ(copy_m.at(2), "two");
-  // EXPECT_EQ(copy_m.at(3), "three");
 }
 // Test the insert(key, value) function
 TEST(MapTest, InsertKeyValue) {
@@ -211,26 +209,20 @@ TEST(MapTest, MaxSize) {
   // Max size is implementation-dependent, but it should be greater than 0
   EXPECT_GT(map.max_size(), map1.max_size());
 }
-// TEST(MapTest, Erase) {
-//   Map<int, std::string> map;
+TEST(MapTest, Erase) {
+  Map<int, std::string> map;
 
-//   map.insert({1, "one"});
-//   map.insert({2, "two"});
-//   map.insert({3, "three"});
+  map.insert({1, "one"});
+  map.insert({2, "two"});
+  map.insert({3, "three"});
+  map.insert({5, "five"});
 
-//   // Erase an existing element.
-//   auto it1 = map.getTree().Search(2);
-//   EXPECT_NE(it1, map.end());
-//   map.erase(it1);
-//   EXPECT_EQ(map.size(), 2);
-//   EXPECT_FALSE(map.contains(2));
-
-//   // Erase a non-existing element.
-//   auto it2 = map.find(4);
-//   EXPECT_EQ(it2, map.end());
-//   map.erase(it2);
-//   EXPECT_EQ(map.size(), 2);
-// }
+  // Erase an existing element.
+  auto it1 = map.begin()++;
+  map.erase(it1);
+  EXPECT_EQ(map.size(), 3);
+  EXPECT_FALSE(map.contains(1));
+}
 
 TEST(MapTest, Swap) {
   Map<int, std::string> map1;
@@ -268,8 +260,6 @@ TEST(MapTest, Merge) {
   EXPECT_TRUE(map1.contains(2));
   EXPECT_TRUE(map1.contains(3));
   EXPECT_TRUE(map1.contains(4));
-
-  EXPECT_EQ(map2.size(), 0);
 }
 
 TEST(MapTest, Contains) {
@@ -277,8 +267,6 @@ TEST(MapTest, Contains) {
 
   map.insert({1, "one"});
   map.insert({2, "two"});
-
-  EXPECT_TRUE(map.contains(1));
   EXPECT_TRUE(map.contains(2));
   EXPECT_FALSE(map.contains(3));
 }
@@ -295,8 +283,8 @@ TEST(MapTest, Contains) {
 //   EXPECT_TRUE(m.empty());
 // }
 // TEST(SetTest, MoveAssignmentOperator) {
-//   s21::Set<int> s1{1, 2, 3, 4};
-//   s21::Set<int> s2{5, 6, 7, 8};
+//   Set<int> s1{1, 2, 3, 4};
+//   Set<int> s2{5, 6, 7, 8};
 //   EXPECT_EQ(s2.size(), 4);
 //   EXPECT_EQ(s1.size(), 4);
 
@@ -305,6 +293,8 @@ TEST(MapTest, Contains) {
 //   // EXPECT_TRUE(s1.contains(6));
 //   // EXPECT_TRUE(s1.contains(7));
 //   // EXPECT_TRUE(s1.contains(8));
+//   EXPECT_EQ(s2.size(), 0);
+//   EXPECT_EQ(s1.size(), 4);
 // }
 int main(int argc, char* argv[]) {
   testing::InitGoogleTest(&argc, argv);

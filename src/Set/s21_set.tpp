@@ -12,7 +12,7 @@ Set<T>::Set(std::initializer_list<value_type> const& items) : tree_() {
 template <typename T>
 Set<T>::Set(const Set& s) : tree_(s.getTree()) {}
 template <typename T>
-Set<T> Set<T>::operator=(Set<T>&& s) {
+Set<T>& Set<T>::operator=(Set<T>&& s) {
   if (this != &s) {
     tree_ = std::move(s.tree_);
   }

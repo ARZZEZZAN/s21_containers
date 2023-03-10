@@ -37,7 +37,7 @@ class AVLTree {
   AVLTree();
   AVLTree(const AVLTree& other);
   ~AVLTree();
-  AVLTree<T, V> operator=(AVLTree&& other);
+  AVLTree<T, V>& operator=(AVLTree&& other) noexcept;
   Node<T, V>* Insert(T key);
   void Remove(T key);
   Node<T, V>* Search(T key);

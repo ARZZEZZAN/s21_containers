@@ -27,7 +27,9 @@ class Iterator {
     }
     if (this->node_->right != nullptr) {
       this->node_ = this->node_->right;
-      while (this->node_->left != nullptr) this->node_ = this->node_->left;
+      while (this->node_->left != nullptr) {
+        this->node_ = this->node_->left;
+      }
     } else {
       Node<T, V>* parent = this->node_->parent;
       while (parent != nullptr && this->node_ == parent->right) {

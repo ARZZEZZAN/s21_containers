@@ -10,10 +10,11 @@ AVLTree<T, V>::AVLTree(const AVLTree& other) {
   this->root = this->CopyTree(other.GetRoot());
 }
 template <typename T, typename V>
-AVLTree<T, V> AVLTree<T, V>::operator=(AVLTree&& other) {
+AVLTree<T, V>& AVLTree<T, V>::operator=(AVLTree&& other) noexcept {
   if (this != &other) {
     Clear(root);
-    root = std::move(other.GetRoot());
+    root = other.GetRoot();
+    other.Clear(other.GetRoot());
   }
   return *this;
 }
@@ -130,6 +131,7 @@ Node<T, V>* AVLTree<T, V>::Remove(Node<T, V>* node, T key) {
     min->right = RemoveMin(right);
     min->left = left;
     min->size_--;
+    min->parent = node->parent;
     UpdateHeight(min);
     return Balance(min);
   }

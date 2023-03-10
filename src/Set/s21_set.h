@@ -20,7 +20,7 @@ class Set {
   Set(std::initializer_list<value_type> const& items);
   Set(const Set& s);
   Set(Set<T>&& s) = default;
-  Set<T> operator=(Set&& s);
+  Set<T>& operator=(Set&& s);
   ~Set() {}
 
   iterator begin();

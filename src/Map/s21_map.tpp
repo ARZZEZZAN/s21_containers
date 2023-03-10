@@ -134,7 +134,7 @@ typename Map<T, V>::mapped_type& Map<T, V>::operatorHelper(const T& key,
                                                            int flag) {
   iterator i = this->begin();
   if (i != nullptr) {
-    for (; i != this->end(); ++i) {
+    for (; i != this->end(); i++) {
       if (i->first == key) {
         return i->second;
       }
