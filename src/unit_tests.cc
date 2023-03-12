@@ -1940,31 +1940,7 @@ TEST(AVLTreeTest, RemoveTest) {
 TEST(SetTest, RotateCheck3) {
   s21::Set<int> s1 = {5, 3, 7, 2, 4, 6, 8, 4, 6, 8, 9, 0, 1, 241325, 543565};
 }
-// TEST(MapConstructorTest, MoveConstructor) {
-//   Map<int, std::string> m{{1, "one"}, {2, "two"}, {3, "three"}};
-//   Map<int, std::string> moved_m(std::move(m));
-//   EXPECT_EQ(moved_m.size(), 3);
-//   EXPECT_FALSE(moved_m.empty());
-//   EXPECT_EQ(moved_m.at(1), "one");
-//   EXPECT_EQ(moved_m.at(2), "two");
-//   EXPECT_EQ(moved_m.at(3), "three");
-//   EXPECT_EQ(m.size(), 0);
-//   EXPECT_TRUE(m.empty());
-// }
-// TEST(SetTest, MoveAssignmentOperator) {
-//   Set<int> s1{1, 2, 3, 4};
-//   Set<int> s2{5, 6, 7, 8};
-//   EXPECT_EQ(s2.size(), 4);
-//   EXPECT_EQ(s1.size(), 4);
 
-//   s1 = std::move(s2);
-//   // EXPECT_TRUE(s1.contains(5));
-//   // EXPECT_TRUE(s1.contains(6));
-//   // EXPECT_TRUE(s1.contains(7));
-//   // EXPECT_TRUE(s1.contains(8));
-//   EXPECT_EQ(s2.size(), 0);
-//   EXPECT_EQ(s1.size(), 4);
-// }
 int main(int argc, char* argv[]) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
