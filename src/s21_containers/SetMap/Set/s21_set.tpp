@@ -2,17 +2,17 @@
 
 namespace s21 {
 template <typename T>
-Set<T>::Set() : tree_() {}
+set<T>::set() : tree_() {}
 template <typename T>
-Set<T>::Set(std::initializer_list<value_type> const& items) : tree_() {
+set<T>::set(std::initializer_list<value_type> const& items) : tree_() {
   for (auto i = items.begin(); i != items.end(); ++i) {
     this->insert(*i);
   }
 }
 template <typename T>
-Set<T>::Set(const Set& s) : tree_(s.getTree()) {}
+set<T>::set(const set& s) : tree_(s.get_tree()) {}
 template <typename T>
-Set<T>& Set<T>::operator=(Set<T>&& s) {
+set<T>& set<T>::operator=(set<T>&& s) {
   if (this != &s) {
     tree_ = std::move(s.tree_);
   }
@@ -20,19 +20,26 @@ Set<T>& Set<T>::operator=(Set<T>&& s) {
 }
 
 template <typename T>
-typename Set<T>::iterator Set<T>::begin() {
+typename set<T>::iterator set<T>::begin() {
   Node<T, T>* node = tree_.GetRoot();
-  while (node != nullptr && node->left != nullptr) {
+  if (node == nullptr) {
+    return iterator(nullptr);
+  }
+  while (node->left != nullptr && !node->left->isSentinel) {
     node = node->left;
   }
-  return iterator(node);
+  if (node->isSentinel) {
+    return iterator(nullptr);
+  } else {
+    return iterator(node);
+  }
 }
 template <typename T>
-typename Set<T>::iterator Set<T>::end() {
-  return iterator(nullptr);
+typename set<T>::iterator set<T>::end() {
+  return iterator(nullptr, tree_.GetRoot());
 }
 template <typename T>
-bool Set<T>::empty() {
+bool set<T>::empty() {
   if (this->tree_.GetRoot() == nullptr) {
     return true;
   }
@@ -42,18 +49,18 @@ bool Set<T>::empty() {
   return false;
 }
 template <typename T>
-typename Set<T>::size_type Set<T>::size() {
+typename set<T>::size_type set<T>::size() {
   if (this->tree_.GetRoot() == nullptr) {
     return 0;
   }
   return tree_.GetRoot()->size_;
 }
 template <typename T>
-typename Set<T>::size_type Set<T>::max_size() {
+typename set<T>::size_type set<T>::max_size() {
   return allocator.max_size() / 10;
 }
 template <typename T>
-void Set<T>::clear() {
+void set<T>::clear() {
   if (this->tree_.GetRoot()) {
     Node<T, T>* root = this->tree_.GetRoot();
     this->tree_.Clear(root);
@@ -61,46 +68,46 @@ void Set<T>::clear() {
   }
 }
 template <typename T>
-std::pair<typename Set<T>::iterator, bool> Set<T>::insert(const T& value) {
-  std::pair<typename Set<T>::iterator, bool> result;
+std::pair<typename set<T>::iterator, bool> set<T>::insert(const T& value) {
+  std::pair<typename set<T>::iterator, bool> result;
   this->tree_.Insert(value);
   if (this->tree_.GetInserted()) {
-    result = std::pair<typename Set<T>::iterator, bool>(find(value), true);
+    result = std::pair<typename set<T>::iterator, bool>(find(value), true);
   } else {
-    result = std::pair<typename Set<T>::iterator, bool>(find(value), false);
+    result = std::pair<typename set<T>::iterator, bool>(find(value), false);
   }
   return result;
 }
 
 template <typename T>
-void Set<T>::erase(Set<T>::iterator pos) {
+void set<T>::erase(set<T>::iterator pos) {
   if (pos != nullptr) {
     tree_.Remove(*pos);
   }
 }
 template <typename T>
-void Set<T>::swap(Set<T>& other) {
+void set<T>::swap(set<T>& other) {
   tree_.Swap(other.tree_);
 }
 template <typename T>
-void Set<T>::merge(Set<T>& other) {
+void set<T>::merge(set<T>& other) {
   if (this != &other) {
-    for (auto& elem : other) {
-      insert(elem);
+    for (auto i = other.begin(); i != other.end(); i++) {
+      insert(*i);
     }
   }
   other.clear();
 }
 template <typename T>
-bool Set<T>::contains(const T& key) {
+bool set<T>::contains(const T& key) {
   return tree_.Search(key) != nullptr;
 }
 template <typename T>
-typename Set<T>::iterator Set<T>::find(const T& key) {
+typename set<T>::iterator set<T>::find(const T& key) {
   return iterator(tree_.Search(key));
 }
 template <typename T>
-const AVLTree<T, T>& Set<T>::getTree() const {
+const AVLTree<T, T>& set<T>::get_tree() const {
   return tree_;
 }
 }  // namespace s21

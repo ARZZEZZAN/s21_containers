@@ -148,10 +148,14 @@ void list<value_type>::erase(iterator pos) {
     if (current == head_) {
       if (current->next_ && current->next_ != end_) {
         head_ = current->next_;
+      } else {
+        head_ = end_;
       }
     } else if (current == tail_) {
       if (current->prev_ && current->prev_ != end_) {
         tail_ = current->prev_;
+      } else {
+        tail_ = end_;
       }
     }
     current->prev_->next_ = current->next_;
@@ -161,6 +165,7 @@ void list<value_type>::erase(iterator pos) {
   } else {
     throw std::invalid_argument("Invalid argument");
   }
+  change_end();
 }
 
 template <typename value_type>
@@ -262,6 +267,7 @@ void list<value_type>::merge(list& other) {
   } else if (this->empty() && !other.empty()) {
     this->copy(other);
   }
+  other.clear();
 }
 
 template <typename value_type>

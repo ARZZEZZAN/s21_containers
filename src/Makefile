@@ -49,7 +49,11 @@ endif
 
 clang:
 	cp ../materials/linters/.clang-format ../src/.clang-format
-	clang-format -style=Google -n $(HEADER) $(TEST_SRC)
+	clang-format -style=Google -n unit_tests.cc s21_containers/s21_containers.h \
+	s21_containers/vector/* s21_containers/list/* s21_containers/queue/* \
+	s21_containers/stack/* s21_containers/setMap/avlTree/* \
+	s21_containers/setMap/iterators/* s21_containers/setMap/Map/* \
+	s21_containers/setMap/Set/*
 	rm .clang-format
 
 leaks: test

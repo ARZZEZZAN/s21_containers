@@ -2,6 +2,7 @@
 #define SRC_AVL_H_
 
 #include <iostream>
+using namespace std;
 
 namespace s21 {
 // AVL tree node
@@ -11,6 +12,7 @@ class Node {
   mutable T key;
   int height;
   size_t size_;
+  bool isSentinel;
   Node<T, V>* left;
   Node<T, V>* right;
   Node<T, V>* parent;
@@ -19,6 +21,7 @@ class Node {
       : key(k),
         height(1),
         size_(1),
+        isSentinel(false),
         left(nullptr),
         right(nullptr),
         parent(nullptr) {}
@@ -27,6 +30,7 @@ class Node {
       : key(k),
         height(1),
         size_(1),
+        isSentinel(false),
         left(nullptr),
         right(nullptr),
         parent(nullptr) {}
@@ -42,13 +46,16 @@ class AVLTree {
   void Remove(T key);
   Node<T, V>* Search(T key);
   Node<T, V>* GetRoot() const;
+  Node<T, V>* GetNil();
   void SetRoot(Node<T, V>* root);
   void Swap(AVLTree<T, V>& other);
   void Clear(Node<T, V>* node);
   bool GetInserted();
+  Node<T, V>* MaximumKey(Node<T, V>* node);
 
  private:
   Node<T, V>* root;
+  Node<T, V>* nil;
   bool inserted;
   int Size(Node<T, V>* node);
   int Height(Node<T, V>* node);

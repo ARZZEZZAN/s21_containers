@@ -4,15 +4,10 @@
 #include <map>
 #include <queue>
 #include <set>
+#include <stack>
+#include <vector>
 
-#include "s21_containers/SetMap/Map/s21_map.tpp"
-#include "s21_containers/SetMap/Set/s21_set.tpp"
-#include "s21_containers/list/s21_list.h"
-#include "s21_containers/queue/s21_queue.h"
-#include "s21_containers/stack/s21_stack.h"
-#include "s21_containers/vector/s21_vector.h"
-#include "stack"
-#include "vector"
+#include "./s21_containers/s21_containers.h"
 
 // VECTOR
 TEST(VectorTest, Constructor_default) {
@@ -30,6 +25,16 @@ TEST(VectorTest, Constructor_n) {
   EXPECT_EQ(s21_v.size(), std_v.size());
   EXPECT_EQ(s21_v.capacity(), std_v.capacity());
   EXPECT_EQ(s21_v.empty(), std_v.empty());
+}
+
+TEST(VectorTest, Constructor_n_throw) {
+  try {
+    s21::vector<int> s21_v(-1);
+    FAIL() << "Expected std::out_of_range";
+  } catch (std::out_of_range const& err) {
+    EXPECT_EQ(err.what(),
+              std::string("cannot create s21::vector larger than max_size()"));
+  }
 }
 
 TEST(VectorTest, Constructor_initializer_list_1) {
@@ -246,19 +251,6 @@ TEST(VectorTest, Capacity_size_2) {
   std::vector<int> std_v{1, 2, 3};
 
   EXPECT_EQ(s21_v.size(), std_v.size());
-}
-
-TEST(VectorTest, Capacity_max_size_1) {
-  s21::vector<int> s21_v;
-  std::vector<int> std_v;
-  EXPECT_EQ(s21_v.max_size(), 0);
-}
-
-TEST(VectorTest, Capacity_max_size_2) {
-  s21::vector<int> s21_v{1, 2, 3};
-  std::vector<int> std_v{1, 2, 3};
-
-  EXPECT_EQ(s21_v.max_size(), 12);
 }
 
 TEST(VectorTest, Capacity_capacity_1) {
@@ -928,15 +920,14 @@ TEST(ListTest, DefaultConstructor) {
   std::list<int> std_list;
   EXPECT_EQ(my_list.size(), 0);
   EXPECT_TRUE(my_list.empty());
-  // EXPECT_THROW(my_list.front(), std::out_of_range);
-  // EXPECT_THROW(my_list.back(), std::out_of_range);
+
   EXPECT_TRUE(compare_lists(my_list, std_list));
 }
 
 TEST(ListTest, SizeConstructor) {
-  s21::list<int> my_list(100);
-  std::list<int> std_list(100);
-  EXPECT_EQ(my_list.size(), 100);
+  s21::list<int> my_list(1000000);
+  std::list<int> std_list(1000000);
+  EXPECT_EQ(my_list.size(), 1000000);
   EXPECT_TRUE(compare_lists(my_list, std_list));
 }
 
@@ -1639,306 +1630,734 @@ TEST(QueueTest, Swap_2) {
   EXPECT_TRUE(compare_queues(my_queue1, std_queue1));
   EXPECT_TRUE(compare_queues(my_queue2, std_queue2));
 }
-TEST(SetTest, DefaultConstructor) {
-  s21::Set<int> s;
-  EXPECT_TRUE(s.empty());
-  EXPECT_EQ(s.size(), 0);
+// SET
+class TestSet {
+ public:
+  s21::set<int> s21_set_empty;
+  s21::set<int> s21_set_ten{1, 2, 56, 76, 123, 53, 78, 43, 21, 100};
+  s21::set<int> s21_set_copy;
+  std::set<int> std_set_copy;
+  s21::set<int> s21_move;
+  std::set<int> std_move;
+  s21::set<int> s21_set_swap{95, 94, 93, 92};
+  std::set<int> std_set_swap{95, 94, 93, 92};
+  s21::set<int> s21_set_merge{1, 2, 3, 4, 5};
+  std::set<int> std_set_merge{1, 2, 3, 4, 5};
+
+  std::set<int> std_set_empty;
+  std::set<int> std_set_ten{1, 2, 56, 76, 123, 53, 78, 43, 21, 100};
+};
+
+TEST(Set, constructor_default) {
+  TestSet tester;
+  EXPECT_EQ(tester.s21_set_empty.size(), tester.std_set_empty.size());
+  EXPECT_EQ(tester.s21_set_empty.empty(), tester.std_set_empty.empty());
 }
 
-TEST(SetTest, InitializerListConstructor) {
-  s21::Set<int> s = {1, 2, 3};
-  EXPECT_EQ(s.size(), 3);
-  EXPECT_TRUE(s.contains(1));
-  EXPECT_TRUE(s.contains(2));
-  EXPECT_TRUE(s.contains(3));
+TEST(Set, constructor_initialazer) {
+  TestSet tester;
+  EXPECT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
+  EXPECT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
+  EXPECT_EQ(tester.s21_set_ten.find(1) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(1) != tester.std_set_ten.end());
+  EXPECT_EQ(tester.s21_set_ten.find(2) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(2) != tester.std_set_ten.end());
+  EXPECT_EQ(tester.s21_set_ten.find(3) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(3) != tester.std_set_ten.end());
+  EXPECT_EQ(tester.s21_set_ten.find(4) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(4) != tester.std_set_ten.end());
 }
 
-TEST(SetTest, CopyConstructor) {
-  s21::Set<int> s1 = {1, 2, 3};
-  s21::Set<int> s2(s1);
-  EXPECT_EQ(s1.size(), s2.size());
+TEST(Set, constructor_copy) {
+  TestSet tester;
+  s21::set<int> s21_empty(tester.s21_set_ten);
+  std::set<int> std_empty(tester.std_set_ten);
+  EXPECT_EQ(s21_empty.find(1) != s21_empty.end(),
+            std_empty.find(1) != std_empty.end());
+  EXPECT_EQ(s21_empty.find(2) != s21_empty.end(),
+            std_empty.find(2) != std_empty.end());
+  EXPECT_EQ(s21_empty.find(3) != s21_empty.end(),
+            std_empty.find(3) != std_empty.end());
+  EXPECT_EQ(s21_empty.find(4) != s21_empty.end(),
+            std_empty.find(4) != std_empty.end());
+  EXPECT_EQ(s21_empty.size(), std_empty.size());
+  EXPECT_EQ(s21_empty.empty(), std_empty.empty());
 }
 
-TEST(SetTest, MoveConstructor) {
-  s21::Set<int> s1 = {1, 2, 3};
-  s21::Set<int> s2(std::move(s1));
-  EXPECT_EQ(s2.size(), 3);
-  EXPECT_TRUE(s2.contains(1));
-  EXPECT_TRUE(s2.contains(2));
-  EXPECT_TRUE(s2.contains(3));
-}
-TEST(SetTest, BeginEnd) {
-  s21::Set<int> s{3, 5, 1, 4, 2};
-  auto it = s.begin();
-  ASSERT_EQ(*it, 1);
-
-  it = s.end();
-  ASSERT_EQ(it, nullptr);
-
-  s.clear();
-  it = s.begin();
-  ASSERT_EQ(it, nullptr);
+TEST(Set, construct_move) {
+  TestSet tester;
+  s21::set<int> s21_move = std::move(tester.s21_set_ten);
+  std::set<int> std_move = std::move(tester.std_set_ten);
+  EXPECT_EQ(s21_move.find(1) != s21_move.end(),
+            std_move.find(1) != std_move.end());
+  EXPECT_EQ(s21_move.find(2) != s21_move.end(),
+            std_move.find(2) != std_move.end());
+  EXPECT_EQ(s21_move.find(3) != s21_move.end(),
+            std_move.find(3) != std_move.end());
+  EXPECT_EQ(s21_move.find(4) != s21_move.end(),
+            std_move.find(4) != std_move.end());
+  EXPECT_EQ(s21_move.size(), std_move.size());
+  EXPECT_EQ(s21_move.empty(), std_move.empty());
 }
 
-TEST(SetTest, SizeMaxSize) {
-  s21::Set<int> s{3, 5, 1, 4, 2};
-  std::set<int> s1{3, 5, 1, 4, 2};
-  ASSERT_EQ(s.size(), 5);
-  ASSERT_GE(s.max_size(), s1.max_size());
-
-  s.clear();
-  ASSERT_EQ(s.size(), 0);
-}
-TEST(SetTest, Erase) {
-  s21::Set<int> s{1, 2, 3, 4, 5};
-  auto it = s.find(3);
-  s.erase(it);
-  EXPECT_EQ(s.size(), 4);
-  EXPECT_FALSE(s.contains(3));
-}
-
-TEST(SetTest, Swap) {
-  s21::Set<int> s1{1, 2, 3};
-  s21::Set<int> s2{4, 5, 6};
-  s1.swap(s2);
-  EXPECT_EQ(s1.size(), 3);
-  EXPECT_EQ(s2.size(), 3);
-  EXPECT_TRUE(s2.contains(1));
-  EXPECT_TRUE(s1.contains(4));
+TEST(Set, operator_move) {
+  TestSet tester;
+  tester.s21_move = std::move(tester.s21_set_ten);
+  tester.std_move = std::move(tester.std_set_ten);
+  EXPECT_EQ(tester.s21_move.find(1) != tester.s21_move.end(),
+            tester.std_move.find(1) != tester.std_move.end());
+  EXPECT_EQ(tester.s21_move.find(2) != tester.s21_move.end(),
+            tester.std_move.find(2) != tester.std_move.end());
+  EXPECT_EQ(tester.s21_move.find(3) != tester.s21_move.end(),
+            tester.std_move.find(3) != tester.std_move.end());
+  EXPECT_EQ(tester.s21_move.find(4) != tester.s21_move.end(),
+            tester.std_move.find(4) != tester.std_move.end());
+  EXPECT_EQ(tester.s21_move.size(), tester.std_move.size());
+  EXPECT_EQ(tester.s21_move.empty(), tester.std_move.empty());
 }
 
-TEST(SetTest, Merge) {
-  s21::Set<int> s1{1, 2, 3};
-  s21::Set<int> s2{3, 4, 5};
-  s1.merge(s2);
-  EXPECT_EQ(s1.size(), 5);
-  EXPECT_EQ(s2.size(), 0);
-  EXPECT_TRUE(s1.contains(4));
-  EXPECT_FALSE(s2.contains(3));
+TEST(Set, function_not_empty) {
+  TestSet tester;
+  EXPECT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
+  EXPECT_EQ(tester.s21_set_ten.empty(), tester.std_set_ten.empty());
 }
 
-TEST(SetTest, Find) {
-  s21::Set<int> s{1, 2, 3};
-  auto it1 = s.find(2);
-  EXPECT_EQ(*it1, 2);
-  auto it2 = s.find(4);
-  EXPECT_EQ(it2, s.end());
+TEST(Set, function_empty) {
+  TestSet tester;
+  EXPECT_EQ(tester.s21_set_empty.size(), tester.std_set_empty.size());
+  EXPECT_EQ(tester.s21_set_empty.empty(), tester.std_set_empty.empty());
 }
 
-TEST(MapConstructorTest, DefaultConstructor) {
-  s21::Map<int, std::string> m;
-  EXPECT_EQ(m.size(), 0);
-  EXPECT_TRUE(m.empty());
+TEST(Set, function_size_empty) {
+  TestSet tester;
+  EXPECT_EQ(tester.s21_set_empty.size(), tester.std_set_empty.size());
 }
 
-TEST(MapConstructorTest, InitializerListConstructor) {
-  s21::Map<int, std::string> m{{1, "one"}, {2, "two"}, {3, "three"}};
-  EXPECT_EQ(m.size(), 3);
-  EXPECT_FALSE(m.empty());
-  EXPECT_EQ(m.at(1), "one");
-  EXPECT_EQ(m.at(2), "two");
-  EXPECT_EQ(m.at(3), "three");
+TEST(Set, function_size_not_empty) {
+  TestSet tester;
+  EXPECT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
 }
 
-TEST(MapConstructorTest, CopyConstructor) {
-  s21::Map<int, std::string> m{{1, "one"}, {2, "two"}, {3, "three"}};
-  s21::Map<int, std::string> copy_m(m);
-  EXPECT_EQ(copy_m.size(), 3);
-  EXPECT_FALSE(copy_m.empty());
-  EXPECT_EQ(copy_m.at(1), "one");
-}
-// Test the insert(key, value) function
-TEST(MapTest, InsertKeyValue) {
-  s21::Map<int, std::string> map;
-  // Insert a single key-value pair
-  map.insert(1, "one");
-  // Check that the size is correct
-  EXPECT_EQ(map.size(), 1);
-  // Check that the inserted key-value pair is in the map
-  EXPECT_EQ(map.contains(1), true);
-  EXPECT_EQ(map[1], "one");
-  // Insert another key-value pair
-  map.insert(2, "two");
-  // Check that the size is correct
-  EXPECT_EQ(map.size(), 2);
-  // Check that both inserted key-value pairs are in the map
-  EXPECT_EQ(map.contains(1), true);
-  EXPECT_EQ(map[1], "one");
-  EXPECT_EQ(map.contains(2), true);
-  EXPECT_EQ(map[2], "two");
-}
-// Test the insert(pair) function
-TEST(MapTest, InsertPair) {
-  s21::Map<int, std::string> map;
-  // Insert a single key-value pair using a pair object
-  map.insert(std::make_pair(1, "one"));
-  // Check that the size is correct
-  EXPECT_EQ(map.size(), 1);
-  // Check that the inserted key-value pair is in the map
-  EXPECT_EQ(map.contains(1), true);
-  EXPECT_EQ(map[1], "one");
-  // Insert another key-value pair using a pair object
-  map.insert(std::make_pair(2, "two"));
-  // Check that the size is correct
-  EXPECT_EQ(map.size(), 2);
-  // Check that both inserted key-value pairs are in the map
-  EXPECT_EQ(map.contains(1), true);
-  EXPECT_EQ(map[1], "one");
-  EXPECT_EQ(map.contains(2), true);
-  EXPECT_EQ(map[2], "two");
-}
-TEST(MapTest, InsertOrAssign) {
-  s21::Map<int, std::string> map;
-  // Insert a new element with a key that does not exist.
-  auto [it1, inserted1] = map.insert_or_assign(1, "one");
-  EXPECT_TRUE(inserted1);
-  EXPECT_EQ(it1->first, 1);
-  EXPECT_EQ(it1->second, "one");
-  // Insert a new element with a key that already exists.
-  auto [it2, inserted2] = map.insert_or_assign(1, "ONE");
-  EXPECT_FALSE(inserted2);
-  EXPECT_EQ(it2->first, 1);
-  EXPECT_EQ(it2->second, "ONE");
-  // Insert multiple elements.
-  map.insert_or_assign(2, "two");
-  map.insert_or_assign(3, "three");
-  map.insert_or_assign(4, "four");
-  map.insert_or_assign(5, "five");
-  EXPECT_EQ(map.size(), 5);
-  EXPECT_EQ(map[1], "ONE");
-  EXPECT_EQ(map[2], "two");
-  EXPECT_EQ(map[3], "three");
-  EXPECT_EQ(map[4], "four");
-  EXPECT_EQ(map[5], "five");
-}
-TEST(MapTest, AtAndOperatorBrackets) {
-  s21::Map<int, std::string> map = {{1, "one"}, {2, "two"}, {3, "three"}};
-
-  EXPECT_EQ(map.at(1), "one");
-  EXPECT_EQ(map[2], "two");
-  EXPECT_THROW(map.at(4), std::invalid_argument);
-  map[4] = "four";
-  EXPECT_EQ(map[4], "four");
-  map[2] = "TWO";
-  EXPECT_EQ(map[2], "TWO");
+TEST(Set, function_max_sez_empty) {
+  TestSet tester;
+  EXPECT_EQ(tester.s21_set_empty.max_size(), tester.std_set_empty.max_size());
 }
 
-TEST(MapTest, EmptyAndSize) {
-  s21::Map<int, std::string> empty_map;
-  s21::Map<int, std::string> map = {{1, "one"}, {2, "two"}, {3, "three"}};
-
-  EXPECT_TRUE(empty_map.empty());
-  EXPECT_EQ(empty_map.size(), 0);
-
-  EXPECT_FALSE(map.empty());
-  EXPECT_EQ(map.size(), 3);
+TEST(Set, function_max_siez_not_empty) {
+  TestSet tester;
+  EXPECT_EQ(tester.s21_set_ten.max_size(), tester.std_set_ten.max_size());
 }
 
-TEST(MapTest, MaxSize) {
-  s21::Map<int, std::string> map;
-  std::map<int, std::string> map1;
-
-  // Max size is implementation-dependent, but it should be greater than 0
-  EXPECT_GT(map.max_size(), map1.max_size());
-}
-TEST(MapTest, Erase) {
-  s21::Map<int, std::string> map;
-
-  map.insert({1, "one"});
-  map.insert({2, "two"});
-  map.insert({3, "three"});
-  map.insert({5, "five"});
-
-  // Erase an existing element.
-  auto it1 = map.begin()++;
-  map.erase(it1);
-  EXPECT_EQ(map.size(), 3);
-  EXPECT_FALSE(map.contains(1));
+TEST(Set, function_max_size_float_empty) {
+  s21::set<float> s21_float_empty;
+  std::set<float> std_float_empty;
+  EXPECT_EQ(s21_float_empty.max_size(), std_float_empty.max_size());
 }
 
-TEST(MapTest, Swap) {
-  s21::Map<int, std::string> map1;
-  map1.insert({1, "one"});
-  map1.insert({2, "two"});
-
-  s21::Map<int, std::string> map2;
-  map2.insert({3, "three"});
-  map2.insert({4, "four"});
-
-  map1.swap(map2);
-
-  EXPECT_EQ(map1.size(), 2);
-  EXPECT_TRUE(map1.contains(3));
-  EXPECT_TRUE(map1.contains(4));
-
-  EXPECT_EQ(map2.size(), 2);
-  EXPECT_TRUE(map2.contains(1));
-  EXPECT_TRUE(map2.contains(2));
+TEST(Set, function_swap_not_empty) {
+  TestSet tester;
+  tester.s21_set_swap.swap(tester.s21_set_ten);
+  tester.std_set_swap.swap(tester.std_set_ten);
+  EXPECT_EQ(tester.s21_set_swap.find(1) != tester.s21_set_swap.end(),
+            tester.std_set_swap.find(1) != tester.std_set_swap.end());
+  EXPECT_EQ(tester.s21_set_swap.find(56) != tester.s21_set_swap.end(),
+            tester.std_set_swap.find(56) != tester.std_set_swap.end());
+  EXPECT_EQ(tester.s21_set_swap.find(76) != tester.s21_set_swap.end(),
+            tester.std_set_swap.find(76) != tester.std_set_swap.end());
+  EXPECT_EQ(tester.s21_set_ten.find(95) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(95) != tester.std_set_ten.end());
+  EXPECT_EQ(tester.s21_set_ten.find(94) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(94) != tester.std_set_ten.end());
+  EXPECT_EQ(tester.s21_set_ten.find(93) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(93) != tester.std_set_ten.end());
+  EXPECT_EQ(tester.s21_set_swap.size(), tester.std_set_swap.size());
+  EXPECT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
 }
 
-TEST(MapTest, Merge) {
-  s21::Map<int, std::string> map1;
-  map1.insert({1, "one"});
-  map1.insert({2, "two"});
+TEST(Set, function_swap_empty) {
+  TestSet tester;
+  tester.s21_set_empty.swap(tester.s21_set_swap);
+  tester.std_set_empty.swap(tester.std_set_swap);
 
-  s21::Map<int, std::string> map2;
-  map2.insert({3, "three"});
-  map2.insert({4, "four"});
+  EXPECT_EQ(tester.s21_set_empty.find(95) != tester.s21_set_empty.end(),
+            tester.std_set_empty.find(95) != tester.std_set_empty.end());
+  EXPECT_EQ(tester.s21_set_empty.find(94) != tester.s21_set_empty.end(),
+            tester.std_set_empty.find(94) != tester.std_set_empty.end());
+  EXPECT_EQ(tester.s21_set_empty.find(93) != tester.s21_set_empty.end(),
+            tester.std_set_empty.find(93) != tester.std_set_empty.end());
 
-  map1.merge(map2);
+  EXPECT_EQ(tester.s21_set_empty.size(), tester.std_set_empty.size());
+  EXPECT_EQ(tester.s21_set_empty.empty(), tester.std_set_empty.empty());
+  EXPECT_EQ(tester.s21_set_swap.size(), tester.std_set_swap.size());
+  EXPECT_EQ(tester.s21_set_swap.empty(), tester.std_set_swap.empty());
+}
+TEST(Set, function_merge_with_duplicates) {
+  TestSet tester;
+  tester.s21_set_merge.merge(tester.s21_set_ten);
+  tester.std_set_merge.merge(tester.std_set_ten);
 
-  EXPECT_EQ(map1.size(), 4);
-  EXPECT_TRUE(map1.contains(1));
-  EXPECT_TRUE(map1.contains(2));
-  EXPECT_TRUE(map1.contains(3));
-  EXPECT_TRUE(map1.contains(4));
+  EXPECT_EQ(tester.s21_set_merge.find(1) != tester.s21_set_merge.end(),
+            tester.std_set_merge.find(1) != tester.std_set_merge.end());
+  EXPECT_EQ(tester.s21_set_merge.find(2) != tester.s21_set_merge.end(),
+            tester.std_set_merge.find(2) != tester.std_set_merge.end());
+  EXPECT_EQ(tester.s21_set_merge.find(76) != tester.s21_set_merge.end(),
+            tester.std_set_merge.find(76) != tester.std_set_merge.end());
+
+  EXPECT_EQ(tester.s21_set_merge.size(), tester.std_set_merge.size());
+  EXPECT_EQ(tester.s21_set_merge.empty(), tester.std_set_merge.empty());
 }
 
-TEST(MapTest, Contains) {
-  s21::Map<int, std::string> map;
+TEST(Set, function_merge_wihout_duplicates) {
+  TestSet tester;
+  tester.s21_set_ten.merge(tester.s21_set_swap);
+  tester.std_set_ten.merge(tester.std_set_swap);
 
-  map.insert({1, "one"});
-  map.insert({2, "two"});
-  EXPECT_TRUE(map.contains(2));
-  EXPECT_FALSE(map.contains(3));
+  EXPECT_EQ(tester.s21_set_ten.find(95) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(95) != tester.std_set_ten.end());
+  EXPECT_EQ(tester.s21_set_ten.find(1) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(1) != tester.std_set_ten.end());
+  EXPECT_EQ(tester.s21_set_ten.find(94) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(94) != tester.std_set_ten.end());
+  EXPECT_EQ(tester.s21_set_ten.find(76) != tester.s21_set_ten.end(),
+            tester.std_set_ten.find(76) != tester.std_set_ten.end());
+
+  EXPECT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
+  EXPECT_EQ(tester.std_set_ten.empty(), tester.std_set_ten.empty());
+  EXPECT_EQ(tester.s21_set_swap.size(), tester.std_set_swap.size());
+  EXPECT_EQ(tester.s21_set_swap.empty(), tester.std_set_swap.empty());
 }
-TEST(SetTest, RotateCheck) {
-  s21::Set<int> s1 = {1, 2, 3, 6, 7, 8, 9, 99, -56};
-  s1.insert(-1000);
-  s1.insert(-10002);
-  s1.insert(-100023);
-  s1.insert(-100024);
-  s1.insert(-100026);
+
+TEST(Set, function_clear_not_empty) {
+  TestSet tester;
+  tester.s21_set_ten.clear();
+  tester.std_set_ten.clear();
+  EXPECT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
+  EXPECT_EQ(tester.s21_set_ten.empty(), tester.std_set_ten.empty());
 }
-TEST(SetTest, RotateCheck2) {
-  s21::Set<int> s1 = {5, 3, 7, 2, 4, 6, 8};
-  s1.erase(s1.begin());
+
+TEST(Set, function_begin_not_empty) {
+  TestSet tester;
+  s21::set<int>::iterator i = tester.s21_set_ten.begin();
+  std::set<int>::iterator j = tester.std_set_ten.begin();
+  EXPECT_EQ(*i, *j);
 }
-TEST(SetTest, Remove) {
+
+TEST(Set, function_begin_empty) {
+  TestSet tester;
+  s21::set<int>::iterator i = tester.s21_set_empty.begin();
+  std::set<int>::iterator j = tester.std_set_empty.begin();
+  EXPECT_EQ(*i, *j);
+}
+
+TEST(Set, function_end_empty) {
+  TestSet tester;
+  s21::set<int>::iterator i = tester.s21_set_empty.end();
+  std::set<int>::iterator j = tester.std_set_empty.end();
+  EXPECT_EQ(*i, *j);
+}
+TEST(Set, function_end_not_empty) {
+  TestSet tester;
+  s21::set<int>::iterator i = tester.s21_set_ten.end();
+  std::set<int>::iterator j = tester.std_set_ten.end();
+  --i;
+  --j;
+  EXPECT_EQ(*i, *j);
+}
+
+TEST(Set, operator_plus) {
+  TestSet tester;
+  s21::set<int>::iterator i = tester.s21_set_ten.begin();
+  std::set<int>::iterator j = tester.std_set_ten.begin();
+  while (i != tester.s21_set_ten.end() && j != tester.std_set_ten.end()) {
+    EXPECT_EQ(*i, *j);
+    ++i;
+    ++j;
+  }
+  EXPECT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
+  EXPECT_EQ(tester.std_set_ten.empty(), tester.std_set_ten.empty());
+}
+
+TEST(Set, operator_minus) {
+  TestSet tester;
+  s21::set<int>::iterator i = tester.s21_set_ten.end();
+  std::set<int>::iterator j = tester.std_set_ten.end();
+  while (i != tester.s21_set_ten.begin() && j != tester.std_set_ten.begin()) {
+    --i;
+    --j;
+    EXPECT_EQ(*i, *j);
+  }
+  EXPECT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
+  EXPECT_EQ(tester.s21_set_ten.empty(), tester.std_set_ten.empty());
+}
+
+TEST(Set, operation_assignment) {
+  TestSet tester;
+  s21::set<int>::iterator iter_1 = tester.s21_set_ten.begin();
+  s21::set<int>::iterator iter_3 = iter_1;
+  std::set<int>::iterator iter_2 = tester.std_set_ten.begin();
+  std::set<int>::iterator iter_4 = iter_2;
+  ASSERT_EQ(*iter_1, *iter_3);
+  ASSERT_EQ(*iter_2, *iter_4);
+}
+TEST(Set, operation_equal) {
+  TestSet tester;
+  s21::set<int>::iterator it1 = tester.s21_set_ten.begin();
+  s21::set<int>::iterator it3 = tester.s21_set_ten.begin();
+  std::set<int>::iterator it2 = tester.std_set_ten.begin();
+  std::set<int>::iterator it4 = tester.std_set_ten.begin();
+  ASSERT_EQ(it1 == it3, it2 == it4);
+}
+TEST(Set, operation_not_equal) {
+  TestSet tester;
+  s21::set<int>::iterator iter_1 = tester.s21_set_ten.begin();
+  std::set<int>::iterator iter_2 = tester.std_set_ten.begin();
+  ASSERT_EQ(iter_1 != tester.s21_set_ten.end(),
+            iter_2 != tester.std_set_ten.end());
+}
+
+TEST(Set, function_insert) {
+  TestSet tester;
+  std::pair<s21::set<int>::iterator, bool> iter_1 =
+      tester.s21_set_ten.insert(45);
+  std::pair<std::set<int>::iterator, bool> iter_2 =
+      tester.std_set_ten.insert(45);
+  EXPECT_EQ(*(iter_1.first), *(iter_2.first));
+  EXPECT_EQ(iter_1.second, iter_2.second);
+}
+
+TEST(Set, function_find_have) {
+  TestSet tester;
+  s21::set<int>::iterator i = tester.s21_set_ten.find(1);
+  std::set<int>::iterator j = tester.std_set_ten.find(1);
+  EXPECT_EQ(i != tester.s21_set_ten.end(), j != tester.std_set_ten.end());
+}
+
+TEST(Set, function_find_dont_have) {
+  TestSet tester;
+  s21::set<int>::iterator i = tester.s21_set_ten.find(100);
+  std::set<int>::iterator j = tester.std_set_ten.find(100);
+  EXPECT_EQ(i == tester.s21_set_ten.end(), j == tester.std_set_ten.end());
+}
+
+TEST(Set, function_erase) {
+  TestSet tester;
+  tester.s21_set_ten.erase(tester.s21_set_ten.begin());
+  tester.std_set_ten.erase(tester.std_set_ten.begin());
+  s21::set<int>::iterator iter_1 = tester.s21_set_ten.find(1);
+  std::set<int>::iterator iter_2 = tester.std_set_ten.find(1);
+  ASSERT_EQ(iter_1 == tester.s21_set_ten.end(),
+            iter_2 == tester.std_set_ten.end());
+}
+TEST(Set, functions_erase_alot) {
+  TestSet tester;
+  s21::set<int>::iterator it1 = tester.s21_set_ten.find(76);
+  std::set<int>::iterator it2 = tester.std_set_ten.find(76);
+  tester.s21_set_ten.erase(it1);
+  tester.std_set_ten.erase(it2);
+  it1 = tester.s21_set_ten.find(123);
+  it2 = tester.std_set_ten.find(123);
+  tester.s21_set_ten.erase(it1);
+  tester.std_set_ten.erase(it2);
+  it1 = tester.s21_set_ten.find(43);
+  it2 = tester.std_set_ten.find(43);
+  tester.s21_set_ten.erase(it1);
+  tester.std_set_ten.erase(it2);
+  ASSERT_EQ(tester.s21_set_ten.size(), tester.std_set_ten.size());
+}
+// MAP
+class TestMap {
+ public:
+  s21::map<int, int> s21_map_empty;
+  s21::map<int, int> s21_map_four{{1, 1}, {2, 2}, {3, 3}, {4, 4}};
+  s21::map<int, int> s21_map_swap{{1, 95}, {2, 94}, {3, 93}};
+
+  std::map<int, int> std_map_empty;
+  std::map<int, int> std_map_four{{
+                                      1,
+                                      1,
+                                  },
+                                  {2, 2},
+                                  {3, 3},
+                                  {4, 4}};
+  std::map<int, int> std_map_swap{{1, 95}, {2, 95}, {3, 95}};
+};
+
+TEST(Map, construcor_default) {
+  TestMap tester;
+  EXPECT_EQ(tester.s21_map_empty.size(), tester.std_map_empty.size());
+  EXPECT_EQ(tester.s21_map_empty.empty(), tester.std_map_empty.empty());
+}
+
+TEST(Map, construcot_initializer) {
+  TestMap tester;
+  EXPECT_EQ(tester.s21_map_four[1], tester.std_map_four[1]);
+  EXPECT_EQ(tester.s21_map_four[4], tester.std_map_four[4]);
+  EXPECT_EQ(tester.s21_map_four.size(), tester.std_map_four.size());
+  EXPECT_EQ(tester.std_map_four.empty(), tester.std_map_four.empty());
+}
+
+TEST(Map, constructor_copy_empty) {
+  TestMap tester;
+  s21::map<int, int> s21_map_copy(tester.s21_map_empty);
+  std::map<int, int> std_map_copy(tester.std_map_empty);
+  EXPECT_EQ(s21_map_copy.size(), std_map_copy.size());
+  EXPECT_EQ(std_map_copy.empty(), std_map_copy.empty());
+}
+
+TEST(Map, constructor_copy_not_empty) {
+  TestMap tester;
+  s21::map<int, int> s21_map_copy(tester.s21_map_four);
+  std::map<int, int> std_map_copy(tester.std_map_four);
+  EXPECT_EQ(s21_map_copy[1], std_map_copy[1]);
+  EXPECT_EQ(s21_map_copy[4], std_map_copy[4]);
+  EXPECT_EQ(s21_map_copy.size(), std_map_copy.size());
+  EXPECT_EQ(std_map_copy.empty(), std_map_copy.empty());
+}
+
+TEST(Map, constructor_move_empty) {
+  TestMap tester;
+  s21::map<int, int> s21_map_move = std::move(tester.s21_map_empty);
+  std::map<int, int> std_map_move = std::move(tester.std_map_empty);
+  EXPECT_EQ(s21_map_move.size(), std_map_move.size());
+  EXPECT_EQ(s21_map_move.empty(), std_map_move.empty());
+}
+
+TEST(Map, constructor_move_not_empty) {
+  TestMap tester;
+  s21::map<int, int> s21_map_move = std::move(tester.s21_map_four);
+  std::map<int, int> std_map_move = std::move(tester.std_map_four);
+  EXPECT_EQ(s21_map_move[1], std_map_move[1]);
+  EXPECT_EQ(s21_map_move[4], std_map_move[4]);
+  EXPECT_EQ(s21_map_move.size(), std_map_move.size());
+  EXPECT_EQ(s21_map_move.empty(), std_map_move.empty());
+}
+
+TEST(Map, operator_move_empty) {
+  TestMap tester;
+  s21::map<int, int> s21_map_move;
+  std::map<int, int> std_map_move;
+  s21_map_move = std::move(tester.s21_map_four);
+  std_map_move = std::move(tester.std_map_four);
+  EXPECT_EQ(s21_map_move[1], std_map_move[1]);
+  EXPECT_EQ(std_map_move[4], std_map_move[4]);
+  EXPECT_EQ(s21_map_move.size(), std_map_move.size());
+  EXPECT_EQ(s21_map_move.empty(), std_map_move.empty());
+}
+
+TEST(Map, function_empty_empty) {
+  TestMap tester;
+  EXPECT_EQ(tester.s21_map_empty.size(), tester.std_map_empty.size());
+  EXPECT_EQ(tester.s21_map_empty.empty(), tester.std_map_empty.empty());
+  EXPECT_EQ(tester.s21_map_empty[1], tester.std_map_empty[1]);
+}
+
+TEST(Map, function_empty_not_empty) {
+  TestMap tester;
+  EXPECT_EQ(tester.s21_map_four.size(), tester.std_map_four.size());
+  EXPECT_EQ(tester.s21_map_four.empty(), tester.std_map_four.empty());
+  EXPECT_EQ(tester.s21_map_four[1], tester.std_map_four[1]);
+}
+
+TEST(Map, function_size_empty) {
+  TestMap tester;
+  EXPECT_EQ(tester.s21_map_empty.size(), tester.std_map_empty.size());
+  EXPECT_EQ(tester.s21_map_empty.empty(), tester.std_map_empty.empty());
+  EXPECT_EQ(tester.s21_map_empty[1], tester.std_map_empty[1]);
+}
+
+TEST(Map, function_size_not_empty) {
+  TestMap tester;
+  EXPECT_EQ(tester.s21_map_four.size(), tester.std_map_four.size());
+  EXPECT_EQ(tester.std_map_four.empty(), tester.std_map_four.empty());
+  EXPECT_EQ(tester.s21_map_four[1], tester.std_map_four[1]);
+  EXPECT_EQ(tester.s21_map_four[4], tester.std_map_four[4]);
+}
+
+TEST(Map, function_swap_empty) {
+  s21::map<int, int> m1({{1, 8}, {4, 2}, {2, 3}});
+  s21::map<int, int> m2;
+  m1.swap(m2);
+
+  std::map<int, int> m3({{1, 8}, {4, 2}, {2, 3}});
+  std::map<int, int> m4;
+  m3.swap(m4);
+
+  ASSERT_EQ(m2[1], m4[1]);
+  ASSERT_EQ(m2[2], m4[2]);
+  ASSERT_EQ(m2[4], m4[4]);
+
+  ASSERT_EQ(m1.size(), m3.size());
+  ASSERT_EQ(m2.size(), m4.size());
+}
+
+TEST(Map, function_swap_not_empty) {
+  TestMap tester;
+  s21::map<int, int> s21_map_swap{{1, 1}, {2, 2}};
+  std::map<int, int> std_map_swap{{1, 1}, {2, 2}};
+  s21_map_swap.swap(tester.s21_map_four);
+  std_map_swap.swap(tester.std_map_four);
+  EXPECT_EQ(s21_map_swap[1], std_map_swap[1]);
+  EXPECT_EQ(s21_map_swap[4], std_map_swap[4]);
+  EXPECT_EQ(s21_map_swap.size(), std_map_swap.size());
+  EXPECT_EQ(s21_map_swap.empty(), std_map_swap.empty());
+}
+
+TEST(Map, WithDuplicatesCase) {
+  s21::map<int, int> m1({{1, 8}, {4, 2}, {2, 3}});
+  s21::map<int, int> m2({{1, 3}, {2, 2}});
+  m1.merge(m2);
+
+  std::map<int, int> m3({{1, 8}, {4, 2}, {2, 3}});
+  std::map<int, int> m4({{1, 3}, {2, 2}});
+  m3.merge(m4);
+  ASSERT_EQ(m1[1], m3[1]);
+  ASSERT_EQ(m1[2], m3[2]);
+  ASSERT_EQ(m1[4], m3[4]);
+
+  ASSERT_EQ(m2[1], m4[1]);
+  ASSERT_EQ(m2[2], m4[2]);
+
+  ASSERT_EQ(m1.size(), m3.size());
+  ASSERT_EQ(m2.size(), m4.size());
+}
+TEST(Map, WithoutDuplicatesCase) {
+  s21::map<int, int> m1({{1, 2}, {3, 4}, {4, 5}});
+  s21::map<int, int> m2({{5, 6}, {7, 7}});
+  m1.merge(m2);
+
+  std::map<int, int> m3({{1, 2}, {3, 4}, {4, 5}});
+  std::map<int, int> m4({{5, 6}, {7, 7}});
+  m3.merge(m4);
+  ASSERT_EQ(m1[1], m3[1]);
+  ASSERT_EQ(m1[3], m3[3]);
+  ASSERT_EQ(m1[4], m3[4]);
+  ASSERT_EQ(m1[5], m3[5]);
+  ASSERT_EQ(m1[7], m3[7]);
+  ASSERT_EQ(m1.size(), m3.size());
+  ASSERT_EQ(m2.size(), m4.size());
+}
+TEST(Map, function_clear_empty) {
+  TestMap tester;
+  tester.s21_map_empty.clear();
+  tester.std_map_empty.clear();
+  EXPECT_EQ(tester.s21_map_empty.size(), tester.std_map_empty.size());
+  EXPECT_EQ(tester.s21_map_empty.empty(), tester.std_map_empty.empty());
+}
+TEST(Map, function_clear_not_empty) {
+  TestMap tester;
+  tester.s21_map_four.clear();
+  tester.std_map_four.clear();
+  EXPECT_EQ(tester.s21_map_four.size(), tester.std_map_four.size());
+  EXPECT_EQ(tester.s21_map_four.empty(), tester.std_map_four.empty());
+}
+TEST(Map, function_begin_empty) {
+  TestMap tester;
+  s21::map<int, int>::iterator iter_1 = tester.s21_map_empty.begin();
+  std::map<int, int>::iterator iter_2 = tester.std_map_empty.begin();
+  EXPECT_EQ(iter_1 == tester.s21_map_empty.end(),
+            iter_2 == tester.std_map_empty.end());
+}
+
+TEST(Map, function_begin_not_empty) {
+  TestMap tester;
+  s21::map<int, int>::iterator iter_1 = tester.s21_map_four.begin();
+  std::map<int, int>::iterator iter_2 = tester.std_map_four.begin();
+  EXPECT_EQ(iter_1 != tester.s21_map_four.end(),
+            iter_2 != tester.std_map_four.end());
+  EXPECT_EQ((*iter_1).second, (*iter_2).second);
+}
+
+TEST(Map, operator_plus) {
+  TestMap tester;
+  s21::map<int, int>::iterator iter_1 = tester.s21_map_four.begin();
+  std::map<int, int>::iterator iter_2 = tester.std_map_four.begin();
+  EXPECT_EQ((*iter_1).second, (*iter_2).second);
+  ++iter_1;
+  ++iter_2;
+  EXPECT_EQ((*iter_1).second, (*iter_2).second);
+  ++iter_1;
+  ++iter_2;
+  EXPECT_EQ((*iter_1).second, (*iter_2).second);
+}
+TEST(Map, operator_minus) {
+  TestMap tester;
+  s21::map<int, int>::iterator iter_1 = tester.s21_map_four.begin();
+  std::map<int, int>::iterator iter_2 = tester.std_map_four.begin();
+  ++iter_1;
+  ++iter_2;
+  EXPECT_EQ((*iter_1).second, (*iter_2).second);
+  --iter_1;
+  --iter_2;
+  EXPECT_EQ((*iter_1).second, (*iter_2).second);
+}
+
+TEST(Map, operator_assignment) {
+  TestMap tester;
+  s21::map<int, int>::iterator iter_1 = tester.s21_map_four.begin();
+  s21::map<int, int>::iterator iter_3 = iter_1;
+  std::map<int, int>::iterator iter_2 = tester.std_map_four.begin();
+  std::map<int, int>::iterator iter_4 = iter_2;
+  EXPECT_EQ(tester.s21_map_four.size(), tester.std_map_four.size());
+  EXPECT_EQ(tester.s21_map_four.empty(), tester.std_map_four.empty());
+  EXPECT_EQ((*iter_1).second, (*iter_3).second);
+  EXPECT_EQ((*iter_2).second, (*iter_4).second);
+}
+TEST(Map, operator_equal) {
+  TestMap tester;
+  s21::map<int, int>::iterator iter_1 = tester.s21_map_four.begin();
+  s21::map<int, int>::iterator iter_3 = tester.s21_map_four.begin();
+  std::map<int, int>::iterator iter_2 = tester.std_map_empty.begin();
+  std::map<int, int>::iterator iter_4 = tester.std_map_empty.begin();
+  EXPECT_EQ(tester.s21_map_four.size(), tester.std_map_four.size());
+  EXPECT_EQ(tester.s21_map_four.empty(), tester.std_map_four.empty());
+  EXPECT_EQ(tester.s21_map_empty.size(), tester.std_map_empty.size());
+  EXPECT_EQ(tester.s21_map_empty.empty(), tester.std_map_empty.empty());
+  EXPECT_EQ(iter_1 == iter_3, iter_2 == iter_4);
+}
+TEST(Map, operatort_not_equal) {
+  TestMap tester;
+  s21::map<int, int>::iterator iter_1 = tester.s21_map_four.begin();
+  std::map<int, int>::iterator iter_2 = tester.std_map_four.begin();
+  EXPECT_EQ(iter_1 != tester.s21_map_four.end(),
+            iter_2 != tester.std_map_empty.end());
+}
+
+TEST(Map, function_insert_without_duplicate) {
+  TestMap tester;
+  std::pair<s21::map<int, int>::iterator, bool> iter_1 =
+      tester.s21_map_four.insert({5, 2});
+  std::pair<std::map<int, int>::iterator, bool> iter_2 =
+      tester.std_map_four.insert({5, 2});
+  EXPECT_EQ((*(iter_1.first)).second, (*(iter_2.first)).second);
+  EXPECT_TRUE(iter_1.second == iter_2.second);
+}
+
+TEST(Map, function_insert_with_duplicate) {
+  TestMap tester;
+  std::pair<s21::map<int, int>::iterator, bool> iter_1 =
+      tester.s21_map_four.insert({1, 2});
+  std::pair<std::map<int, int>::iterator, bool> iter_2 =
+      tester.std_map_four.insert({1, 2});
+  EXPECT_TRUE(iter_1.second == iter_2.second);
+}
+
+TEST(Map, function_insert_key_value_without_duplicate) {
+  TestMap tester;
+  std::pair<s21::map<int, int>::iterator, bool> iter_1 =
+      tester.s21_map_four.insert(7, 7);
+  std::pair<std::map<int, int>::iterator, bool> iter_2 =
+      tester.std_map_four.insert({7, 7});
+  EXPECT_EQ(tester.s21_map_four.size(), tester.std_map_four.size());
+  EXPECT_EQ(tester.s21_map_four.empty(), tester.std_map_four.empty());
+  EXPECT_EQ((*(iter_1.first)).second, (*(iter_2.first)).second);
+  EXPECT_TRUE(iter_1.second == iter_2.second);
+}
+
+TEST(Map, function_insert_key_value_with_duplicate) {
+  TestMap tester;
+  std::pair<s21::map<int, int>::iterator, bool> iter_1 =
+      tester.s21_map_four.insert(1, 7);
+  std::pair<std::map<int, int>::iterator, bool> iter_2 =
+      tester.std_map_four.insert({1, 7});
+  EXPECT_EQ(tester.s21_map_four.size(), tester.std_map_four.size());
+  EXPECT_EQ(tester.s21_map_four.empty(), tester.std_map_four.empty());
+  EXPECT_TRUE(iter_1.second == iter_2.second);
+}
+TEST(Map, function_insert_or_assign_value) {
+  s21::map<int, int> m1({{1, 3}, {4, 2}});
+  std::map<int, int> m2({{1, 3}, {4, 2}});
+  std::pair<s21::map<int, int>::iterator, bool> it1 = m1.insert_or_assign(5, 2);
+  std::pair<std::map<int, int>::iterator, bool> it2 = m2.insert_or_assign(5, 2);
+  ASSERT_TRUE(it1.second == it2.second);
+}
+
+TEST(Map, function_insert_or_assign) {
+  s21::map<int, int> m1({{1, 3}, {4, 2}});
+  std::map<int, int> m2({{1, 3}, {4, 2}});
+  std::pair<s21::map<int, int>::iterator, bool> it1 = m1.insert_or_assign(1, 2);
+  std::pair<std::map<int, int>::iterator, bool> it2 = m2.insert_or_assign(1, 2);
+  ASSERT_EQ((*(it1.first)).second, (*(it2.first)).second);
+  ASSERT_TRUE(it1.second == it2.second);
+}
+TEST(Map, function_insert_s) {
+  s21::map<int, int> m1({{1, 3}, {4, 2}});
+  std::pair<s21::map<int, int>::iterator, bool> it1 = m1.insert(5, 2);
+  ASSERT_EQ((*(it1.first)).second, 2);
+  ASSERT_TRUE(it1.second);
+}
+
+TEST(Map, function_at) {
+  s21::map<int, int> m1({{1, 3}, {4, 2}});
+  std::map<int, int> m2({{1, 3}, {4, 2}});
+  ASSERT_EQ(m1.at(1), m2.at(1));
+}
+TEST(Map, function_erase) {
+  s21::map<int, int> m1({{1, 3}, {4, 2}});
+  std::map<int, int> m2({{1, 3}, {4, 2}});
+  m1.erase(m1.begin());
+  m2.erase(m2.begin());
+  ASSERT_EQ(m1[1], m2[1]);
+}
+TEST(Map, function_ontains) {
+  s21::map<int, int> s1({{1, 3}, {4, 2}});
+  ASSERT_TRUE(s1.contains(1));
+  ASSERT_TRUE(s1.contains(4));
+  ASSERT_FALSE(s1.contains(3));
+}
+// AVLTree
+TEST(AVLTreeTest, InsertAndSearch) {
   s21::AVLTree<int, int> tree;
+
   tree.Insert(5);
-  tree.Insert(3);
-  tree.Insert(7);
-  tree.Insert(2);
-  tree.Insert(4);
-  tree.Insert(6);
-  tree.Insert(8);
-  tree.Remove(5);
-  tree.Remove(6);
-  tree.Remove(8);
-}
-TEST(AVLTreeTest, RemoveTest) {
-  s21::AVLTree<int, int> tree;
   tree.Insert(10);
-  tree.Insert(20);
-  tree.Insert(30);
-  tree.Insert(40);
-  tree.Insert(50);
-  // Remove a leaf node
-  tree.Remove(50);
+  tree.Insert(3);
+  tree.Insert(1);
+  tree.Insert(4);
+
+  EXPECT_NE(tree.Search(5), nullptr);
+  EXPECT_NE(tree.Search(10), nullptr);
+  EXPECT_NE(tree.Search(3), nullptr);
+  EXPECT_NE(tree.Search(1), nullptr);
+  EXPECT_NE(tree.Search(4), nullptr);
+
+  EXPECT_EQ(tree.Search(2), nullptr);
+  EXPECT_EQ(tree.Search(6), nullptr);
 }
-TEST(SetTest, RotateCheck3) {
-  s21::Set<int> s1 = {5, 3, 7, 2, 4, 6, 8, 4, 6, 8, 9, 0, 1, 241325, 543565};
+
+TEST(AVLTreeTest, Remove) {
+  s21::AVLTree<int, int> tree;
+
+  tree.Insert(5);
+  tree.Insert(10);
+  tree.Insert(3);
+  tree.Insert(1);
+  tree.Insert(4);
+
+  tree.Remove(1);
+  EXPECT_EQ(tree.Search(1), nullptr);
+
+  tree.Remove(10);
+  EXPECT_EQ(tree.Search(10), nullptr);
+
+  tree.Remove(3);
+  EXPECT_EQ(tree.Search(3), nullptr);
+
+  EXPECT_NE(tree.Search(5), nullptr);
+  EXPECT_NE(tree.Search(4), nullptr);
+}
+
+TEST(AVLTreeTest, Clear) {
+  s21::AVLTree<int, int> tree;
+
+  tree.Insert(5);
+  tree.Insert(10);
+  tree.Insert(3);
+
+  tree.Clear(tree.GetRoot());
+
+  EXPECT_EQ(tree.Search(5), nullptr);
+  EXPECT_EQ(tree.Search(10), nullptr);
+  EXPECT_EQ(tree.Search(3), nullptr);
 }
 
 int main(int argc, char* argv[]) {

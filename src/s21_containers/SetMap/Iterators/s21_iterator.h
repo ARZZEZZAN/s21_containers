@@ -1,7 +1,7 @@
 #ifndef AVL_ITERATOR_H_
 #define AVL_ITERATOR_H_
 
-#include "../AvlTree/s21_avl_tree.tpp"
+#include "../avlTree/s21_avl_tree.tpp"
 
 namespace s21 {
 
@@ -14,6 +14,10 @@ class Iterator {
   using pointer = T*;
 
   Iterator(Node<T, V>* node = nullptr) : node_(node) {}
+  Iterator(Node<T, V>* nil, Node<T, V>* root) : node_(nil), root_(root) {}
+  Iterator(const Iterator&) = default;
+  Iterator& operator=(const Iterator&) = default;
+  ~Iterator() = default;
   Iterator operator+(const size_t value) {
     Iterator tmp = *this;
     for (size_t i = 0; i < value; i++) {
@@ -22,48 +26,39 @@ class Iterator {
     return tmp;
   }
   Iterator& operator++() {
-    if (this->node_ == nullptr) {
-      throw std::length_error("Node is nullptr");
-    }
-    if (this->node_->right != nullptr) {
-      this->node_ = this->node_->right;
-      while (this->node_->left != nullptr) {
-        this->node_ = this->node_->left;
+    if (node_ != nullptr) {
+      if (node_->right != nullptr) {
+        node_ = node_->right;
+        while (node_->left != nullptr) {
+          node_ = node_->left;
+        }
+      } else {
+        Node<T, V>* parent = node_->parent;
+        while (parent != nullptr && node_ == parent->right) {
+          node_ = parent;
+          parent = parent->parent;
+        }
+        node_ = parent;
       }
-    } else {
-      Node<T, V>* parent = this->node_->parent;
-      while (parent != nullptr && this->node_ == parent->right) {
-        this->node_ = parent;
-        parent = parent->parent;
-      }
-      this->node_ = parent;
+      return *this;
     }
     return *this;
   }
+
   Iterator operator++(int) {
     Iterator tmp = *this;
     ++(*this);
     return tmp;
   }
   Iterator& operator--() {
-    if (this->node_ == nullptr) {
-      throw std::length_error("Node is nullptr");
-    }
-    if (this->node_ == nullptr) {
-      throw std::length_error("Node is nullptr");
-    }
-    if (node_->left != nullptr) {
-      node_ = node_->left;
-      while (node_->right != nullptr) node_ = node_->right;
-    } else {
-      Node<T, V>* parent = node_->parent;
-      while (parent != nullptr && node_ == parent->left) {
-        node_ = parent;
-        parent = parent->parent;
+    if (Size(root_) > 0) {
+      if (node_ != nullptr) {
+        return OperatorHelper();
       }
-      node_ = parent;
+      node_ = MaximumKey(root_);
+      return *this;
     }
-    return *this;
+    return OperatorHelper();
   }
 
   Iterator operator--(int) {
@@ -75,11 +70,52 @@ class Iterator {
   bool operator==(const Iterator& other) const { return node_ == other.node_; }
   bool operator!=(const Iterator& other) const { return node_ != other.node_; }
 
-  reference operator*() const { return node_->key; }
+  reference operator*() const {
+    if (node_ == nullptr) {
+      static T default_value = T{};
+      return default_value;
+    }
+    return node_->key;
+  }
   pointer operator->() const { return &(node_->key); }
+  int Size(Node<T, V>* node) {
+    if (node) {
+      return node->size_;
+    }
+    return 0;
+  }
+  Node<T, V>* MaximumKey(Node<T, V>* node) {
+    if (node != nullptr) {
+      while (node->right != nullptr) {
+        return this->MaximumKey(node->right);
+      }
+      return node;
+    }
+    return nullptr;
+  }
+  Iterator& OperatorHelper() {
+    if (node_ != nullptr) {
+      if (node_->left != nullptr) {
+        node_ = node_->left;
+        while (node_->right != nullptr) {
+          node_ = node_->right;
+        }
+      } else {
+        Node<T, V>* parent = node_->parent;
+        while (parent != nullptr && node_ == parent->left) {
+          node_ = parent;
+          parent = parent->parent;
+        }
+        node_ = parent;
+      }
+      return *this;
+    }
+    return *this;
+  }
 
  protected:
   Node<T, V>* node_;
+  Node<T, V>* root_;
 };
 
 template <typename T, typename V>

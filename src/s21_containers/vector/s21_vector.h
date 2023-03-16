@@ -1,8 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
+#include <cmath>
 #include <initializer_list>
 #include <iostream>
-
 using namespace std;
 
 namespace s21 {
@@ -73,6 +73,7 @@ class vector {
   void bring_to_zero();
   void add_memory(size_type size, bool flag);
   size_type add_memory_size(size_type size, bool flag);
+  void copy_vector(const vector &v);
   void remove();
 };
 

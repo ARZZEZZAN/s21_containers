@@ -3,25 +3,25 @@
 
 #include <algorithm>
 
-#include "../Iterators/s21_iterator.h"
+#include "../iterators/s21_iterator.h"
 
 namespace s21 {
 
 template <typename T>
-class Set {
+class set {
  public:
   using value_type = T;
   using iterator = Iterator<T, T>;
-  using constIterator = ConstIterator<T, T>;
+  using const_iterator = ConstIterator<T, T>;
   using size_type = size_t;
   using Allocator = std::allocator<T>;
 
-  Set();
-  Set(std::initializer_list<value_type> const& items);
-  Set(const Set& s);
-  Set(Set<T>&& s) = default;
-  Set<T>& operator=(Set&& s);
-  ~Set() {}
+  set();
+  set(std::initializer_list<value_type> const& items);
+  set(const set& s);
+  set(set<T>&& s) = default;
+  set<T>& operator=(set&& s);
+  ~set() {}
 
   iterator begin();
   iterator end();
@@ -33,12 +33,12 @@ class Set {
   void clear();
   std::pair<iterator, bool> insert(const T& value);
   void erase(iterator pos);
-  void swap(Set<T>& other);
-  void merge(Set<T>& other);
+  void swap(set<T>& other);
+  void merge(set<T>& other);
 
   bool contains(const T& key);
   iterator find(const T& key);
-  const AVLTree<T, T>& getTree() const;
+  const AVLTree<T, T>& get_tree() const;
 
  private:
   AVLTree<T, T> tree_;

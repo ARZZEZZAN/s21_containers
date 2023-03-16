@@ -1,20 +1,15 @@
 #include "s21_avl_tree.h"
 namespace s21 {
 template <typename T, typename V>
-AVLTree<T, V>::AVLTree() {
-  root = nullptr;
-  inserted = false;
-}
+AVLTree<T, V>::AVLTree() : root(nullptr), nil(nullptr), inserted(false) {}
 template <typename T, typename V>
-AVLTree<T, V>::AVLTree(const AVLTree& other) {
-  this->root = this->CopyTree(other.GetRoot());
-}
+AVLTree<T, V>::AVLTree(const AVLTree& other)
+    : root(CopyTree(other.GetRoot())) {}
 template <typename T, typename V>
 AVLTree<T, V>& AVLTree<T, V>::operator=(AVLTree&& other) noexcept {
   if (this != &other) {
     Clear(root);
-    root = other.GetRoot();
-    other.Clear(other.GetRoot());
+    root = exchange(other.root, nullptr);
   }
   return *this;
 }
@@ -86,7 +81,7 @@ Node<T, V>* AVLTree<T, V>::Balance(Node<T, V>* node) {
 }
 template <typename T, typename V>
 Node<T, V>* AVLTree<T, V>::Insert(Node<T, V>* node, T key, Node<T, V>* parent) {
-  inserted = false;
+  this->inserted = false;
   if (!node) {
     node = new Node<T, V>(key);
     node->parent = parent;
@@ -98,7 +93,7 @@ Node<T, V>* AVLTree<T, V>::Insert(Node<T, V>* node, T key, Node<T, V>* parent) {
   } else if (key > node->key) {
     node->right = Insert(node->right, key, node);
   } else {
-    inserted = false;
+    this->inserted = false;
   }
   return Balance(node);
 }
@@ -145,13 +140,12 @@ AVLTree<T, V>::~AVLTree() {
 }
 template <typename T, typename V>
 void AVLTree<T, V>::Clear(Node<T, V>* node) {
-  if (!node) {
-    return;
+  if (node != nullptr) {
+    Clear(node->left);
+    Clear(node->right);
+    delete node;
   }
-  Clear(node->left);
-  Clear(node->right);
-  delete node;
-  node = nullptr;
+  root = nullptr;
 }
 template <typename T, typename V>
 Node<T, V>* AVLTree<T, V>::Search(Node<T, V>* node, T key) {
@@ -220,6 +214,21 @@ Node<T, V>* AVLTree<T, V>::CopyTree(Node<T, V>* node) {
   new_node->size_ = node->size_;
   new_node->left = CopyTree(node->left);
   new_node->right = CopyTree(node->right);
+  new_node->parent = node->parent;
   return new_node;
+}
+template <typename T, typename V>
+Node<T, V>* AVLTree<T, V>::MaximumKey(Node<T, V>* node) {
+  if (node != nullptr) {
+    while (node->right != nullptr) {
+      return this->MaximumKey(node->right);
+    }
+    return node;
+  }
+  return nullptr;
+}
+template <typename T, typename V>
+Node<T, V>* AVLTree<T, V>::GetNil() {
+  return nil;
 }
 }  // namespace s21

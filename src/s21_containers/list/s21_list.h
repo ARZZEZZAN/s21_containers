@@ -115,7 +115,6 @@ class list {
     }
 
     bool operator==(ListIterator other) { return this->ptr_ == other.ptr_; }
-
     bool operator!=(ListIterator other) { return this->ptr_ != other.ptr_; }
 
    private:
